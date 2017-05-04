@@ -13,7 +13,9 @@ uniform sampler2D texRight;
 uniform sampler2D texTop;
 uniform sampler2D texBottom;
 
-uniform vec2 pixelOffset[4];
+uniform int antialiasing;
+
+uniform vec2 pixelOffset[16];
 
 uniform vec4 backgroundColor;
 
@@ -44,9 +46,9 @@ void main(void) {
   /* Ray-trace a cube */
 	
 	//Anti-aliasing
-	vec4 colorN[4];
+	vec4 colorN[16];
 	
-	for (int loop = 0; loop < 4; loop++) {
+	for (int loop = 0; loop < pow(4, antialiasing); loop++) {
 		
 		//create ray\n
 		vec3 ray = vec3(0, 0, -1);
@@ -133,5 +135,18 @@ void main(void) {
 		}
 	}
 	
-	color = mix(mix(colorN[0], colorN[1], 0.5), mix(colorN[2], colorN[3], 0.5), 0.5);
+	if (antialiasing == 2) {
+	  vec4 corner[4];
+	  corner[0] = mix(mix(colorN[0], colorN[1], 2.0/3.0), mix(colorN[4], colorN[5], 3.0/5.0), 5.0/8.0);
+	  corner[1] = mix(mix(colorN[3], colorN[2], 2.0/3.0), mix(colorN[7], colorN[6], 3.0/5.0), 5.0/8.0);
+	  corner[2] = mix(mix(colorN[12], colorN[13], 2.0/3.0), mix(colorN[8], colorN[9], 3.0/5.0), 5.0/8.0);
+	  corner[3] = mix(mix(colorN[15], colorN[14], 2.0/3.0), mix(colorN[11], colorN[10], 3.0/5.0), 5.0/8.0);
+	  color = mix(mix(corner[0], corner[1], 0.5), mix(corner[2], corner[3], 0.5), 0.5);
+	}
+	else if (antialiasing == 1) {
+		color = mix(mix(colorN[0], colorN[1], 0.5), mix(colorN[2], colorN[3], 0.5), 0.5);
+	}
+	else { //if antialiasing == 0
+		color = colorN[0];
+	}
 }

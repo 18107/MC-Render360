@@ -13,11 +13,12 @@ import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
 import mod.render360.coretransform.CLTLog;
-import mod.render360.coretransform.CoreLoader;
 import mod.render360.coretransform.RenderUtil;
+import mod.render360.coretransform.classtransformers.name.ClassName;
+import mod.render360.coretransform.classtransformers.name.MethodName;
+import mod.render360.coretransform.classtransformers.name.Names;
 import mod.render360.coretransform.render.RenderMethod;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.shader.Framebuffer;
 
@@ -26,21 +27,16 @@ import static org.objectweb.asm.Opcodes.*;
 public class LoadingScreenRendererTransformer extends ClassTransformer {
 
 	@Override
-	public String getObfuscatedClassName() {
-		return "bet";
-	}
-
-	@Override
-	public String getClassName() {
-		return "net.minecraft.client.LoadingScreenRenderer";
-	}
+	public ClassName getClassName() {return Names.LoadingScreenRenderer;}
 
 	@Override
 	public MethodTransformer[] getMethodTransformers() {
 		
-		MethodTransformer transformResetProgressAndMessage = new MethodTransformer() {
-			public String getMethodName() {return CoreLoader.isObfuscated ? "a" : "setLoadingProgress";}
-			public String getDescName() {return "(I)V";}
+		MethodTransformer transformSetLoadingProgress = new MethodTransformer() {
+			@Override
+			public MethodName getMethodName() {
+				return Names.LoadingScreenRenderer_setLoadingProgress;
+			}
 			
 			@Override
 			public void transform(ClassNode classNode, MethodNode method, boolean obfuscated) {
@@ -48,7 +44,7 @@ public class LoadingScreenRendererTransformer extends ClassTransformer {
 				
 				for (AbstractInsnNode instruction : method.instructions.toArray()) {
 					if (instruction.getOpcode() == FSTORE) {
-						CLTLog.info("Found FSTORE in method " + getMethodName());
+						CLTLog.info("Found FSTORE in method " + getMethodName().getShortName());
 						
 						
 						instruction = instruction.getNext();
@@ -84,16 +80,16 @@ public class LoadingScreenRendererTransformer extends ClassTransformer {
 						
 						toInsert.add(new VarInsnNode(ALOAD, 0)); //this
 						toInsert.add(new FieldInsnNode(GETFIELD, classNode.name,
-								obfuscated ? "field_73725_b" : "mc",
-										"L" + Type.getInternalName(Minecraft.class) + ";")); //mc
+								Names.LoadingScreenRenderer_mc.getFullName(),
+								Names.LoadingScreenRenderer_mc.getDesc())); //mc
 						toInsert.add(new FieldInsnNode(GETFIELD, Type.getInternalName(Minecraft.class),
-								obfuscated ? "field_71462_r" : "currentScreen",
-										"L" + Type.getInternalName(GuiScreen.class) + ";")); //currentScreen
+								Names.Minecraft_currentScreen.getFullName(),
+								Names.Minecraft_currentScreen.getDesc())); //currentScreen
 						
 						toInsert.add(new VarInsnNode(ALOAD, 0)); //this
 						toInsert.add(new FieldInsnNode(GETFIELD, classNode.name,
-								obfuscated ? "field_146588_g" : "framebuffer",
-								"L" + Type.getInternalName(Framebuffer.class) + ";")); //framebuffer
+								Names.LoadingScreenRenderer_framebuffer.getFullName(),
+								Names.LoadingScreenRenderer_framebuffer.getDesc())); //framebuffer
 						toInsert.add(new MethodInsnNode(INVOKEVIRTUAL, Type.getInternalName(RenderMethod.class),
 								"renderLoadingScreen", "(L" + Type.getInternalName(GuiScreen.class) +
 								";L" + Type.getInternalName(Framebuffer.class) + ";)V", false));
@@ -105,14 +101,15 @@ public class LoadingScreenRendererTransformer extends ClassTransformer {
 						//this.mc.guiScreen.drawBackground();
 						toInsert.add(new VarInsnNode(ALOAD, 0)); //this
 						toInsert.add(new FieldInsnNode(GETFIELD, classNode.name,
-								obfuscated ? "field_73725_b" : "mc",
-										"L" + Type.getInternalName(Minecraft.class) + ";")); //mc
+								Names.LoadingScreenRenderer_mc.getFullName(),
+								Names.LoadingScreenRenderer_mc.getDesc())); //mc
 						toInsert.add(new FieldInsnNode(GETFIELD, Type.getInternalName(Minecraft.class),
-								obfuscated ? "field_71462_r" : "currentScreen",
-										"L" + Type.getInternalName(GuiScreen.class) + ";")); //currentScreen
+								Names.Minecraft_currentScreen.getFullName(),
+								Names.Minecraft_currentScreen.getDesc())); //currentScreen
 						toInsert.add(new InsnNode(ICONST_0)); //0
 						toInsert.add(new MethodInsnNode(INVOKEVIRTUAL, Type.getInternalName(GuiScreen.class),
-								obfuscated ? "func_146278_c" : "drawBackground", "(I)V", false)); //drawBackground
+								Names.GuiScreen_drawBackground.getFullName(),
+								Names.GuiScreen_drawBackground.getDesc(), false)); //drawBackground
 						
 						toInsert.add(label2);
 
@@ -124,7 +121,7 @@ public class LoadingScreenRendererTransformer extends ClassTransformer {
 			}
 		};
 		
-		return new MethodTransformer[] {transformResetProgressAndMessage};
+		return new MethodTransformer[] {transformSetLoadingProgress};
 	}
 
 }

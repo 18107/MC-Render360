@@ -4,19 +4,17 @@ import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.InsnList;
-import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.LabelNode;
-import org.objectweb.asm.tree.LdcInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
-import org.objectweb.asm.tree.TypeInsnNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
 import mod.render360.coretransform.CLTLog;
-import mod.render360.coretransform.CoreLoader;
 import mod.render360.coretransform.RenderUtil;
-import mod.render360.coretransform.render.Equirectangular;
+import mod.render360.coretransform.classtransformers.name.ClassName;
+import mod.render360.coretransform.classtransformers.name.MethodName;
+import mod.render360.coretransform.classtransformers.name.Names;
 import mod.render360.coretransform.render.RenderMethod;
 
 import static org.objectweb.asm.Opcodes.*;
@@ -26,21 +24,16 @@ import org.objectweb.asm.Type;
 public class GuiScreenTransformer extends ClassTransformer {
 
 	@Override
-	public String getObfuscatedClassName() {
-		return "bhm";
-	}
-
-	@Override
-	public String getClassName() {
-		return "net.minecraft.client.gui.GuiScreen";
-	}
+	public ClassName getClassName() {return Names.GuiScreen;}
 
 	@Override
 	public MethodTransformer[] getMethodTransformers() {
 		
 		MethodTransformer transformDrawWorldBackground = new MethodTransformer() {
-			public String getMethodName() {return CoreLoader.isObfuscated ? "d_" : "drawWorldBackground";}
-			public String getDescName() {return "(I)V";}
+			@Override
+			public MethodName getMethodName() {
+				return Names.GuiScreen_drawWorldBackground;
+			}
 			
 			@Override
 			public void transform(ClassNode classNode, MethodNode method, boolean obfuscated) {
@@ -48,7 +41,7 @@ public class GuiScreenTransformer extends ClassTransformer {
 				
 				for (AbstractInsnNode instruction : method.instructions.toArray()) {
 					if (instruction.getOpcode() == ICONST_0) {
-						CLTLog.info("Found ICONST_0 in method " + getMethodName());
+						CLTLog.info("Found ICONST_0 in method " + getMethodName().getShortName());
 						
 						instruction = instruction.getPrevious();
 						
@@ -80,8 +73,10 @@ public class GuiScreenTransformer extends ClassTransformer {
 		};
 		
 		MethodTransformer transformDrawBackground = new MethodTransformer() {
-			public String getMethodName() {return CoreLoader.isObfuscated ? "c" : "drawBackground";}
-			public String getDescName() {return "(I)V";}
+			@Override
+			public MethodName getMethodName() {
+				return Names.GuiScreen_drawBackground;
+			}
 			
 			@Override
 			public void transform(ClassNode classNode, MethodNode method, boolean obfuscated) {
@@ -102,7 +97,7 @@ public class GuiScreenTransformer extends ClassTransformer {
 				
 				for (AbstractInsnNode instruction : method.instructions.toArray()) {
 					if (instruction.getOpcode() == RETURN) {
-						CLTLog.info("Found RETURN in method " + getMethodName());
+						CLTLog.info("Found RETURN in method " + getMethodName().getShortName());
 						
 						//else {
 						//RenderUtil.renderMethod.renderLoadingScreen(this)

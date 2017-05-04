@@ -11,7 +11,7 @@ import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 public class CoreLoader implements IFMLLoadingPlugin {
 	
 	public static final String NAME = "Render 360";
-	public static boolean isObfuscated = false;
+	public static boolean isObfuscated;
 	
 	@Override
 	public String[] getASMTransformerClass() {

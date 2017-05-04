@@ -9,9 +9,11 @@ import org.lwjgl.opengl.GL20;
 
 import mod.render360.coretransform.render.Standard;
 import mod.render360.coretransform.render.RenderMethod;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -20,6 +22,13 @@ import net.minecraft.client.renderer.culling.ICamera;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.passive.EntityAnimal;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.client.event.EntityViewRenderEvent.CameraSetup;
 
 public class RenderUtil {
 	
@@ -35,11 +44,17 @@ public class RenderUtil {
 	private static int width = 0;
 	/**Used to check if the screen was resized.*/
 	private static int height = 0;
-	/**Used for rendering multiple times*/ //TODO remove
+	/**Used for rendering multiple times*/
 	public static int partialWidth = 0;
 	public static int partialHeight = 0;
 	
-	public static float rotation = 0;
+	//for doRotation(event)
+	public static float yaw;
+	public static float pitch;
+	public static float roll;
+	public static int renderPass;
+	public static double distancePass;
+	public static double distance;
 	
 	/**The 360 degree shader.*/
 	private static Shader shader = null;
@@ -172,10 +187,29 @@ public class RenderUtil {
 	 * Called from asm modified code
 	 * {@link net.minecraft.client.renderer.EntityRenderer#orientCamera(float) orientCamera}
 	 */
-	public static void rotateCamera() {
-		//GlStateManager.rotate(renderMethod.getRotateY(), 0, 1, 0);
-		//GlStateManager.rotate(renderMethod.getRotateX(), 1, 0, 0);
-		//GlStateManager.translate(-RenderMethod.testZ, 0, RenderMethod.testZ);
+	public static void doRotation(float roll, float pitch, float yaw) {
+		if (renderPass == 0) {
+        	RenderUtil.yaw = yaw;
+        	RenderUtil.pitch = pitch;
+        	RenderUtil.distance = distancePass;
+        }
+        GlStateManager.rotate(RenderUtil.roll, 0.0F, 0.0F, 1.0F);
+        GlStateManager.rotate(roll, 0.0F, 0.0F, 1.0F);
+        GlStateManager.rotate(pitch, 1.0F, 0.0F, 0.0F);
+        GlStateManager.rotate(yaw, 0.0F, 1.0F, 0.0F);
+        double Yaw = Math.toRadians(RenderUtil.yaw);
+        double Pitch = Math.toRadians(RenderUtil.pitch);
+        distancePass = Math.max(RenderUtil.distance - 0.1, 0);
+        GlStateManager.translate((float)(distancePass*Math.sin(Yaw)*Math.cos(Pitch)),
+        		(float)(-distancePass*Math.sin(Pitch)), (float)(-distancePass*Math.cos(Yaw)*Math.cos(Pitch)));
+        if (Minecraft.getMinecraft().gameSettings.thirdPersonView == 2)
+        {
+        	GlStateManager.rotate(-RenderUtil.yaw, 0.0F, 1.0F, 0.0F);
+            GlStateManager.rotate(-RenderUtil.pitch, 1.0F, 0.0F, 0.0F);
+            GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
+            GlStateManager.rotate(RenderUtil.pitch, 1.0F, 0.0F, 0.0F);
+        	GlStateManager.rotate(RenderUtil.yaw, 0.0F, 1.0F, 0.0F);
+        }
 	}
 	
 	/**

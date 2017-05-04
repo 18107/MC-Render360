@@ -1,47 +1,28 @@
 package mod.render360.coretransform.classtransformers.particle;
 
-import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.FieldInsnNode;
-import org.objectweb.asm.tree.InsnList;
-import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
-import org.objectweb.asm.tree.VarInsnNode;
 
 import mod.render360.coretransform.CLTLog;
-import mod.render360.coretransform.CoreLoader;
-import mod.render360.coretransform.classtransformers.ClassTransformer;
-import mod.render360.coretransform.classtransformers.ClassTransformer.MethodTransformer;
-import net.minecraft.client.renderer.VertexBuffer;
-import net.minecraft.entity.Entity;
+import mod.render360.coretransform.classtransformers.name.ClassName;
+import mod.render360.coretransform.classtransformers.name.MethodName;
+import mod.render360.coretransform.classtransformers.name.Names;
 
 import static org.objectweb.asm.Opcodes.*;
 
 public class BarrierTransformer extends ParticleTransformer {
 
 	@Override
-	public String getObfuscatedClassName() {
-		return "bnx";
-	}
-
-	@Override
-	public String getClassName() {
-		return "net.minecraft.client.particle.Barrier";
-	}
+	public ClassName getClassName() {return Names.Barrier;}
 
 	@Override
 	public MethodTransformer[] getMethodTransformers() {
 		
 		MethodTransformer transformRenderParticle = new MethodTransformer() {
-			public String getMethodName() {return CoreLoader.isObfuscated ? "a" : "renderParticle";}
-			public String getDescName() {
-				if (CoreLoader.isObfuscated) {
-					return "(Lbpw;Lsm;FFFFFF)V";
-				} else {
-					return "(L" + Type.getInternalName(VertexBuffer.class) +
-							";L" + Type.getInternalName(Entity.class) + ";FFFFFF)V";
-				}
+			@Override
+			public MethodName getMethodName() {
+				return Names.Particle_renderParticle;
 			}
 			
 			@Override
@@ -50,7 +31,7 @@ public class BarrierTransformer extends ParticleTransformer {
 				
 				for (AbstractInsnNode instruction : method.instructions.toArray()) {
 					if (instruction.getOpcode() == ISHR) {
-						CLTLog.info("Found ISHR in method " + getMethodName());
+						CLTLog.info("Found ISHR in method " + getMethodName().getShortName());
 						
 						for (int i = 0; i < 12; i++) {
 							instruction = instruction.getNext();

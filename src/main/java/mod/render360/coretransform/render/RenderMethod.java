@@ -9,6 +9,7 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 
+import mod.render360.coretransform.CLTLog;
 import mod.render360.coretransform.RenderUtil;
 import mod.render360.coretransform.Shader;
 import mod.render360.coretransform.gui.Slider;
@@ -36,8 +37,9 @@ public abstract class RenderMethod {
 	
 	protected static float quality = 1;
 	protected static boolean resizeGui = false;
+	protected static int antialiasing = 2;
 	
-	private float yaw; //TODO remove
+	private float yaw;
 	private float pitch;
 	private float prevYaw;
 	private float prevPitch;
@@ -47,7 +49,7 @@ public abstract class RenderMethod {
 	
 	static {
 		//Put all of the render methods here
-		renderMethods = new RenderMethod[] {new Standard(), new Cubic(), new Hammer(), new Equirectangular(), new EquirectangularStatic()};
+		renderMethods = new RenderMethod[] {new Standard(), new Cubic(), new Hammer(), new Equirectangular()};
 	}
 	
 	/**
@@ -137,14 +139,35 @@ public abstract class RenderMethod {
 		GL11.glLoadIdentity();
 		
 		//Anti-aliasing
-		int pixelOffsetUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "pixelOffset[0]");
-		GL20.glUniform2f(pixelOffsetUniform, -0.25f/mc.displayWidth, -0.25f/mc.displayHeight);
-		pixelOffsetUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "pixelOffset[1]");
-		GL20.glUniform2f(pixelOffsetUniform, 0.25f/mc.displayWidth, -0.25f/mc.displayHeight);
-		pixelOffsetUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "pixelOffset[2]");
-		GL20.glUniform2f(pixelOffsetUniform, -0.25f/mc.displayWidth, 0.25f/mc.displayHeight);
-		pixelOffsetUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "pixelOffset[3]");
-		GL20.glUniform2f(pixelOffsetUniform, 0.25f/mc.displayWidth, 0.25f/mc.displayHeight);
+		int aaUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "antialiasing");
+		GL20.glUniform1i(aaUniform, getAntialiasing());
+		int pixelOffsetUniform;
+		if (getAntialiasing() == 0) {
+			pixelOffsetUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "pixelOffset[0]");
+			GL20.glUniform2f(pixelOffsetUniform, 0, 0);
+		}
+		else if (getAntialiasing() == 1) {
+			pixelOffsetUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "pixelOffset[0]");
+			GL20.glUniform2f(pixelOffsetUniform, -0.25f/mc.displayWidth, -0.25f/mc.displayHeight);
+			pixelOffsetUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "pixelOffset[1]");
+			GL20.glUniform2f(pixelOffsetUniform, 0.25f/mc.displayWidth, -0.25f/mc.displayHeight);
+			pixelOffsetUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "pixelOffset[2]");
+			GL20.glUniform2f(pixelOffsetUniform, -0.25f/mc.displayWidth, 0.25f/mc.displayHeight);
+			pixelOffsetUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "pixelOffset[3]");
+			GL20.glUniform2f(pixelOffsetUniform, 0.25f/mc.displayWidth, 0.25f/mc.displayHeight);
+		}
+		else if (getAntialiasing() == 2) {
+			float left = (-0.5f+0.125f)/mc.displayWidth;
+			float top = (-0.5f+0.125f)/mc.displayHeight;
+			float right = 0.25f/mc.displayWidth;
+			float down = 0.25f/mc.displayHeight;
+			for (int y = 0; y < 4; y++) {
+				for (int x = 0; x < 4; x++) {
+					pixelOffsetUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "pixelOffset[" + (y*4+x) + "]");
+					GL20.glUniform2f(pixelOffsetUniform, left + right*x, top + down*y);
+				}
+			}
+		}
 		
 		int texFrontUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "texFront");
 		GL20.glUniform1i(texFrontUniform, 0);
@@ -220,8 +243,8 @@ public abstract class RenderMethod {
 		mc.displayWidth = (int)(height*sizeIncrease);
 		mc.displayHeight = (int)(height*sizeIncrease); //Must be square
 		
-		RenderUtil.partialWidth = mc.displayWidth; //TODO is this even needed?
-		RenderUtil.partialHeight = mc.displayHeight; //TODO remove
+		RenderUtil.partialWidth = mc.displayWidth;
+		RenderUtil.partialHeight = mc.displayHeight;
 		
 		RenderUtil.render360 = true;
 
@@ -264,6 +287,7 @@ public abstract class RenderMethod {
 		OpenGlHelper.glFramebufferTexture2D(OpenGlHelper.GL_FRAMEBUFFER, OpenGlHelper.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D, framebufferTexture, 0);
 		GlStateManager.bindTexture(0);
 		//rotate the player and render
+		RenderUtil.renderPass = 0;
 		er.renderWorldPass(2, partialTicks, finishTimeNano);
 	}
 	
@@ -275,9 +299,10 @@ public abstract class RenderMethod {
 		player.prevRotationYaw = prevYaw - 90;
 		player.rotationPitch = 0;
 		player.prevRotationPitch = 0;
-		RenderUtil.rotation = pitch;
+		RenderUtil.roll = pitch;
+		RenderUtil.renderPass = 1;
 		er.renderWorldPass(2, partialTicks, finishTimeNano);
-		RenderUtil.rotation = 0;
+		RenderUtil.roll = 0;
 	}
 	
 	protected void renderRight(EntityRenderer er, Minecraft mc, float partialTicks, long finishTimeNano,
@@ -288,9 +313,10 @@ public abstract class RenderMethod {
 		player.prevRotationYaw = prevYaw + 90;
 		player.rotationPitch = 0;
 		player.prevRotationPitch = 0;
-		RenderUtil.rotation = -pitch;
+		RenderUtil.roll = -pitch;
+		RenderUtil.renderPass = 2;
 		er.renderWorldPass(2, partialTicks, finishTimeNano);
-		RenderUtil.rotation = 0;
+		RenderUtil.roll = 0;
 	}
 	
 	protected void renderTop(EntityRenderer er, Minecraft mc, float partialTicks, long finishTimeNano,
@@ -301,6 +327,7 @@ public abstract class RenderMethod {
 		player.prevRotationYaw = prevYaw;
 		player.rotationPitch = pitch - 90;
 		player.prevRotationPitch = prevPitch - 90;
+		RenderUtil.renderPass = 3;
 		er.renderWorldPass(2, partialTicks, finishTimeNano);
 	}
 	
@@ -312,6 +339,7 @@ public abstract class RenderMethod {
 		player.prevRotationYaw = prevYaw;
 		player.rotationPitch = pitch + 90;
 		player.prevRotationPitch = prevPitch + 90;
+		RenderUtil.renderPass = 4;
 		er.renderWorldPass(2, partialTicks, finishTimeNano);
 	}
 	
@@ -323,7 +351,9 @@ public abstract class RenderMethod {
 		player.prevRotationYaw = prevYaw + 180;
 		player.rotationPitch = -pitch;
 		player.prevRotationPitch = -prevPitch;
+		RenderUtil.renderPass = 5;
 		er.renderWorldPass(2, partialTicks, finishTimeNano);
+		RenderUtil.renderPass = 0;
 	}
 	
 	public void runShader(EntityRenderer er, Minecraft mc, Framebuffer framebuffer,
@@ -341,14 +371,35 @@ public abstract class RenderMethod {
 		GL11.glLoadIdentity();
 		
 		//Anti-aliasing
-		int pixelOffsetUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "pixelOffset[0]");
-		GL20.glUniform2f(pixelOffsetUniform, -0.25f/mc.displayWidth, -0.25f/mc.displayHeight);
-		pixelOffsetUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "pixelOffset[1]");
-		GL20.glUniform2f(pixelOffsetUniform, 0.25f/mc.displayWidth, -0.25f/mc.displayHeight);
-		pixelOffsetUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "pixelOffset[2]");
-		GL20.glUniform2f(pixelOffsetUniform, -0.25f/mc.displayWidth, 0.25f/mc.displayHeight);
-		pixelOffsetUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "pixelOffset[3]");
-		GL20.glUniform2f(pixelOffsetUniform, 0.25f/mc.displayWidth, 0.25f/mc.displayHeight);
+		int aaUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "antialiasing");
+		GL20.glUniform1i(aaUniform, getAntialiasing());
+		int pixelOffsetUniform;
+		if (getAntialiasing() == 0) {
+			pixelOffsetUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "pixelOffset[0]");
+			GL20.glUniform2f(pixelOffsetUniform, 0, 0);
+		}
+		else if (getAntialiasing() == 1) {
+			pixelOffsetUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "pixelOffset[0]");
+			GL20.glUniform2f(pixelOffsetUniform, -0.25f/mc.displayWidth, -0.25f/mc.displayHeight);
+			pixelOffsetUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "pixelOffset[1]");
+			GL20.glUniform2f(pixelOffsetUniform, 0.25f/mc.displayWidth, -0.25f/mc.displayHeight);
+			pixelOffsetUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "pixelOffset[2]");
+			GL20.glUniform2f(pixelOffsetUniform, -0.25f/mc.displayWidth, 0.25f/mc.displayHeight);
+			pixelOffsetUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "pixelOffset[3]");
+			GL20.glUniform2f(pixelOffsetUniform, 0.25f/mc.displayWidth, 0.25f/mc.displayHeight);
+		}
+		else if (getAntialiasing() == 2) {
+			float left = (-0.5f+0.125f)/mc.displayWidth;
+			float top = (-0.5f+0.125f)/mc.displayHeight;
+			float right = 0.25f/mc.displayWidth;
+			float down = 0.25f/mc.displayHeight;
+			for (int y = 0; y < 4; y++) {
+				for (int x = 0; x < 4; x++) {
+					pixelOffsetUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "pixelOffset[" + (y*4+x) + "]");
+					GL20.glUniform2f(pixelOffsetUniform, left + right*x, top + down*y);
+				}
+			}
+		}
 
 		int texFrontUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "texFront");
 		GL20.glUniform1i(texFrontUniform, 0);
@@ -405,6 +456,7 @@ public abstract class RenderMethod {
 	public void addButtonsToGui(List<GuiButton> buttonList, int width, int height) {
 		buttonList.add(new GuiButton(18101, width / 2 - 155, height / 6 + 48, 150, 20, "Resize Gui: " + (resizeGui ? "ON" : "OFF")));
 		buttonList.add(new Slider(new Responder(), 18102, width / 2 + 5, height / 6 + 48, 150, 20, "Quality", 0.1f, 5f, quality, 0.1f, null));
+		buttonList.add(new GuiButton(18106, width / 2 + 5, height / 6 + 72, 150, 20, "Antialiasing: " + (antialiasing == 0 ? "OFF" : antialiasing == 1 ? "LOW" : "HIGH")));
 	}
 	
 	public void onButtonPress(GuiButton button) {
@@ -412,6 +464,11 @@ public abstract class RenderMethod {
 		if (button.id == 18101) {
 			resizeGui = !resizeGui;
 			button.displayString = "Resize Gui: " + (resizeGui ? "ON" : "OFF");
+		}
+		else if (button.id == 18106) {
+			antialiasing++;
+			if (antialiasing >=3) antialiasing = 0;
+			button.displayString = "Antialiasing: " + (antialiasing == 0 ? "OFF" : antialiasing == 1 ? "LOW" : "HIGH");
 		}
 	}
 	
@@ -449,6 +506,10 @@ public abstract class RenderMethod {
 	
 	public boolean getResizeGui() {
 		return resizeGui;
+	}
+	
+	public int getAntialiasing() {
+		return antialiasing;
 	}
 	
 	public boolean replaceLoadingScreen() {

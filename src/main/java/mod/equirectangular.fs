@@ -13,14 +13,19 @@ uniform sampler2D texRight;
 uniform sampler2D texTop;
 uniform sampler2D texBottom;
 
-uniform vec2 pixelOffset[4];
+uniform int antialiasing;
 
-//fovx\n
+uniform vec2 pixelOffset[16];
+
 uniform float fovx;
 
 uniform vec2 cursorPos;
 
 uniform bool drawCursor;
+
+uniform bool drawCircle;
+
+uniform vec2 rotation;
 
 out vec4 color;
 
@@ -41,19 +46,36 @@ vec3 rotate(vec3 ray, vec2 angle) {
   return ray;
 }
 
+vec3 rotate2(vec3 ray, vec2 angle) {
+	//rotate x\n
+	float x = cos(angle.x)*ray.x - sin(angle.x)*ray.z;
+	float z = cos(angle.x)*ray.z + sin(angle.x)*ray.x;
+	ray.x = x;
+	ray.z = z;
+	
+	//rotate y\n
+	float y = cos(angle.y)*ray.y - sin(angle.y)*ray.z;
+	z = cos(angle.y)*ray.z + sin(angle.y)*ray.y;
+	ray.y = y;
+	ray.z = z;
+	
+	return ray;
+}
+
 void main(void) {
   /* Ray-trace a cube */
 	
 	//Anti-aliasing
-	vec4 colorN[4];
+	vec4 colorN[16];
 	
-	for (int loop = 0; loop < 4; loop++) {
+	for (int loop = 0; loop < pow(4, antialiasing); loop++) {
 		
 		//create ray\n
 		vec3 ray = vec3(0, 0, -1);
 		
 		//rotate ray\n
 		ray = rotate(ray, vec2((texcoord.x+pixelOffset[loop].x-0.5)*2*M_PI*fovx/360, (texcoord.y+pixelOffset[loop].y-0.5)*M_PI*fovx/360)); //x (-pi to pi), y (-pi/2 to pi/2\n
+		ray = rotate2(ray, vec2(-rotation.x*M_PI/180, rotation.y*M_PI/180));
 		
 		//find which side to use\n
 		if (abs(ray.x) > abs(ray.y)) {
@@ -119,8 +141,30 @@ void main(void) {
 				ray.z < 0) {
 				colorN[loop] = vec4(1, 1, 1, 1);
 			}
+		} else if (drawCircle) {
+			float phi = (texcoord.y+pixelOffset[loop].y-0.5)*M_PI;
+			float lambda = (texcoord.x+pixelOffset[loop].x-0.5-rotation.x/360)*2*M_PI;
+			float z = cos(phi)*cos(lambda);
+			float y = sin(phi)*cos(rotation.y*M_PI/180+M_PI/2) + z*sin(rotation.y*M_PI/180+M_PI/2);
+			float radius = asin(1-y);
+			if (radius < 0.0013 && radius > 0.0007) {
+				colorN[loop] = vec4(0, 0, 0, 1);
+			}
 		}
 	}
 	
-	color = mix(mix(colorN[0], colorN[1], 0.5), mix(colorN[2], colorN[3], 0.5), 0.5);
+	if (antialiasing == 2) {
+	  vec4 corner[4];
+	  corner[0] = mix(mix(colorN[0], colorN[1], 2.0/3.0), mix(colorN[4], colorN[5], 3.0/5.0), 5.0/8.0);
+	  corner[1] = mix(mix(colorN[3], colorN[2], 2.0/3.0), mix(colorN[7], colorN[6], 3.0/5.0), 5.0/8.0);
+	  corner[2] = mix(mix(colorN[12], colorN[13], 2.0/3.0), mix(colorN[8], colorN[9], 3.0/5.0), 5.0/8.0);
+	  corner[3] = mix(mix(colorN[15], colorN[14], 2.0/3.0), mix(colorN[11], colorN[10], 3.0/5.0), 5.0/8.0);
+	  color = mix(mix(corner[0], corner[1], 0.5), mix(corner[2], corner[3], 0.5), 0.5);
+	}
+	else if (antialiasing == 1) {
+		color = mix(mix(colorN[0], colorN[1], 0.5), mix(colorN[2], colorN[3], 0.5), 0.5);
+	}
+	else { //if antialiasing == 0
+		color = colorN[0];
+	}
 }

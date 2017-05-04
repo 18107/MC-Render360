@@ -4,8 +4,8 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
 
-import mod.render360.coretransform.classtransformers.particle.BarrierTransformer;
-import mod.render360.coretransform.classtransformers.particle.ParticleExplosionLargeTransformer;
+import mod.render360.coretransform.classtransformers.name.ClassName;
+import mod.render360.coretransform.classtransformers.name.MethodName;
 import mod.render360.coretransform.classtransformers.particle.ParticleTransformer;
 
 /**
@@ -26,19 +26,13 @@ public abstract class ClassTransformer {
 	//Template for a method transformer
 	public static abstract class MethodTransformer {
 		public abstract void transform(ClassNode classNode, MethodNode method, boolean obfuscated);
-		public abstract String getMethodName();
-		public abstract String getDescName();
+		public abstract MethodName getMethodName();
 	}
-	
-	/**
-	 * @return the obfuscated name of the class
-	 */
-	public abstract String getObfuscatedClassName();
 	
 	/**
 	 * @return the name of the class
 	 */
-	public abstract String getClassName();
+	public abstract ClassName getClassName();
 	
 	/**
 	 * @return an array containing all method transformers for this class transformer
