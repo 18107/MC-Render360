@@ -51,4 +51,8 @@ public class ClassName {
 	public String getNameAsDesc(boolean obfuscated) {
 		return "L" + getInternalName(obfuscated) + ";";
 	}
+	
+	public String all() {
+		return deobfuscatedName + "   " + obfuscatedName;
+	}
 }

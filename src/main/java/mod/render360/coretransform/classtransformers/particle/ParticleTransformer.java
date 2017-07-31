@@ -40,11 +40,11 @@ public class ParticleTransformer extends ClassTransformer {
 			
 			@Override
 			public void transform(ClassNode classNode, MethodNode method, boolean obfuscated) {
-				CLTLog.info("Found method: " + method.name + " " + method.desc);
+				CLTLog.info("Found method: " + getMethodName().all());
 				
 				for (AbstractInsnNode instruction : method.instructions.toArray()) {
 					if (instruction.getOpcode() == ANEWARRAY) {
-						CLTLog.info("Found ANEWARRAY in method " + getMethodName().getShortName());
+						CLTLog.info("Found ANEWARRAY in method " + getMethodName().debug());
 						
 						instruction = instruction.getPrevious();
 						

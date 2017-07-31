@@ -37,11 +37,11 @@ public class GuiScreenTransformer extends ClassTransformer {
 			
 			@Override
 			public void transform(ClassNode classNode, MethodNode method, boolean obfuscated) {
-				CLTLog.info("Found method: " + method.name + " " + method.desc);
+				CLTLog.info("Found method: " + getMethodName().all());
 				
 				for (AbstractInsnNode instruction : method.instructions.toArray()) {
 					if (instruction.getOpcode() == ICONST_0) {
-						CLTLog.info("Found ICONST_0 in method " + getMethodName().getShortName());
+						CLTLog.info("Found ICONST_0 in method " + getMethodName().debug());
 						
 						instruction = instruction.getPrevious();
 						
@@ -80,11 +80,13 @@ public class GuiScreenTransformer extends ClassTransformer {
 			
 			@Override
 			public void transform(ClassNode classNode, MethodNode method, boolean obfuscated) {
-				CLTLog.info("Found method: " + method.name + " " + method.desc);
+				CLTLog.info("Found method: " + getMethodName().all());
 				
 				InsnList toInsert = new InsnList();
 				LabelNode label1 = new LabelNode();
 				LabelNode label2 = new LabelNode();
+				
+				CLTLog.info("Beginning at start of method " + getMethodName().debug());
 				
 				//if (!RenderUtil.renderMethod.replaceLoadingScreen())
 				toInsert.add(new FieldInsnNode(GETSTATIC, Type.getInternalName(RenderUtil.class),
@@ -97,7 +99,7 @@ public class GuiScreenTransformer extends ClassTransformer {
 				
 				for (AbstractInsnNode instruction : method.instructions.toArray()) {
 					if (instruction.getOpcode() == RETURN) {
-						CLTLog.info("Found RETURN in method " + getMethodName().getShortName());
+						CLTLog.info("Found RETURN in method " + getMethodName().debug());
 						
 						//else {
 						//RenderUtil.renderMethod.renderLoadingScreen(this)

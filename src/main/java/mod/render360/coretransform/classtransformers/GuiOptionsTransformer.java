@@ -43,10 +43,10 @@ public class GuiOptionsTransformer extends ClassTransformer {
 			
 			@Override
 			public void transform(ClassNode classNode, MethodNode method, boolean obfuscated) {
-				CLTLog.info("Found method: " + method.name + " " + method.desc);
+				CLTLog.info("Found method: " + getMethodName().all());
 				
 				AbstractInsnNode instruction = method.instructions.toArray()[2];
-				CLTLog.info("Starting at begining of method " + getMethodName().getShortName());
+				CLTLog.info("Starting at begining of method " + getMethodName().debug());
 
 				InsnList toInsert = new InsnList();
 				LabelNode label = new LabelNode();
@@ -92,8 +92,8 @@ public class GuiOptionsTransformer extends ClassTransformer {
 			
 			@Override
 			public void transform(ClassNode classNode, MethodNode method, boolean obfuscated) {
-				CLTLog.info("Found method: " + method.name + " " + method.desc);
-				CLTLog.info("Starting at begining of method " + getMethodName().getShortName());
+				CLTLog.info("Found method: " + getMethodName().all());
+				CLTLog.info("Starting at begining of method " + getMethodName().debug());
 				
 				AbstractInsnNode instruction = method.instructions.getFirst();
 				InsnList toInsert = new InsnList();

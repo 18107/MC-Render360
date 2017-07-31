@@ -27,11 +27,11 @@ public class BarrierTransformer extends ParticleTransformer {
 			
 			@Override
 			public void transform(ClassNode classNode, MethodNode method, boolean obfuscated) {
-				CLTLog.info("Found method: " + method.name + " " + method.desc);
+				CLTLog.info("Found method: " + getMethodName().all());
 				
 				for (AbstractInsnNode instruction : method.instructions.toArray()) {
 					if (instruction.getOpcode() == ISHR) {
-						CLTLog.info("Found ISHR in method " + getMethodName().getShortName());
+						CLTLog.info("Found ISHR in method " + getMethodName().debug());
 						
 						for (int i = 0; i < 12; i++) {
 							instruction = instruction.getNext();

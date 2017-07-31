@@ -49,7 +49,7 @@ public class CoreTransformer implements IClassTransformer {
 			//if the class transformer should modify this class
 			if (name.equals(classTransformer.getClassName().getName())) {
 				
-				CLTLog.info(String.format("Class: %s", name));
+				CLTLog.info(String.format("Class: %s", classTransformer.getClassName().all()));
 				boolean obfuscated = CoreLoader.isObfuscated;
 
 				try {

@@ -27,11 +27,11 @@ public class ParticleExplosionLargeTransformer extends ParticleTransformer {
 			
 			@Override
 			public void transform(ClassNode classNode, MethodNode method, boolean obfuscated) {
-				CLTLog.info("Found method: " + method.name + " " + method.desc);
+				CLTLog.info("Found method: " + getMethodName().all());
 				
 				for (AbstractInsnNode instruction : method.instructions.toArray()) {
 					if (instruction.getOpcode() == FCONST_1) {
-						CLTLog.info("Found FCONST_1 in method " + getMethodName().getShortName());
+						CLTLog.info("Found FCONST_1 in method " + getMethodName().debug());
 						
 						transformParticle(classNode, method, instruction, 15);
 						

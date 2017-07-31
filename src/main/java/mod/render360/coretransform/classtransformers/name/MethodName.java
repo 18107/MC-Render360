@@ -54,4 +54,12 @@ public class MethodName {
 			return deobfuscatedDesc;
 		}
 	}
+	
+	public String all() {
+		return deobfuscatedName + deobfuscatedDesc + "   " + obfuscatedNameShort + obfuscatedDesc + "   " + obfuscatedNameFull;
+	}
+	
+	public String debug() {
+		return deobfuscatedName + deobfuscatedDesc;
+	}
 }

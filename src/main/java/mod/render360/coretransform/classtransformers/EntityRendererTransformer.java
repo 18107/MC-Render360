@@ -40,11 +40,11 @@ public class EntityRendererTransformer extends ClassTransformer {
 			}
 			
 			public void transform(ClassNode classNode, MethodNode method, boolean obfuscated) {
-				CLTLog.info("Found method: " + method.name + " " + method.desc);
+				CLTLog.info("Found method: " + getMethodName().all());
 				for (AbstractInsnNode instruction : method.instructions.toArray()) {
 					
 					if (instruction.getOpcode() == ALOAD) {
-						CLTLog.info("Found ALOAD in method " + getMethodName().getShortName());
+						CLTLog.info("Found ALOAD in method " + getMethodName().debug());
 						
 						InsnList toInsert = new InsnList();
 						LabelNode label = new LabelNode();
@@ -74,8 +74,8 @@ public class EntityRendererTransformer extends ClassTransformer {
 			
 			@Override
 			public void transform(ClassNode classNode, MethodNode method, boolean obfuscated) {
-				CLTLog.info("Found method: " + method.name + " " + method.desc);
-				CLTLog.info("begining at start of method " + getMethodName().getShortName());
+				CLTLog.info("Found method: " + getMethodName().all());
+				CLTLog.info("begining at start of method " + getMethodName().debug());
 				
 				InsnList toInsert = new InsnList();
 				LabelNode label = new LabelNode();
@@ -101,7 +101,7 @@ public class EntityRendererTransformer extends ClassTransformer {
 			}
 			
 			public void transform(ClassNode classNode, MethodNode method, boolean obfuscated) {
-				CLTLog.info("Found method: " + method.name + " " + method.desc);
+				CLTLog.info("Found method: " + getMethodName().all());
 				
 				boolean optifineDetected = false;
 				
@@ -122,7 +122,7 @@ public class EntityRendererTransformer extends ClassTransformer {
 					
 					if (instruction.getOpcode() == ICONST_2 &&
 							instruction.getNext().getNext().getNext().getNext().getOpcode() == LDC) {
-						CLTLog.info("Found ICONST_2 in method " + getMethodName().getShortName());
+						CLTLog.info("Found ICONST_2 in method " + getMethodName().debug());
 						
 						for (int i = 0; i < 3; i++) {
 							instruction = instruction.getNext();
@@ -160,7 +160,7 @@ public class EntityRendererTransformer extends ClassTransformer {
 					
 					//find net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(event);
 					if (!optifineDetected && instruction.getOpcode() == POP) {
-						CLTLog.info("Found POP in method " + getMethodName().getShortName());
+						CLTLog.info("Found POP in method " + getMethodName().debug());
 						
 						instruction = instruction.getNext().getNext();
 						
@@ -190,7 +190,7 @@ public class EntityRendererTransformer extends ClassTransformer {
 							instruction = instruction.getNext();
 						}
 						if (instruction.getNext().getOpcode() == FLOAD) {
-							CLTLog.info("Found ANEWARRAY in method " + getMethodName().getShortName());
+							CLTLog.info("Found ANEWARRAY in method " + getMethodName().debug());
 							
 							//remove rotate
 							for (int i = 0; i < 5+7+7; i++) {
@@ -220,12 +220,12 @@ public class EntityRendererTransformer extends ClassTransformer {
 			
 			@Override
 			public void transform(ClassNode classNode, MethodNode method, boolean obfuscated) {
-				CLTLog.info("Found method: " + method.name + " " + method.desc);
+				CLTLog.info("Found method: " + getMethodName().all());
 				for (AbstractInsnNode instruction : method.instructions.toArray()) {
 					
 					if (instruction.getOpcode() == SIPUSH &&
 							instruction.getNext().getOpcode() == LDC) {
-						CLTLog.info("Found SIPUSH in method " + getMethodName().getShortName());
+						CLTLog.info("Found SIPUSH in method " + getMethodName().debug());
 						
 						//go to start of method call
 						for (int i = 0; i < 16; i++) {
@@ -256,7 +256,7 @@ public class EntityRendererTransformer extends ClassTransformer {
 					if (instruction.getOpcode() == ILOAD &&
 							instruction.getPrevious().getOpcode() == GETFIELD &&
 							instruction.getNext().getOpcode() == ILOAD) {
-						CLTLog.info("Found ILOAD in method " + getMethodName().getShortName());
+						CLTLog.info("Found ILOAD in method " + getMethodName().debug());
 						
 						InsnList toInsert = new InsnList();
 						
@@ -320,12 +320,12 @@ public class EntityRendererTransformer extends ClassTransformer {
 			}
 			
 			public void transform(ClassNode classNode, MethodNode method, boolean obfuscated) {
-				CLTLog.info("Found method: " + method.name + " " + method.desc);
+				CLTLog.info("Found method: " + getMethodName().all());
 				for (AbstractInsnNode instruction : method.instructions.toArray()) {
 					
 					if (instruction.getOpcode() == ALOAD &&
 							instruction.getNext().getOpcode() == ICONST_2) {
-						CLTLog.info("Found ALOAD in method " + getMethodName().getShortName());
+						CLTLog.info("Found ALOAD in method " + getMethodName().debug());
 						
 						InsnList toInsert = new InsnList();
 						
@@ -361,11 +361,11 @@ public class EntityRendererTransformer extends ClassTransformer {
 			}
 			
 			public void transform(ClassNode classNode, MethodNode method, boolean obfuscated) {
-				CLTLog.info("Found method: " + method.name + " " + method.desc);
+				CLTLog.info("Found method: " + getMethodName().all());
 				for (AbstractInsnNode instruction : method.instructions.toArray()) {
 					
 					if (instruction.getOpcode() == LDC) {
-						CLTLog.info("found LDC in method " + getMethodName().getShortName());
+						CLTLog.info("found LDC in method " + getMethodName().debug());
 						
 						InsnList toInsert = new InsnList();
 						LabelNode clearNode = new LabelNode();
@@ -400,7 +400,7 @@ public class EntityRendererTransformer extends ClassTransformer {
 				}
 				
 				AbstractInsnNode instruction = method.instructions.getLast();
-				CLTLog.info("reached end of method " + getMethodName().getShortName());
+				CLTLog.info("reached end of method " + getMethodName().debug());
 				
 				
 				instruction = instruction.getPrevious();
@@ -445,13 +445,13 @@ public class EntityRendererTransformer extends ClassTransformer {
 			
 			@Override
 			public void transform(ClassNode classNode, MethodNode method, boolean obfuscated) {
-				CLTLog.info("Found method: " + method.name + " " + method.desc);
+				CLTLog.info("Found method: " + getMethodName().all());
 				for (AbstractInsnNode instruction : method.instructions.toArray()) {
 					
 					if (instruction.getOpcode() == D2F &&
 							instruction.getPrevious().getOpcode() == INVOKEVIRTUAL &&
 							instruction.getNext().getOpcode() == FSTORE) {
-						CLTLog.info("found D2F in method " + getMethodName().getShortName());
+						CLTLog.info("found D2F in method " + getMethodName().debug());
 						
 						//after float f5 = (float)entity.getLook(partialTicks).dotProduct(vec3d2);
 						for (int i = 0; i < 3; i++) {
@@ -490,8 +490,8 @@ public class EntityRendererTransformer extends ClassTransformer {
 			}
 			
 			public void transform(ClassNode classNode, MethodNode method, boolean obfuscated) {
-				CLTLog.info("Found method: " + method.name + " " + method.desc);
-				CLTLog.info("begining at start of method " + getMethodName().getShortName());
+				CLTLog.info("Found method: " + getMethodName().all());
+				CLTLog.info("begining at start of method " + getMethodName().debug());
 				
 				//viewerYaw = RenderUtil.setViewerYaw(x, z)
 				InsnList toInsert = new InsnList();
