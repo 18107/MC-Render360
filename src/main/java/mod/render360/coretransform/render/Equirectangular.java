@@ -68,9 +68,14 @@ public class Equirectangular extends RenderMethod {
 	}
 	
 	@Override
+	public boolean renderAllSides() {
+		return stabilizeYaw || stabilizePitch;
+	}
+	
+	@Override
 	public void addButtonsToGui(List<GuiButton> buttonList, int width, int height) {
 		super.addButtonsToGui(buttonList, width, height);
-		//buttonList.add(new Slider(new Responder(), 18104, width / 2 - 180, height / 6 + 24, 360, 20, "FOV", 0f, 360f, fov, 1f, null));
+		buttonList.add(new Slider(new Responder(), 18104, width / 2 - 180, height / 6 + 24, 360, 20, "FOV", 0f, 360f, fov, 1f, null));
 		buttonList.add(new GuiButton(18107, width / 2 - 155, height / 6 + 96, 150, 20, "Stabilize Yaw: " + (stabilizeYaw ? "ON" : "OFF")));
 		buttonList.add(new GuiButton(18108, width / 2 + 5, height / 6 + 96, 150, 20, "Stabilize Pitch: " + (stabilizePitch ? "ON" : "OFF")));
 		buttonList.add(new GuiButton(18109, width / 2 - 155, height / 6 + 120, 150, 20, "Draw Circle: " + (drawCircle ? "ON" : "OFF")));

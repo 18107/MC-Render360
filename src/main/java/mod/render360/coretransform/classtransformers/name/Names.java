@@ -6,6 +6,7 @@ public class Names {
 	public static final MethodName EntityRenderer_getFOVModifier = new MethodName("getFOVModifier", "func_78481_a", "a", "(FZ)F", "(FZ)F");
 	public static final MethodName EntityRenderer_hurtCameraEffect = new MethodName("hurtCameraEffect", "func_78482_e", "d", "(F)V", "(F)V");
 	public static final MethodName EntityRenderer_orientCamera = new MethodName("orientCamera", "func_78467_g", "f", "(F)V", "(F)V");
+	public static final MethodName EntityRenderer_setupCameraTransform = new MethodName("setupCameraTransform", "func_78479_a", "a", "(FI)V", "(FI)V");
 	public static final MethodName EntityRenderer_updateCameraAndRender = new MethodName("updateCameraAndRender", "func_181560_a", "a", "(FJ)V", "(FJ)V");
 	public static final MethodName EntityRenderer_renderWorld = new MethodName("renderWorld", "func_78471_a", "b", "(FJ)V", "(FJ)V");
 	public static final MethodName EntityRenderer_renderWorldPass = new MethodName("renderWorldPass", "func_175068_a", "a", "(IFJ)V", "(IFJ)V");
@@ -14,6 +15,8 @@ public class Names {
 	public static final FieldName EntityRenderer_mc = new FieldName("mc", "field_78531_r", "h", "Lnet/minecraft/client/Minecraft;", "Lbeq;");
 	
 	public static final MethodName GameSettings_saveOptions = new MethodName("saveOptions", "func_74303_b", "b", "()V", "()V");
+	
+	public static final MethodName GLStateManager_loadIdentity = new MethodName("loadIdentity", "func_179096_D", "F", "()V", "()V");
 	
 	public static final ClassName GuiButton = new ClassName("net.minecraft.client.gui.GuiButton", "bfk");
 	public static final FieldName GuiButton_id = new FieldName("id", "field_146127_k", "k", "I", "I");

@@ -48,10 +48,6 @@ public class RenderUtil {
 	public static int partialWidth = 0;
 	public static int partialHeight = 0;
 	
-	//for doRotation(event)
-	public static float yaw;
-	public static float pitch;
-	public static float roll;
 	public static int renderPass;
 	public static double distancePass;
 	public static double distance;
@@ -185,35 +181,6 @@ public class RenderUtil {
 	
 	/**
 	 * Called from asm modified code
-	 * {@link net.minecraft.client.renderer.EntityRenderer#orientCamera(float) orientCamera}
-	 */
-	public static void doRotation(float roll, float pitch, float yaw) {
-		if (renderPass == 0) {
-        	RenderUtil.yaw = yaw;
-        	RenderUtil.pitch = pitch;
-        	RenderUtil.distance = distancePass;
-        }
-        GlStateManager.rotate(RenderUtil.roll, 0.0F, 0.0F, 1.0F);
-        GlStateManager.rotate(roll, 0.0F, 0.0F, 1.0F);
-        GlStateManager.rotate(pitch, 1.0F, 0.0F, 0.0F);
-        GlStateManager.rotate(yaw, 0.0F, 1.0F, 0.0F);
-        double Yaw = Math.toRadians(RenderUtil.yaw);
-        double Pitch = Math.toRadians(RenderUtil.pitch);
-        distancePass = Math.max(RenderUtil.distance - 0.1, 0);
-        GlStateManager.translate((float)(distancePass*Math.sin(Yaw)*Math.cos(Pitch)),
-        		(float)(-distancePass*Math.sin(Pitch)), (float)(-distancePass*Math.cos(Yaw)*Math.cos(Pitch)));
-        if (Minecraft.getMinecraft().gameSettings.thirdPersonView == 2)
-        {
-        	GlStateManager.rotate(-RenderUtil.yaw, 0.0F, 1.0F, 0.0F);
-            GlStateManager.rotate(-RenderUtil.pitch, 1.0F, 0.0F, 0.0F);
-            GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
-            GlStateManager.rotate(RenderUtil.pitch, 1.0F, 0.0F, 0.0F);
-        	GlStateManager.rotate(RenderUtil.yaw, 0.0F, 1.0F, 0.0F);
-        }
-	}
-	
-	/**
-	 * Called from asm modified code
 	 * {@link net.minecraft.client.renderer.EntityRenderer#updateCameraAndRender(float, long) updateCameraAndRender}
 	 */
 	public static void renderGuiStart() {
@@ -304,5 +271,15 @@ public class RenderUtil {
 		float distance = (float) (Math.sqrt(x*x + z*z));
 		float pitch = (float) -(Math.atan((y-Minecraft.getMinecraft().getRenderViewEntity().height)/distance)*180/Math.PI);
 		return pitch;
+	}
+	
+	//TODO comment
+	public static void rotateCamera() {
+		renderMethod.rotateCamera();
+	}
+	
+	//TODO comment
+	public static void rotatePlayer() {
+		renderMethod.rotatePlayer();
 	}
 }

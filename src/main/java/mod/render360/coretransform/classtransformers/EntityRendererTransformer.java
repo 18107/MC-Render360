@@ -66,6 +66,7 @@ public class EntityRendererTransformer extends ClassTransformer {
 			}
 		};
 		
+		//TODO
 		MethodTransformer hurtCameraEffectTransformer = new MethodTransformer() {
 			@Override
 			public MethodName getMethodName() {
@@ -94,118 +95,40 @@ public class EntityRendererTransformer extends ClassTransformer {
 			}
 		};
 		
-		MethodTransformer transformOrientCamera = new MethodTransformer() {
+		MethodTransformer transformSetupCameraTransform = new MethodTransformer() {
 			@Override
 			public MethodName getMethodName() {
-				return Names.EntityRenderer_orientCamera;
+				return Names.EntityRenderer_setupCameraTransform;
 			}
 			
+			@Override
 			public void transform(ClassNode classNode, MethodNode method, boolean obfuscated) {
 				CLTLog.info("Found method: " + getMethodName().all());
-				
-				boolean optifineDetected = false;
-				
-				if (method.instructions.get(104).getOpcode() == INVOKEINTERFACE) {
-					optifineDetected = true;
-					CLTLog.info("Optifine detected");
-				}
-
-				InsnList toInsert = new InsnList();
-				
-				//RenderUtil.distancePass = 0;
-				toInsert.add(new InsnNode(DCONST_0));
-				toInsert.add(new FieldInsnNode(PUTSTATIC, Type.getInternalName(RenderUtil.class), "distancePass", "D"));
-				method.instructions.insert(toInsert);
-				
-				//Fix F5 mode
+				int count = 0;
 				for (AbstractInsnNode instruction : method.instructions.toArray()) {
-					
-					if (instruction.getOpcode() == ICONST_2 &&
-							instruction.getNext().getNext().getNext().getNext().getOpcode() == LDC) {
-						CLTLog.info("Found ICONST_2 in method " + getMethodName().debug());
-						
-						for (int i = 0; i < 3; i++) {
-							instruction = instruction.getNext();
-						}
-						
-						//remove GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
-						for (int i = 0; i < 5; i++) {
-							method.instructions.remove(instruction.getNext());
-						}
-						
-						for (int i = 0; i < 3; i++) {
-							instruction = instruction.getNext();
-						}
-						
-						//remove rotate and translate
-						for (int i = 0; i < 8+10+8+10+10; i++) {
-							method.instructions.remove(instruction.getNext());
-						}
-						
-						//RenderUtil.distancePass = d3;
-						toInsert.add(new VarInsnNode(DLOAD, 10)); //d3
-						toInsert.add(new FieldInsnNode(PUTSTATIC, Type.getInternalName(RenderUtil.class), "distancePass", "D"));
-						instruction = instruction.getNext();
-						method.instructions.insertBefore(instruction, toInsert);
-						
-						for (int i = 0; i < 6; i++) {
-							instruction = instruction.getNext();
-						}
-						
-						//remove GlStateManager.translate(0.0F, 0.0F, 0.05F);
-						for (int i = 0; i < 4; i++) {
-							method.instructions.remove(instruction.getNext());
-						}
-					}
-					
-					//find net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(event);
-					if (!optifineDetected && instruction.getOpcode() == POP) {
-						CLTLog.info("Found POP in method " + getMethodName().debug());
-						
-						instruction = instruction.getNext().getNext();
-						
-						//remove rotate
-						for (int i = 0; i < 6+8+8; i++) {
-							method.instructions.remove(instruction.getNext());
-						}
-						
-						//RenderUtil.doRotation(roll, pitch, yaw);
-						toInsert.add(new VarInsnNode(ALOAD, 14)); //event
-						toInsert.add(new MethodInsnNode(INVOKEVIRTUAL, Type.getInternalName(CameraSetup.class),
-								"getRoll", "()F", false)); //getRoll
-						toInsert.add(new VarInsnNode(ALOAD, 14)); //event
-						toInsert.add(new MethodInsnNode(INVOKEVIRTUAL, Type.getInternalName(CameraSetup.class),
-								"getPitch", "()F", false)); //getPitch
-						toInsert.add(new VarInsnNode(ALOAD, 14)); //event
-						toInsert.add(new MethodInsnNode(INVOKEVIRTUAL, Type.getInternalName(CameraSetup.class),
-								"getYaw", "()F", false)); //getYaw
-						toInsert.add(new MethodInsnNode(INVOKESTATIC, Type.getInternalName(RenderUtil.class),
-								"doRotation", "(FFF)V", false));
-						method.instructions.insert(instruction, toInsert);
-						
-						break;
-					}
-					else if (optifineDetected && instruction.getOpcode() == ANEWARRAY) {
-						for (int i = 0; i < 4; i++) {
-							instruction = instruction.getNext();
-						}
-						if (instruction.getNext().getOpcode() == FLOAD) {
-							CLTLog.info("Found ANEWARRAY in method " + getMethodName().debug());
-							
-							//remove rotate
-							for (int i = 0; i < 5+7+7; i++) {
-								method.instructions.remove(instruction.getNext());
+					if (instruction instanceof MethodInsnNode) {
+						MethodInsnNode methodCall = (MethodInsnNode)instruction;
+						if (methodCall.name.equals(Names.GLStateManager_loadIdentity.getShortName(obfuscated)) &&
+								methodCall.desc.equals(Names.GLStateManager_loadIdentity.getDesc(obfuscated))) {
+							count++;
+							if (count == 2) {
+								CLTLog.info("Found: " + Names.GLStateManager_loadIdentity.debug());
+								method.instructions.insert(instruction, new MethodInsnNode(INVOKESTATIC,
+										Type.getInternalName(RenderUtil.class), "rotateCamera", "()V", false));
+								break;
 							}
-							
-							//RenderUtil.doRotation(roll, pitch, yaw)
-							toInsert.add(new VarInsnNode(FLOAD, 12)); //f8 (roll)
-							toInsert.add(new VarInsnNode(FLOAD, 11)); //f7 (pitch)
-							toInsert.add(new VarInsnNode(FLOAD, 10)); //f6 (yaw)
-							toInsert.add(new MethodInsnNode(INVOKESTATIC, Type.getInternalName(RenderUtil.class),
-									"doRotation", "(FFF)V", false));
-							method.instructions.insert(instruction, toInsert);
-							
-							break;
+						}
+					}
+				}
+				
+				for (AbstractInsnNode instruction : method.instructions.toArray()) {
+					if (instruction instanceof MethodInsnNode) {
+						MethodInsnNode methodCall = (MethodInsnNode)instruction;
+						if (methodCall.name.equals(Names.EntityRenderer_orientCamera.getShortName(obfuscated)) &&
+								methodCall.desc.equals(Names.EntityRenderer_orientCamera.getDesc(obfuscated))) {
+							CLTLog.info("Found method: " + Names.EntityRenderer_orientCamera.debug());
+							method.instructions.insert(instruction, new MethodInsnNode(INVOKESTATIC,
+									Type.getInternalName(RenderUtil.class), "rotatePlayer", "()V", false));
 						}
 					}
 				}
@@ -511,7 +434,7 @@ public class EntityRendererTransformer extends ClassTransformer {
 			}
 		};
 		
-		return new MethodTransformer[] {transformGetFOVModifier, hurtCameraEffectTransformer, transformOrientCamera, transformUpdateCameraAndRender, transformRenderWorld, transformRenderWorldPass, updateFogColorTransformer, drawNameplateTransformer};
+		return new MethodTransformer[] {transformGetFOVModifier, /*hurtCameraEffectTransformer,*/ transformSetupCameraTransform, transformUpdateCameraAndRender, transformRenderWorld, transformRenderWorldPass, updateFogColorTransformer, drawNameplateTransformer};
 	}
 
 }
