@@ -1,4 +1,4 @@
-package mod.render360.coretransform;
+package mod.render360;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -10,7 +10,7 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
-import mod.render360.coretransform.render.RenderMethod;
+import mod.render360.render.RenderMethod;
 
 public class Shader {
 

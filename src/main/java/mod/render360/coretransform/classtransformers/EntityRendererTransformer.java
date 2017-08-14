@@ -21,8 +21,8 @@ import mod.render360.coretransform.RenderUtil;
 import mod.render360.coretransform.classtransformers.name.ClassName;
 import mod.render360.coretransform.classtransformers.name.MethodName;
 import mod.render360.coretransform.classtransformers.name.Names;
-import mod.render360.coretransform.render.RenderMethod;
-import mod.render360.coretransform.render.Standard;
+import mod.render360.render.RenderMethod;
+import mod.render360.render.Standard;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.EntityViewRenderEvent.CameraSetup;
 

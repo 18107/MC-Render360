@@ -17,7 +17,7 @@ import mod.render360.coretransform.RenderUtil;
 import mod.render360.coretransform.classtransformers.name.ClassName;
 import mod.render360.coretransform.classtransformers.name.MethodName;
 import mod.render360.coretransform.classtransformers.name.Names;
-import mod.render360.coretransform.render.RenderMethod;
+import mod.render360.render.RenderMethod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.shader.Framebuffer;

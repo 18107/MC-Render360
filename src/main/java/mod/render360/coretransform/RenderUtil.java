@@ -7,8 +7,9 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 
-import mod.render360.coretransform.render.Standard;
-import mod.render360.coretransform.render.RenderMethod;
+import mod.render360.Shader;
+import mod.render360.render.RenderMethod;
+import mod.render360.render.Standard;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;

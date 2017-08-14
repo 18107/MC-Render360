@@ -1,11 +1,11 @@
-package mod.render360.coretransform.render;
+package mod.render360.render;
 
 import java.util.List;
 
 import org.lwjgl.opengl.GL20;
 
+import mod.render360.Shader;
 import mod.render360.coretransform.RenderUtil;
-import mod.render360.coretransform.Shader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.EntityRenderer;

@@ -21,7 +21,7 @@ import mod.render360.coretransform.CLTLog;
 import mod.render360.coretransform.classtransformers.name.ClassName;
 import mod.render360.coretransform.classtransformers.name.MethodName;
 import mod.render360.coretransform.classtransformers.name.Names;
-import mod.render360.coretransform.gui.Render360Settings;
+import mod.render360.gui.Render360Settings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
