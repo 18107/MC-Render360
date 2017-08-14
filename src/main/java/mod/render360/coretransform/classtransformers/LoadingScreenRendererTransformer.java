@@ -46,23 +46,18 @@ public class LoadingScreenRendererTransformer extends ClassTransformer {
 					if (instruction.getOpcode() == FSTORE) {
 						CLTLog.info("Found FSTORE in method " + getMethodName().debug());
 						
-						
-						instruction = instruction.getNext();
-						
-						//replace float f = 32.0F;
-						//...
-						//tessellator.draw();
-						//with guiScreen.drawBackground()
-						for (int i = 0; i < 93; i++) {
-							method.instructions.remove(instruction.getNext());
+						for (int i = 0; i < 3; i++) {
+							instruction = instruction.getNext();
 						}
 						
 						//if (RenderUtil.renderMethod.replaceLoadingScreen()) {
-						//RenderUtil.renderMethod.renderLoadingScreen(this.mc.guiScreen, framebuffer);
+						//	RenderUtil.renderMethod.renderLoadingScreen(this.mc.guiScreen, framebuffer);
 						//} else {
-						//this.mc.guiScreen.drawBackground();
+						//vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
+						//...
+						//tessellator.draw();
 						//}
-
+						
 						InsnList toInsert = new InsnList();
 						LabelNode label1 = new LabelNode();
 						LabelNode label2 = new LabelNode();
@@ -82,7 +77,7 @@ public class LoadingScreenRendererTransformer extends ClassTransformer {
 						toInsert.add(new FieldInsnNode(GETFIELD, classNode.name,
 								Names.LoadingScreenRenderer_mc.getFullName(),
 								Names.LoadingScreenRenderer_mc.getDesc())); //mc
-						toInsert.add(new FieldInsnNode(GETFIELD, Type.getInternalName(Minecraft.class),
+						toInsert.add(new FieldInsnNode(GETFIELD, Names.Minecraft.getInternalName(obfuscated),
 								Names.Minecraft_currentScreen.getFullName(),
 								Names.Minecraft_currentScreen.getDesc())); //currentScreen
 						
@@ -91,29 +86,19 @@ public class LoadingScreenRendererTransformer extends ClassTransformer {
 								Names.LoadingScreenRenderer_framebuffer.getFullName(),
 								Names.LoadingScreenRenderer_framebuffer.getDesc())); //framebuffer
 						toInsert.add(new MethodInsnNode(INVOKEVIRTUAL, Type.getInternalName(RenderMethod.class),
-								"renderLoadingScreen", "(L" + Type.getInternalName(GuiScreen.class) +
-								";L" + Type.getInternalName(Framebuffer.class) + ";)V", false));
+								"renderLoadingScreen", "(L" + Names.GuiScreen.getInternalName(obfuscated) +
+								";L" + Names.Framebuffer.getInternalName(obfuscated) + ";)V", false));
 						
 						//else
 						toInsert.add(new JumpInsnNode(GOTO, label2));
 						toInsert.add(label1);
-
-						//this.mc.guiScreen.drawBackground();
-						toInsert.add(new VarInsnNode(ALOAD, 0)); //this
-						toInsert.add(new FieldInsnNode(GETFIELD, classNode.name,
-								Names.LoadingScreenRenderer_mc.getFullName(),
-								Names.LoadingScreenRenderer_mc.getDesc())); //mc
-						toInsert.add(new FieldInsnNode(GETFIELD, Type.getInternalName(Minecraft.class),
-								Names.Minecraft_currentScreen.getFullName(),
-								Names.Minecraft_currentScreen.getDesc())); //currentScreen
-						toInsert.add(new InsnNode(ICONST_0)); //0
-						toInsert.add(new MethodInsnNode(INVOKEVIRTUAL, Type.getInternalName(GuiScreen.class),
-								Names.GuiScreen_drawBackground.getFullName(),
-								Names.GuiScreen_drawBackground.getDesc(), false)); //drawBackground
 						
-						toInsert.add(label2);
-
-						method.instructions.insert(instruction, toInsert);
+						method.instructions.insertBefore(instruction, toInsert);
+						
+						//go to tessellator.draw();
+						instruction = method.instructions.get(
+								method.instructions.indexOf(instruction)+91);
+						method.instructions.insert(instruction, label2);
 						
 						break;
 					}

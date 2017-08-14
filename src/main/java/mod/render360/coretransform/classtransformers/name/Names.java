@@ -14,6 +14,8 @@ public class Names {
 	public static final MethodName EntityRenderer_drawNameplate = new MethodName("drawNameplate", "func_189692_a", "a", "(Lnet/minecraft/client/gui/FontRenderer;Ljava/lang/String;FFFIFFZZ)V", "(Lbfe;Ljava/lang/String;FFFIFFZZ)V");
 	public static final FieldName EntityRenderer_mc = new FieldName("mc", "field_78531_r", "h", "Lnet/minecraft/client/Minecraft;", "Lbeq;");
 	
+	public static final ClassName Framebuffer = new ClassName("net.minecraft.client.shader.Framebuffer", "bqp");
+	
 	public static final MethodName GameSettings_saveOptions = new MethodName("saveOptions", "func_74303_b", "b", "()V", "()V");
 	
 	public static final MethodName GLStateManager_loadIdentity = new MethodName("loadIdentity", "func_179096_D", "F", "()V", "()V");
