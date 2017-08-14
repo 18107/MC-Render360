@@ -18,7 +18,7 @@ public abstract class ClassTransformer {
 	
 	static {
 		//Put all of the class transformers here
-		ClassTransformer[] classTransformers = new ClassTransformer[] {new MinecraftTransformer(), new GuiScreenTransformer(), new LoadingScreenRendererTransformer(), new EntityRendererTransformer(), new ParticleTransformer(), new GuiOptionsTransformer()};
+		ClassTransformer[] classTransformers = new ClassTransformer[] {new MinecraftTransformer(), new GuiScreenTransformer(), new LoadingScreenRendererTransformer(), new EntityRendererTransformer(), new ParticleTransformer()};
 		
 		transformers = ArrayUtils.addAll(classTransformers, ParticleTransformer.getParticleTransformers());
 	}
