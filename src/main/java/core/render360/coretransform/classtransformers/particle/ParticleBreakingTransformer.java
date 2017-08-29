@@ -1,20 +1,20 @@
-package mod.render360.coretransform.classtransformers.particle;
+package core.render360.coretransform.classtransformers.particle;
 
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
 
-import mod.render360.coretransform.CLTLog;
-import mod.render360.coretransform.classtransformers.name.ClassName;
-import mod.render360.coretransform.classtransformers.name.MethodName;
-import mod.render360.coretransform.classtransformers.name.Names;
+import core.render360.coretransform.CLTLog;
+import core.render360.coretransform.classtransformers.name.ClassName;
+import core.render360.coretransform.classtransformers.name.MethodName;
+import core.render360.coretransform.classtransformers.name.Names;
 
 import static org.objectweb.asm.Opcodes.*;
 
-public class ParticleSweepAttackTransformer extends ParticleTransformer {
+public class ParticleBreakingTransformer extends ParticleTransformer {
 
 	@Override
-	public ClassName getClassName() {return Names.ParticleSweepAttack;}
+	public ClassName getClassName() {return Names.ParticleBreaking;}
 	
 	@Override
 	public MethodTransformer[] getMethodTransformers() {
@@ -30,13 +30,12 @@ public class ParticleSweepAttackTransformer extends ParticleTransformer {
 				CLTLog.info("Found method: " + getMethodName().all());
 				
 				for (AbstractInsnNode instruction : method.instructions.toArray()) {
-					if (instruction.getOpcode() == BIPUSH &&
-							instruction.getNext().getOpcode() == GETSTATIC) {
-						CLTLog.info("Found BIPUSH in method " + getMethodName().debug());
+					if (instruction.getOpcode() == ISHR) {
+						CLTLog.info("Found ISHR in method " + getMethodName().debug());
 						
-						instruction = instruction.getPrevious();
+						instruction = instruction.getPrevious().getPrevious();
 						
-						transformParticle(classNode, method, instruction, 15);
+						transformParticle(classNode, method, instruction, 14);
 						
 						break;
 					}

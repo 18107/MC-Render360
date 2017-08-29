@@ -1,4 +1,4 @@
-package mod.render360.coretransform.classtransformers.name;
+package core.render360.coretransform.classtransformers.name;
 
 public class Names {
 

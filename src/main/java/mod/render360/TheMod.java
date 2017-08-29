@@ -21,7 +21,7 @@ public class TheMod
     @EventHandler
     public void init(FMLInitializationEvent event)
     {
-    	MinecraftForge.EVENT_BUS.register(new ForgeEventHandler());
+    	MinecraftForge.EVENT_BUS.register(new Render360EventHandler());
         Log.info("" + ForgeVersion.mcVersion);
     }
 }

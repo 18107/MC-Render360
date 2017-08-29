@@ -1,21 +1,21 @@
-package mod.render360.coretransform.classtransformers.particle;
+package core.render360.coretransform.classtransformers.particle;
 
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
 
-import mod.render360.coretransform.CLTLog;
-import mod.render360.coretransform.classtransformers.name.ClassName;
-import mod.render360.coretransform.classtransformers.name.MethodName;
-import mod.render360.coretransform.classtransformers.name.Names;
+import core.render360.coretransform.CLTLog;
+import core.render360.coretransform.classtransformers.name.ClassName;
+import core.render360.coretransform.classtransformers.name.MethodName;
+import core.render360.coretransform.classtransformers.name.Names;
 
 import static org.objectweb.asm.Opcodes.*;
 
-public class ParticleExplosionLargeTransformer extends ParticleTransformer {
+public class ParticleSweepAttackTransformer extends ParticleTransformer {
 
 	@Override
-	public ClassName getClassName() {return Names.ParticleExplosionLarge;}
-
+	public ClassName getClassName() {return Names.ParticleSweepAttack;}
+	
 	@Override
 	public MethodTransformer[] getMethodTransformers() {
 		
@@ -30,8 +30,11 @@ public class ParticleExplosionLargeTransformer extends ParticleTransformer {
 				CLTLog.info("Found method: " + getMethodName().all());
 				
 				for (AbstractInsnNode instruction : method.instructions.toArray()) {
-					if (instruction.getOpcode() == FCONST_1) {
-						CLTLog.info("Found FCONST_1 in method " + getMethodName().debug());
+					if (instruction.getOpcode() == BIPUSH &&
+							instruction.getNext().getOpcode() == GETSTATIC) {
+						CLTLog.info("Found BIPUSH in method " + getMethodName().debug());
+						
+						instruction = instruction.getPrevious();
 						
 						transformParticle(classNode, method, instruction, 15);
 						
@@ -43,5 +46,4 @@ public class ParticleExplosionLargeTransformer extends ParticleTransformer {
 		
 		return new MethodTransformer[] {transformRenderParticle};
 	}
-
 }

@@ -1,20 +1,20 @@
-package mod.render360.coretransform.classtransformers.particle;
+package core.render360.coretransform.classtransformers.particle;
 
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
 
-import mod.render360.coretransform.CLTLog;
-import mod.render360.coretransform.classtransformers.name.ClassName;
-import mod.render360.coretransform.classtransformers.name.MethodName;
-import mod.render360.coretransform.classtransformers.name.Names;
+import core.render360.coretransform.CLTLog;
+import core.render360.coretransform.classtransformers.name.ClassName;
+import core.render360.coretransform.classtransformers.name.MethodName;
+import core.render360.coretransform.classtransformers.name.Names;
 
 import static org.objectweb.asm.Opcodes.*;
 
-public class BarrierTransformer extends ParticleTransformer {
+public class ParticleExplosionLargeTransformer extends ParticleTransformer {
 
 	@Override
-	public ClassName getClassName() {return Names.Barrier;}
+	public ClassName getClassName() {return Names.ParticleExplosionLarge;}
 
 	@Override
 	public MethodTransformer[] getMethodTransformers() {
@@ -30,14 +30,10 @@ public class BarrierTransformer extends ParticleTransformer {
 				CLTLog.info("Found method: " + getMethodName().all());
 				
 				for (AbstractInsnNode instruction : method.instructions.toArray()) {
-					if (instruction.getOpcode() == ISHR) {
-						CLTLog.info("Found ISHR in method " + getMethodName().debug());
+					if (instruction.getOpcode() == FCONST_1) {
+						CLTLog.info("Found FCONST_1 in method " + getMethodName().debug());
 						
-						for (int i = 0; i < 12; i++) {
-							instruction = instruction.getNext();
-						}
-						
-						transformParticle(classNode, method, instruction, 14);
+						transformParticle(classNode, method, instruction, 15);
 						
 						break;
 					}

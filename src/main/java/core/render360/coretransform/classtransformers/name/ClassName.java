@@ -1,6 +1,6 @@
-package mod.render360.coretransform.classtransformers.name;
+package core.render360.coretransform.classtransformers.name;
 
-import mod.render360.coretransform.CoreLoader;
+import core.render360.coretransform.CoreLoader;
 
 public class ClassName {
 

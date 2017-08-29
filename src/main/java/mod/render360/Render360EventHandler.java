@@ -7,7 +7,7 @@ import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class ForgeEventHandler {
+public class Render360EventHandler {
 
 	@SubscribeEvent
 	public void initGui(InitGuiEvent.Post e) {

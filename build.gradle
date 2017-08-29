@@ -12,8 +12,8 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 
 
 version = "2.3.3 1.11"
-group= "mod.18107.render360" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "Render 360"
+group= "core.18107.render360" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "Render 360 core"
 
 sourceCompatibility = targetCompatibility = "1.6" // Need this here so eclipse task generates correctly.
 compileJava {
@@ -23,7 +23,7 @@ compileJava {
 jar {
         manifest {
         attributes 'FMLAT': 'render360_at.cfg',
-            'FMLCorePlugin': 'mod.render360.coretransform.CoreLoader',
+            'FMLCorePlugin': 'core.render360.coretransform.CoreLoader',
                         'FMLCorePluginContainsFMLMod': 'false'
     }
 }

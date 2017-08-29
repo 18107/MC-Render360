@@ -1,4 +1,4 @@
-package mod.render360.coretransform.classtransformers;
+package core.render360.coretransform.classtransformers;
 
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
@@ -10,11 +10,11 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
-import mod.render360.coretransform.CLTLog;
-import mod.render360.coretransform.RenderUtil;
-import mod.render360.coretransform.classtransformers.name.ClassName;
-import mod.render360.coretransform.classtransformers.name.MethodName;
-import mod.render360.coretransform.classtransformers.name.Names;
+import core.render360.coretransform.CLTLog;
+import core.render360.coretransform.RenderUtil;
+import core.render360.coretransform.classtransformers.name.ClassName;
+import core.render360.coretransform.classtransformers.name.MethodName;
+import core.render360.coretransform.classtransformers.name.Names;
 import mod.render360.render.RenderMethod;
 
 import static org.objectweb.asm.Opcodes.*;
@@ -29,6 +29,9 @@ public class GuiScreenTransformer extends ClassTransformer {
 	@Override
 	public MethodTransformer[] getMethodTransformers() {
 		
+		/**
+		 * Removes the gray background when Resize Gui is on
+		 */
 		MethodTransformer transformDrawWorldBackground = new MethodTransformer() {
 			@Override
 			public MethodName getMethodName() {
@@ -72,6 +75,9 @@ public class GuiScreenTransformer extends ClassTransformer {
 			}
 		};
 		
+		/**
+		 * Changes the options background and some of the loading screens
+		 */
 		MethodTransformer transformDrawBackground = new MethodTransformer() {
 			@Override
 			public MethodName getMethodName() {

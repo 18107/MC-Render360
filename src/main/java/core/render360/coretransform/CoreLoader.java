@@ -1,11 +1,11 @@
-package mod.render360.coretransform;
+package core.render360.coretransform;
 
 import java.util.Map;
 
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 
 @IFMLLoadingPlugin.MCVersion("1.11")
-@IFMLLoadingPlugin.TransformerExclusions(value = "mod.render360.coretransform.")
+@IFMLLoadingPlugin.TransformerExclusions(value = "core.render360.coretransform.")
 @IFMLLoadingPlugin.Name(CoreLoader.NAME)
 @IFMLLoadingPlugin.SortingIndex(value = 999)
 public class CoreLoader implements IFMLLoadingPlugin {

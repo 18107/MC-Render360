@@ -1,4 +1,4 @@
-package mod.render360.coretransform;
+package core.render360.coretransform;
 
 import java.io.IOException;
 

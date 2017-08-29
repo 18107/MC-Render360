@@ -1,4 +1,4 @@
-package mod.render360.coretransform.classtransformers;
+package core.render360.coretransform.classtransformers;
 
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.ClassNode;
@@ -7,11 +7,11 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
-import mod.render360.coretransform.CLTLog;
-import mod.render360.coretransform.RenderUtil;
-import mod.render360.coretransform.classtransformers.name.ClassName;
-import mod.render360.coretransform.classtransformers.name.MethodName;
-import mod.render360.coretransform.classtransformers.name.Names;
+import core.render360.coretransform.CLTLog;
+import core.render360.coretransform.RenderUtil;
+import core.render360.coretransform.classtransformers.name.ClassName;
+import core.render360.coretransform.classtransformers.name.MethodName;
+import core.render360.coretransform.classtransformers.name.Names;
 import net.minecraft.client.multiplayer.WorldClient;
 
 import static org.objectweb.asm.Opcodes.*;

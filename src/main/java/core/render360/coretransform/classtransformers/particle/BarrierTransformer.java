@@ -1,21 +1,21 @@
-package mod.render360.coretransform.classtransformers.particle;
+package core.render360.coretransform.classtransformers.particle;
 
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
 
-import mod.render360.coretransform.CLTLog;
-import mod.render360.coretransform.classtransformers.name.ClassName;
-import mod.render360.coretransform.classtransformers.name.MethodName;
-import mod.render360.coretransform.classtransformers.name.Names;
+import core.render360.coretransform.CLTLog;
+import core.render360.coretransform.classtransformers.name.ClassName;
+import core.render360.coretransform.classtransformers.name.MethodName;
+import core.render360.coretransform.classtransformers.name.Names;
 
 import static org.objectweb.asm.Opcodes.*;
 
-public class ParticleBreakingTransformer extends ParticleTransformer {
+public class BarrierTransformer extends ParticleTransformer {
 
 	@Override
-	public ClassName getClassName() {return Names.ParticleBreaking;}
-	
+	public ClassName getClassName() {return Names.Barrier;}
+
 	@Override
 	public MethodTransformer[] getMethodTransformers() {
 		
@@ -33,7 +33,9 @@ public class ParticleBreakingTransformer extends ParticleTransformer {
 					if (instruction.getOpcode() == ISHR) {
 						CLTLog.info("Found ISHR in method " + getMethodName().debug());
 						
-						instruction = instruction.getPrevious().getPrevious();
+						for (int i = 0; i < 12; i++) {
+							instruction = instruction.getNext();
+						}
 						
 						transformParticle(classNode, method, instruction, 14);
 						
@@ -45,4 +47,5 @@ public class ParticleBreakingTransformer extends ParticleTransformer {
 		
 		return new MethodTransformer[] {transformRenderParticle};
 	}
+
 }

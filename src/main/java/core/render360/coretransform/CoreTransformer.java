@@ -1,4 +1,4 @@
-package mod.render360.coretransform;
+package core.render360.coretransform;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
@@ -19,10 +19,10 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
-import mod.render360.coretransform.classtransformers.ClassTransformer;
-import mod.render360.coretransform.classtransformers.ClassTransformer.MethodTransformer;
-import mod.render360.coretransform.classtransformers.EntityRendererTransformer;
-import mod.render360.coretransform.classtransformers.MinecraftTransformer;
+import core.render360.coretransform.classtransformers.ClassTransformer;
+import core.render360.coretransform.classtransformers.EntityRendererTransformer;
+import core.render360.coretransform.classtransformers.MinecraftTransformer;
+import core.render360.coretransform.classtransformers.ClassTransformer.MethodTransformer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiIngame;
 import net.minecraft.client.multiplayer.WorldClient;

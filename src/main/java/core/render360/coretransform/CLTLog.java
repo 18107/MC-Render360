@@ -1,4 +1,4 @@
-package mod.render360.coretransform;
+package core.render360.coretransform;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

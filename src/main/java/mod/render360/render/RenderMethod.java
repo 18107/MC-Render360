@@ -9,9 +9,9 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 
+import core.render360.coretransform.CLTLog;
+import core.render360.coretransform.RenderUtil;
 import mod.render360.Shader;
-import mod.render360.coretransform.CLTLog;
-import mod.render360.coretransform.RenderUtil;
 import mod.render360.gui.Slider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
