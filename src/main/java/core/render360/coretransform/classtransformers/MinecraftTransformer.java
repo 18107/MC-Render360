@@ -8,7 +8,7 @@ import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
 import core.render360.coretransform.CLTLog;
-import core.render360.coretransform.RenderUtil;
+import core.render360.coretransform.TransformerUtil;
 import core.render360.coretransform.classtransformers.name.ClassName;
 import core.render360.coretransform.classtransformers.name.MethodName;
 import core.render360.coretransform.classtransformers.name.Names;
@@ -35,7 +35,7 @@ public class MinecraftTransformer extends ClassTransformer {
 				
 				InsnList toInsert = new InsnList();
 				toInsert.add(new VarInsnNode(ALOAD, 1)); //worldClientIn
-				toInsert.add(new MethodInsnNode(INVOKESTATIC, Type.getInternalName(RenderUtil.class),
+				toInsert.add(new MethodInsnNode(INVOKESTATIC, Type.getInternalName(TransformerUtil.class),
 						"onWorldLoad", "(L" + Type.getInternalName(WorldClient.class) + ";)V", false));
 				method.instructions.insertBefore(method.instructions.getFirst(), toInsert);
 			}

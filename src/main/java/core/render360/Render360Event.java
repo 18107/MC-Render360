@@ -1,5 +1,14 @@
 package core.render360;
 
-public class Render360Event {
+import net.minecraftforge.fml.common.eventhandler.Event;
 
+public abstract class Render360Event extends Event {
+
+	public static class DimensionLoadEvent extends Render360Event {
+		
+	}
+	
+	public static class DimensionUnloadEvent extends Render360Event {
+		
+	}
 }

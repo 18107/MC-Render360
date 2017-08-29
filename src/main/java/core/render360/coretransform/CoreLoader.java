@@ -10,7 +10,7 @@ import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 @IFMLLoadingPlugin.SortingIndex(value = 999)
 public class CoreLoader implements IFMLLoadingPlugin {
 	
-	public static final String NAME = "Render 360";
+	public static final String NAME = "Render 360 core";
 	public static boolean isObfuscated;
 	
 	@Override

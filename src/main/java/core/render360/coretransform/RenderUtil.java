@@ -92,47 +92,48 @@ public class RenderUtil {
 	}
 	
 	/**
-	 * Create or delete shader and secondary framebuffer.<br>
-	 * Called from asm modified code on world load and unload.
-	 * @param worldClient used to detect if the world is being loaded or unloaded.
+	 * Create shader and secondary framebuffer if they do not exist.
 	 */
-	public static void onWorldLoad(WorldClient worldClient) {
-		if (worldClient != null) {
-			if (framebuffer == null) {
-				//The actual numbers don't matter, they are reset later.
-				framebuffer = new Framebuffer((int)(Display.getHeight()*renderMethod.getQuality()),
-						(int)(Display.getHeight()*renderMethod.getQuality()), true);
-				//create 6 new textures
-				for (int i = 0; i < framebufferTextures.length; i++) {
-					framebufferTextures[i] = TextureUtil.glGenTextures();
-					GlStateManager.bindTexture(framebufferTextures[i]);
-					GlStateManager.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8,
-							framebuffer.framebufferTextureWidth, framebuffer.framebufferTextureHeight,
-							0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, null);
-					GlStateManager.bindTexture(framebufferTextures[i]);
-		            GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
-		            GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-		            GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_CLAMP);
-		            GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_CLAMP);
-				}
-				GlStateManager.bindTexture(0);
-			} else {
-				CLTLog.info("Attempted to recreate existing framebuffer");
+	public static void onWorldLoad() {
+		if (framebuffer == null) {
+			//The actual numbers don't matter, they are reset later.
+			framebuffer = new Framebuffer((int)(Display.getHeight()*renderMethod.getQuality()),
+					(int)(Display.getHeight()*renderMethod.getQuality()), true);
+			//create 6 new textures
+			for (int i = 0; i < framebufferTextures.length; i++) {
+				framebufferTextures[i] = TextureUtil.glGenTextures();
+				GlStateManager.bindTexture(framebufferTextures[i]);
+				GlStateManager.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8,
+						framebuffer.framebufferTextureWidth, framebuffer.framebufferTextureHeight,
+						0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, null);
+				GlStateManager.bindTexture(framebufferTextures[i]);
+				GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
+				GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+				GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_CLAMP);
+				GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_CLAMP);
 			}
-			createShader();
+			GlStateManager.bindTexture(0);
 		} else {
-			deleteShader();
-			if (framebuffer != null) {
-				//delete textures
-				for (int i = 0; i < framebufferTextures.length; i++) {
-					TextureUtil.deleteTexture(framebufferTextures[i]);
-					framebufferTextures[i] = -1;
-				}
-				framebuffer.deleteFramebuffer();
-				framebuffer = null;
-			} else {
-				CLTLog.info("Attempted to delete non-existant framebuffer");
+			CLTLog.info("Attempted to recreate existing framebuffer");
+		}
+		createShader();
+	}
+	
+	/**
+	 * Delete shader and secondary framebuffer if they exist.
+	 */
+	public static void onWorldUnload() {
+		deleteShader();
+		if (framebuffer != null) {
+			//delete textures
+			for (int i = 0; i < framebufferTextures.length; i++) {
+				TextureUtil.deleteTexture(framebufferTextures[i]);
+				framebufferTextures[i] = -1;
 			}
+			framebuffer.deleteFramebuffer();
+			framebuffer = null;
+		} else {
+			CLTLog.info("Attempted to delete non-existant framebuffer");
 		}
 	}
 
