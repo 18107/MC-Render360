@@ -14,6 +14,7 @@ import org.objectweb.asm.tree.VarInsnNode;
 
 import core.render360.coretransform.CLTLog;
 import core.render360.coretransform.RenderUtil;
+import core.render360.coretransform.TransformerUtil;
 import core.render360.coretransform.classtransformers.name.ClassName;
 import core.render360.coretransform.classtransformers.name.MethodName;
 import core.render360.coretransform.classtransformers.name.Names;
@@ -50,55 +51,35 @@ public class LoadingScreenRendererTransformer extends ClassTransformer {
 							instruction = instruction.getNext();
 						}
 						
-						//if (RenderUtil.renderMethod.replaceLoadingScreen()) {
-						//	RenderUtil.renderMethod.renderLoadingScreen(this.mc.guiScreen, framebuffer);
-						//} else {
-						//vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-						//...
-						//tessellator.draw();
-						//}
+						/**
+						 * if (!TransformerUtil.setLoadingProgressBackground(framebuffer)) {
+						 *   vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
+						 *   ...
+						 *   tessellator.draw();
+						 * }
+						 */
 						
 						InsnList toInsert = new InsnList();
-						LabelNode label1 = new LabelNode();
-						LabelNode label2 = new LabelNode();
-						
-						//if (RenderUtil.renderMethod.replaceLoadingScreen())
-						toInsert.add(new FieldInsnNode(GETSTATIC, Type.getInternalName(RenderUtil.class),
-								"renderMethod", "L" + Type.getInternalName(RenderMethod.class) + ";")); //renderMethod
-						toInsert.add(new MethodInsnNode(INVOKEVIRTUAL, Type.getInternalName(RenderMethod.class),
-								"replaceLoadingScreen", "()Z", false)); //replaceLoadingScreen()
-						toInsert.add(new JumpInsnNode(IFEQ, label1));
-						
-						//RenderUtil.renderMethod.renderLoadingScreen(this.mc.guiScreen, framebuffer);
-						toInsert.add(new FieldInsnNode(GETSTATIC, Type.getInternalName(RenderUtil.class),
-								"renderMethod", "L" + Type.getInternalName(RenderMethod.class) + ";")); //renderMethod
+						LabelNode label = new LabelNode();
 						
 						toInsert.add(new VarInsnNode(ALOAD, 0)); //this
 						toInsert.add(new FieldInsnNode(GETFIELD, classNode.name,
-								Names.LoadingScreenRenderer_mc.getFullName(),
-								Names.LoadingScreenRenderer_mc.getDesc())); //mc
-						toInsert.add(new FieldInsnNode(GETFIELD, Names.Minecraft.getInternalName(obfuscated),
-								Names.Minecraft_currentScreen.getFullName(),
-								Names.Minecraft_currentScreen.getDesc())); //currentScreen
+								Names.LoadingScreenRenderer_framebuffer.getFullName(obfuscated),
+								Names.LoadingScreenRenderer_framebuffer.getDesc(obfuscated))); //framebuffer
+						toInsert.add(new MethodInsnNode(INVOKESTATIC,
+								Type.getInternalName(TransformerUtil.class),
+								"setLoadingProgressBackground",
+								"(L" + Names.Framebuffer.getInternalName(obfuscated) + ";)Z", false));
 						
-						toInsert.add(new VarInsnNode(ALOAD, 0)); //this
-						toInsert.add(new FieldInsnNode(GETFIELD, classNode.name,
-								Names.LoadingScreenRenderer_framebuffer.getFullName(),
-								Names.LoadingScreenRenderer_framebuffer.getDesc())); //framebuffer
-						toInsert.add(new MethodInsnNode(INVOKEVIRTUAL, Type.getInternalName(RenderMethod.class),
-								"renderLoadingScreen", "(L" + Names.GuiScreen.getInternalName(obfuscated) +
-								";L" + Names.Framebuffer.getInternalName(obfuscated) + ";)V", false));
-						
-						//else
-						toInsert.add(new JumpInsnNode(GOTO, label2));
-						toInsert.add(label1);
+						toInsert.add(new JumpInsnNode(IFNE, label));
 						
 						method.instructions.insertBefore(instruction, toInsert);
 						
 						//go to tessellator.draw();
 						instruction = method.instructions.get(
 								method.instructions.indexOf(instruction)+91);
-						method.instructions.insert(instruction, label2);
+						
+						method.instructions.insert(instruction, label);
 						
 						break;
 					}

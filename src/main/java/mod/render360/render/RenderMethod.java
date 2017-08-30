@@ -94,6 +94,7 @@ public abstract class RenderMethod {
 		renderLoadingScreen(guiScreen, Minecraft.getMinecraft().getFramebuffer());
 	}
 	
+	//TODO This is a very long method. Possibly too long...
 	public void renderLoadingScreen(GuiScreen guiScreen, Framebuffer framebufferIn) {
 		//Prevents null pointer exception when moving between dimensions
 		if (guiScreen == null) {

@@ -37,4 +37,12 @@ public class Render360EventHandler {
 	public void worldUnload(Render360Event.DimensionUnloadEvent e) {
 		RenderUtil.onWorldUnload(); //FIXME
 	}
+	
+	@SubscribeEvent
+	public void setLoadingProgressBackground(Render360Event.LoadingProgressBackgroundEvent e) {
+		if (RenderUtil.renderMethod.replaceLoadingScreen()) {
+			e.setCanceled(true);
+			RenderUtil.renderMethod.renderLoadingScreen(e.guiScreen, e.framebuffer);
+		}
+	}
 }
