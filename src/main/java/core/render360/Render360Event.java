@@ -26,4 +26,24 @@ public abstract class Render360Event extends Event {
 			this.framebuffer = framebuffer;
 		}
 	}
+	
+	@Cancelable
+	public static class DrawWorldBackgroundEvent extends Render360Event {
+		
+		public final GuiScreen guiScreen;
+		
+		public DrawWorldBackgroundEvent(GuiScreen guiScreen) {
+			this.guiScreen = guiScreen;
+		}
+	}
+	
+	@Cancelable
+	public static class DrawBackgroundEvent extends Render360Event {
+		
+		public final GuiScreen guiScreen;
+		
+		public DrawBackgroundEvent(GuiScreen guiScreen) {
+			this.guiScreen = guiScreen;
+		}
+	}
 }

@@ -45,4 +45,19 @@ public class Render360EventHandler {
 			RenderUtil.renderMethod.renderLoadingScreen(e.guiScreen, e.framebuffer);
 		}
 	}
+	
+	@SubscribeEvent
+	public void drawWorldBackground(Render360Event.DrawWorldBackgroundEvent e) {
+		if (RenderUtil.renderMethod.getResizeGui()) {
+			e.setCanceled(true);
+		}
+	}
+	
+	@SubscribeEvent
+	public void drawBackground(Render360Event.DrawBackgroundEvent e) {
+		if (RenderUtil.renderMethod.replaceLoadingScreen()) {
+			e.setCanceled(true);
+			RenderUtil.renderMethod.renderLoadingScreen(e.guiScreen);
+		}
+	}
 }
