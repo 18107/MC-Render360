@@ -181,10 +181,6 @@ public class RenderUtil {
 		renderMethod.renderWorld(er, mc, framebuffer, shader, framebufferTextures, partialTicks, finishTimeNano, width, height, renderMethod.getQuality());
 	}
 	
-	/**
-	 * Called from asm modified code
-	 * {@link net.minecraft.client.renderer.EntityRenderer#updateCameraAndRender(float, long) updateCameraAndRender}
-	 */
 	public static void renderGuiStart() {
 		if (renderMethod.getResizeGui()) {
 			Minecraft mc = Minecraft.getMinecraft();
@@ -195,10 +191,6 @@ public class RenderUtil {
 		}
 	}
 	
-	/**
-	 * Called from asm modified code
-	 * {@link net.minecraft.client.renderer.EntityRenderer#updateCameraAndRender(float, long) updateCameraAndRender}
-	 */
 	public static void renderGuiEnd() {
 		if (renderMethod.getResizeGui()) {
 			Minecraft mc = Minecraft.getMinecraft();
@@ -224,10 +216,6 @@ public class RenderUtil {
 		}
 	}
 	
-	/**
-	 * Called from asm modified code
-	 * {@link net.minecraft.client.renderer.EntityRenderer#updateCameraAndRender(float, long) updateCameraAndRender}
-	 */
 	public static void renderGuiStart2() {
 		if (renderMethod.getResizeGui()) {
 			Minecraft mc = Minecraft.getMinecraft();
@@ -238,10 +226,6 @@ public class RenderUtil {
 		}
 	}
 	
-	/**
-	 * Called from asm modified code
-	 * {@link net.minecraft.client.renderer.EntityRenderer#updateCameraAndRender(float, long) updateCameraAndRender}
-	 */
 	public static void renderGuiEnd2() {
 		if (renderMethod.getResizeGui()) {
 			Minecraft mc = Minecraft.getMinecraft();

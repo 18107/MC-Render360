@@ -52,6 +52,16 @@ public class TransformerUtil {
         GlStateManager.translate(0, 0, -0.05f);
 	}
 	
+	//EntityRenderer
+	public static void renderOverlayPre() {
+		MinecraftForge.EVENT_BUS.post(new Render360Event.RenderOverlayEvent.Pre());
+	}
+	
+	//EntityRenderer
+	public static void renderOverlayPost() {
+		MinecraftForge.EVENT_BUS.post(new Render360Event.RenderOverlayEvent.Post());
+	}
+	
 	//Particle
 	public static float rotationX;
 	public static float rotationZ;

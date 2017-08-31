@@ -60,6 +60,17 @@ public abstract class Render360Event extends Event {
 		}
 	}
 	
+	public static class RenderOverlayEvent extends Render360Event {
+		
+		public static class Pre extends RenderOverlayEvent {
+			
+		}
+		
+		public static class Post extends RenderOverlayEvent {
+			
+		}
+	}
+	
 	public static class RotateParticleEvent extends Render360Event {
 		
 		public float rotationX;

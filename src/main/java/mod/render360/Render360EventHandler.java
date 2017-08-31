@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiOptions;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
+import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -78,6 +79,26 @@ public class Render360EventHandler {
 			e.setCanceled(true);
 			RenderUtil.renderMethod.renderLoadingScreen(e.guiScreen);
 		}
+	}
+	
+	@SubscribeEvent
+	public void renderOverlayPre(Render360Event.RenderOverlayEvent.Pre e) {
+		RenderUtil.renderGuiStart();
+	}
+	
+	@SubscribeEvent
+	public void renderOverlayPost(Render360Event.RenderOverlayEvent.Post e) {
+		RenderUtil.renderGuiEnd();
+	}
+	
+	@SubscribeEvent
+	public void drawScreenPre(GuiScreenEvent.DrawScreenEvent.Pre e) {
+		RenderUtil.renderGuiStart2();
+	}
+	
+	@SubscribeEvent
+	public void drawScreenPos(GuiScreenEvent.DrawScreenEvent.Post e) {
+		RenderUtil.renderGuiEnd2();
 	}
 	
 	@SubscribeEvent

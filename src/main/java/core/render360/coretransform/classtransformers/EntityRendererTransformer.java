@@ -106,85 +106,19 @@ public class EntityRendererTransformer extends ClassTransformer {
 							instruction.getNext().getOpcode() == LDC) {
 						CLTLog.info("Found SIPUSH in method " + getMethodName().debug());
 						
-						//go to start of method call
-						for (int i = 0; i < 16; i++) {
-							instruction = instruction.getNext();
-						}
+						//go to renderGameOverlay
+						instruction = method.instructions.get(
+								method.instructions.indexOf(instruction) + 16);
 						
-						InsnList toInsert = new InsnList();
-						
-						//RenderUtil.renderGuiStart()
-						toInsert.add(new MethodInsnNode(INVOKESTATIC, Type.getInternalName(RenderUtil.class), "renderGuiStart", "()V", false));
-						method.instructions.insertBefore(instruction, toInsert);
+						method.instructions.insertBefore(instruction, new MethodInsnNode(INVOKESTATIC,
+								Type.getInternalName(TransformerUtil.class), "renderOverlayPre", "()V", false));
 						
 						//go to after method call
-						for (int i = 0; i < 5; i++) {
-							instruction = instruction.getNext();
-						}
+						instruction = method.instructions.get(
+								method.instructions.indexOf(instruction) + 5);
 						
-						//RenderUtil.renderGuiEnd()
-						toInsert.add(new MethodInsnNode(INVOKESTATIC, Type.getInternalName(RenderUtil.class), "renderGuiEnd", "()V", false));
-						method.instructions.insertBefore(instruction, toInsert);
-						
-						break;
-					}
-				}
-				
-				for (AbstractInsnNode instruction : method.instructions.toArray()) {
-					
-					if (instruction.getOpcode() == ILOAD &&
-							instruction.getPrevious().getOpcode() == GETFIELD &&
-							instruction.getNext().getOpcode() == ILOAD) {
-						CLTLog.info("Found ILOAD in method " + getMethodName().debug());
-						
-						InsnList toInsert = new InsnList();
-						
-						//go to start of method call
-						for (int i = 0; i < 3; i++) {
-							instruction = instruction.getNext();
-						}
-						
-						if (instruction.getOpcode() != INVOKESTATIC) {
-							//assume optifine is installed
-							
-							AbstractInsnNode hold = instruction;
-							for (int i = 0; i < 40; i++) {
-								instruction = instruction.getPrevious();
-							}
-							
-							//RenderUtil.renderGuiStart2()
-							toInsert.add(new MethodInsnNode(INVOKESTATIC, Type.getInternalName(RenderUtil.class), "renderGuiStart2", "()V", false));
-							method.instructions.insertBefore(instruction, toInsert);
-							
-							instruction = hold;
-							for (int i = 0; i < 4; i++) {
-								instruction = instruction.getNext();
-							}
-							
-							//RenderUtil.renderGuiEnd2()
-							toInsert.add(new MethodInsnNode(INVOKESTATIC, Type.getInternalName(RenderUtil.class), "renderGuiEnd2", "()V", false));
-							method.instructions.insertBefore(instruction, toInsert);
-							
-							break;
-						}
-						//assume no other coremods installed
-						
-						for (int i = 0; i < 6; i++) {
-							instruction = instruction.getPrevious();
-						}
-						
-						//RenderUtil.renderGuiStart2()
-						toInsert.add(new MethodInsnNode(INVOKESTATIC, Type.getInternalName(RenderUtil.class), "renderGuiStart2", "()V", false));
-						method.instructions.insertBefore(instruction, toInsert);
-						
-						//go to after method call
-						for (int i = 0; i < 7; i++) {
-							instruction = instruction.getNext();
-						}
-						
-						//RenderUtil.renderGuiEnd2()
-						toInsert.add(new MethodInsnNode(INVOKESTATIC, Type.getInternalName(RenderUtil.class), "renderGuiEnd2", "()V", false));
-						method.instructions.insertBefore(instruction, toInsert);
+						method.instructions.insertBefore(instruction, new MethodInsnNode(INVOKESTATIC,
+								Type.getInternalName(TransformerUtil.class), "renderOverlayPost", "()V", false));
 						
 						break;
 					}
