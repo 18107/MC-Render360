@@ -10,6 +10,7 @@ import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
 import core.render360.coretransform.CLTLog;
+import core.render360.coretransform.TransformerUtil;
 import core.render360.coretransform.classtransformers.ClassTransformer;
 import core.render360.coretransform.classtransformers.name.ClassName;
 import core.render360.coretransform.classtransformers.name.MethodName;
@@ -70,44 +71,35 @@ public class ParticleTransformer extends ClassTransformer {
 		toInsert.add(new VarInsnNode(FLOAD, firstInsn));
 		toInsert.add(new VarInsnNode(FLOAD, firstInsn+1));
 		toInsert.add(new VarInsnNode(FLOAD, firstInsn+2));
-		toInsert.add(new MethodInsnNode(INVOKESTATIC, Type.getInternalName(ParticleTransformer.class),
-				"rotateParticle", "(FFFFFFFF)V", false));
+		toInsert.add(new MethodInsnNode(INVOKESTATIC, Type.getInternalName(TransformerUtil.class),
+				"transformParticle", "(FFFFFFFF)V", false));
 		
-		toInsert.add(new FieldInsnNode(GETSTATIC, Type.getInternalName(ParticleTransformer.class),
-				"rotX", "F"));
+		toInsert.add(new FieldInsnNode(GETSTATIC, Type.getInternalName(TransformerUtil.class),
+				"rotationX", "F"));
 		toInsert.add(new VarInsnNode(FSTORE, 4));
-		toInsert.add(new FieldInsnNode(GETSTATIC, Type.getInternalName(ParticleTransformer.class),
-				"rotZ", "F"));
+		toInsert.add(new FieldInsnNode(GETSTATIC, Type.getInternalName(TransformerUtil.class),
+				"rotationZ", "F"));
 		toInsert.add(new VarInsnNode(FSTORE, 5));
-		toInsert.add(new FieldInsnNode(GETSTATIC, Type.getInternalName(ParticleTransformer.class),
-				"rotYZ", "F"));
+		toInsert.add(new FieldInsnNode(GETSTATIC, Type.getInternalName(TransformerUtil.class),
+				"rotationYZ", "F"));
 		toInsert.add(new VarInsnNode(FSTORE, 6));
-		toInsert.add(new FieldInsnNode(GETSTATIC, Type.getInternalName(ParticleTransformer.class),
-				"rotXY", "F"));
+		toInsert.add(new FieldInsnNode(GETSTATIC, Type.getInternalName(TransformerUtil.class),
+				"rotationXY", "F"));
 		toInsert.add(new VarInsnNode(FSTORE, 7));
-		toInsert.add(new FieldInsnNode(GETSTATIC, Type.getInternalName(ParticleTransformer.class),
-				"rotXZ", "F"));
+		toInsert.add(new FieldInsnNode(GETSTATIC, Type.getInternalName(TransformerUtil.class),
+				"rotationXZ", "F"));
 		toInsert.add(new VarInsnNode(FSTORE, 8));
+		toInsert.add(new FieldInsnNode(GETSTATIC, Type.getInternalName(TransformerUtil.class),
+				"posX", "F"));
+		toInsert.add(new VarInsnNode(FSTORE, firstInsn));
+		toInsert.add(new FieldInsnNode(GETSTATIC, Type.getInternalName(TransformerUtil.class),
+				"posY", "F"));
+		toInsert.add(new VarInsnNode(FSTORE, firstInsn+1));
+		toInsert.add(new FieldInsnNode(GETSTATIC, Type.getInternalName(TransformerUtil.class),
+				"posZ", "F"));
+		toInsert.add(new VarInsnNode(FSTORE, firstInsn+2));
 		
 		method.instructions.insertBefore(instruction, toInsert);
-	}
-	
-	public static float rotX;
-	public static float rotZ;
-	public static float rotYZ;
-	public static float rotXY;
-	public static float rotXZ;
-	public static void rotateParticle(float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ, float posX, float posY, float posZ) {
-		posY -= Minecraft.getMinecraft().thePlayer.eyeHeight;
-		
-		float hDist = (float) (Math.sqrt(posZ*posZ + posX*posX));
-		float dist = (float) (Math.sqrt(posZ*posZ + posY*posY + posX*posX));
-		
-		rotX = posZ/hDist;
-		rotZ = 1-Math.abs(posY/dist);
-		rotYZ = -posX/hDist;
-		rotXY = -posY/dist * posX/hDist;
-		rotXZ = -posY/dist * posZ/hDist;
 	}
 	
 	public static ClassTransformer[] getParticleTransformers() {

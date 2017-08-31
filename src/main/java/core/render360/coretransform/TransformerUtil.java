@@ -40,4 +40,31 @@ public class TransformerUtil {
 		MinecraftForge.EVENT_BUS.post(event);
 		return event.isCanceled();
 	}
+	
+	public static float rotationX;
+	public static float rotationZ;
+	public static float rotationYZ;
+	public static float rotationXY;
+	public static float rotationXZ;
+	public static float posX;
+	public static float posY;
+	public static float posZ;
+	public static void transformParticle(float rotationX, float rotationZ,
+			float rotationYZ, float rotationXY, float rotationXZ,
+			float posX, float posY, float posZ) {
+		
+		Render360Event.RotateParticleEvent event = new Render360Event.RotateParticleEvent(
+				rotationX, rotationZ, rotationYZ, rotationXY, rotationXZ, posX, posY, posZ);
+		MinecraftForge.EVENT_BUS.post(event);
+		
+		//TODO find a way to return these values instead of having them public
+		TransformerUtil.rotationX = event.rotationX;
+		TransformerUtil.rotationZ = event.rotationZ;
+		TransformerUtil.rotationYZ = event.rotationYZ;
+		TransformerUtil.rotationXY = event.rotationXY;
+		TransformerUtil.rotationXZ = event.rotationXZ;
+		TransformerUtil.posX = event.posX;
+		TransformerUtil.posY = event.posY;
+		TransformerUtil.posZ = event.posZ;
+	}
 }

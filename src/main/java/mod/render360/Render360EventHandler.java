@@ -3,6 +3,7 @@ package mod.render360;
 import core.render360.Render360Event;
 import core.render360.coretransform.RenderUtil;
 import mod.render360.gui.Render360Settings;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiOptions;
 import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
@@ -59,5 +60,21 @@ public class Render360EventHandler {
 			e.setCanceled(true);
 			RenderUtil.renderMethod.renderLoadingScreen(e.guiScreen);
 		}
+	}
+	
+	@SubscribeEvent
+	public void rotateParticle(Render360Event.RotateParticleEvent e) {
+		float posX = e.posX;
+		float posY = e.posY - Minecraft.getMinecraft().thePlayer.eyeHeight;
+		float posZ = e.posZ;
+		
+		float hDist = (float) (Math.sqrt(posZ*posZ + posX*posX));
+		float dist = (float) (Math.sqrt(posZ*posZ + posY*posY + posX*posX));
+		
+		e.rotationX = posZ/hDist;
+		e.rotationZ = 1-Math.abs(posY/dist);
+		e.rotationYZ = -posX/hDist;
+		e.rotationXY = -posY/dist * posX/hDist;
+		e.rotationXZ = -posY/dist * posZ/hDist;
 	}
 }

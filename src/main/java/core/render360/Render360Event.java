@@ -46,4 +46,29 @@ public abstract class Render360Event extends Event {
 			this.guiScreen = guiScreen;
 		}
 	}
+	
+	public static class RotateParticleEvent extends Render360Event {
+		
+		public float rotationX;
+		public float rotationZ;
+		public float rotationYZ;
+		public float rotationXY;
+		public float rotationXZ;
+		public float posX;
+		public float posY;
+		public float posZ;
+		
+		public RotateParticleEvent(float rotationX, float rotationZ,
+				float rotationYZ, float rotationXY, float rotationXZ,
+				float posX, float posY, float posZ) {
+			this.rotationX = rotationX;
+			this.rotationZ = rotationZ;
+			this.rotationYZ = rotationYZ;
+			this.rotationXY = rotationXY;
+			this.rotationXZ = rotationXZ;
+			this.posX = posX;
+			this.posY = posY;
+			this.posZ = posZ;
+		}
+	}
 }
