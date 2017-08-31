@@ -3,7 +3,6 @@ package core.render360.coretransform.classtransformers.name;
 public class Names {
 
 	public static final ClassName EntityRenderer = new ClassName("net.minecraft.client.renderer.EntityRenderer", "bqc");
-	public static final MethodName EntityRenderer_getFOVModifier = new MethodName("getFOVModifier", "func_78481_a", "a", "(FZ)F", "(FZ)F");
 	public static final MethodName EntityRenderer_hurtCameraEffect = new MethodName("hurtCameraEffect", "func_78482_e", "d", "(F)V", "(F)V");
 	public static final MethodName EntityRenderer_orientCamera = new MethodName("orientCamera", "func_78467_g", "f", "(F)V", "(F)V");
 	public static final MethodName EntityRenderer_setupCameraTransform = new MethodName("setupCameraTransform", "func_78479_a", "a", "(FI)V", "(FI)V");

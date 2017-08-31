@@ -33,39 +33,6 @@ public class EntityRendererTransformer extends ClassTransformer {
 
 	@Override
 	public MethodTransformer[] getMethodTransformers() {
-		MethodTransformer transformGetFOVModifier = new MethodTransformer() {
-			@Override
-			public MethodName getMethodName() {
-				return Names.EntityRenderer_getFOVModifier;
-			}
-			
-			public void transform(ClassNode classNode, MethodNode method, boolean obfuscated) {
-				CLTLog.info("Found method: " + getMethodName().all());
-				for (AbstractInsnNode instruction : method.instructions.toArray()) {
-					
-					if (instruction.getOpcode() == ALOAD) {
-						CLTLog.info("Found ALOAD in method " + getMethodName().debug());
-						
-						InsnList toInsert = new InsnList();
-						LabelNode label = new LabelNode();
-						
-						// change "if (this.debugView)" to "if (RenderUtil.render360 || this.debugView)"
-						toInsert.add(new FieldInsnNode(GETSTATIC, Type.getInternalName(RenderUtil.class), "render360", "Z"));
-						toInsert.add(new JumpInsnNode(IFNE, label));
-						method.instructions.insertBefore(instruction, toInsert);
-						
-						//Find LDC 90.0
-						for (int i = 0; i < 3; i++) {
-							instruction = instruction.getNext();
-						}
-						method.instructions.insertBefore(instruction, label);
-						
-						break;
-					}
-				}
-			}
-		};
-		
 		//TODO
 		MethodTransformer hurtCameraEffectTransformer = new MethodTransformer() {
 			@Override
@@ -434,7 +401,7 @@ public class EntityRendererTransformer extends ClassTransformer {
 			}
 		};
 		
-		return new MethodTransformer[] {transformGetFOVModifier, /*hurtCameraEffectTransformer,*/ transformSetupCameraTransform, transformUpdateCameraAndRender, transformRenderWorld, transformRenderWorldPass, updateFogColorTransformer, drawNameplateTransformer};
+		return new MethodTransformer[] {/*hurtCameraEffectTransformer,*/ transformSetupCameraTransform, transformUpdateCameraAndRender, transformRenderWorld, transformRenderWorldPass, updateFogColorTransformer, drawNameplateTransformer};
 	}
 
 }

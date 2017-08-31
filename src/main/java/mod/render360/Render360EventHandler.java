@@ -6,6 +6,7 @@ import mod.render360.gui.Render360Settings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiOptions;
+import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -26,6 +27,13 @@ public class Render360EventHandler {
 		if (e.getGui() instanceof GuiOptions && e.getButton().id == 18107) {
 			e.getGui().mc.gameSettings.saveOptions();
 			e.getGui().mc.displayGuiScreen(new Render360Settings(e.getGui()));
+		}
+	}
+	
+	@SubscribeEvent
+	public void getFOVModifier(EntityViewRenderEvent.FOVModifier e) {
+		if (RenderUtil.render360) {
+			e.setFOV(90);
 		}
 	}
 	
