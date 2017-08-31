@@ -4,6 +4,7 @@ import core.render360.Render360Event;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.shader.Framebuffer;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -41,6 +42,17 @@ public class TransformerUtil {
 		return event.isCanceled();
 	}
 	
+	//EntityRenderer
+	public static void rotateCamera() {
+		Render360Event.RotateCameraEvent event = new Render360Event.RotateCameraEvent();
+		MinecraftForge.EVENT_BUS.post(event);
+		GlStateManager.rotate(event.roll, 0.0F, 0.0F, 1.0F);
+        GlStateManager.rotate(event.pitch, 1.0F, 0.0F, 0.0F);
+        GlStateManager.rotate(event.yaw, 0.0F, 1.0F, 0.0F);
+        GlStateManager.translate(0, 0, -0.05f);
+	}
+	
+	//Particle
 	public static float rotationX;
 	public static float rotationZ;
 	public static float rotationYZ;

@@ -9,6 +9,7 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 
+import core.render360.Render360Event;
 import core.render360.coretransform.CLTLog;
 import core.render360.coretransform.RenderUtil;
 import mod.render360.Shader;
@@ -462,11 +463,14 @@ public abstract class RenderMethod {
 		}
 	}
 	
-	public void rotateCamera() {
-		GlStateManager.rotate(changeYaw, 0, 1, 0);
-		GlStateManager.rotate(changePitch, 1, 0, 0);
+	public void rotateCamera(Render360Event.RotateCameraEvent event) {
+		event.yaw = changeYaw;
+		event.pitch = changePitch;
 	}
 	
+	/**
+	 * Prevents chunk culling
+	 */
 	public void rotatePlayer() {
 		if (player != null) {
 			player.rotationYaw = yaw + changeYaw;

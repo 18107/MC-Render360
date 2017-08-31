@@ -274,14 +274,4 @@ public class RenderUtil {
 		float pitch = (float) -(Math.atan((y-Minecraft.getMinecraft().getRenderViewEntity().height)/distance)*180/Math.PI);
 		return pitch;
 	}
-	
-	//TODO comment
-	public static void rotateCamera() {
-		renderMethod.rotateCamera();
-	}
-	
-	//TODO comment
-	public static void rotatePlayer() {
-		renderMethod.rotatePlayer();
-	}
 }

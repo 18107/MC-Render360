@@ -38,6 +38,16 @@ public class Render360EventHandler {
 	}
 	
 	@SubscribeEvent
+	public void rotateCamera(Render360Event.RotateCameraEvent e) {
+		RenderUtil.renderMethod.rotateCamera(e);
+	}
+	
+	@SubscribeEvent
+	public void rotatePlayer(EntityViewRenderEvent.CameraSetup e) {
+		RenderUtil.renderMethod.rotatePlayer(); //FIXME
+	}
+	
+	@SubscribeEvent
 	public void worldLoad(Render360Event.DimensionLoadEvent e) {
 		RenderUtil.onWorldLoad(); //FIXME
 	}

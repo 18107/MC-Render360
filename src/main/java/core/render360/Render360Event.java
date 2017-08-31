@@ -47,6 +47,19 @@ public abstract class Render360Event extends Event {
 		}
 	}
 	
+	public static class RotateCameraEvent extends Render360Event {
+		
+		public float yaw;
+		public float pitch;
+		public float roll;
+		
+		public RotateCameraEvent() {
+			this.yaw = 0;
+			this.pitch = 0;
+			this.roll = 0;
+		}
+	}
+	
 	public static class RotateParticleEvent extends Render360Event {
 		
 		public float rotationX;

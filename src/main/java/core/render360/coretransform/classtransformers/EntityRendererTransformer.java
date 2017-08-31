@@ -18,6 +18,7 @@ import org.objectweb.asm.tree.VarInsnNode;
 
 import core.render360.coretransform.CLTLog;
 import core.render360.coretransform.RenderUtil;
+import core.render360.coretransform.TransformerUtil;
 import core.render360.coretransform.classtransformers.name.ClassName;
 import core.render360.coretransform.classtransformers.name.MethodName;
 import core.render360.coretransform.classtransformers.name.Names;
@@ -81,21 +82,9 @@ public class EntityRendererTransformer extends ClassTransformer {
 							if (count == 2) {
 								CLTLog.info("Found: " + Names.GLStateManager_loadIdentity.debug());
 								method.instructions.insert(instruction, new MethodInsnNode(INVOKESTATIC,
-										Type.getInternalName(RenderUtil.class), "rotateCamera", "()V", false));
+										Type.getInternalName(TransformerUtil.class), "rotateCamera", "()V", false));
 								break;
 							}
-						}
-					}
-				}
-				
-				for (AbstractInsnNode instruction : method.instructions.toArray()) {
-					if (instruction instanceof MethodInsnNode) {
-						MethodInsnNode methodCall = (MethodInsnNode)instruction;
-						if (methodCall.name.equals(Names.EntityRenderer_orientCamera.getShortName(obfuscated)) &&
-								methodCall.desc.equals(Names.EntityRenderer_orientCamera.getDesc(obfuscated))) {
-							CLTLog.info("Found method: " + Names.EntityRenderer_orientCamera.debug());
-							method.instructions.insert(instruction, new MethodInsnNode(INVOKESTATIC,
-									Type.getInternalName(RenderUtil.class), "rotatePlayer", "()V", false));
 						}
 					}
 				}
