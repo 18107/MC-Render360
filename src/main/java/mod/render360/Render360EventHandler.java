@@ -10,6 +10,7 @@ import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
+import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -106,6 +107,21 @@ public class Render360EventHandler {
 		Minecraft mc = Minecraft.getMinecraft();
 		e.setCanceled(true);
 		RenderUtil.setupRenderWorld(mc.entityRenderer, mc, e.partialTicks, e.finishTimeNano);
+	}
+	
+	@SubscribeEvent
+	public void setViewport(Render360Event.SetViewportEvent e) {
+		e.x = 0;
+		e.y = 0;
+		e.width = RenderUtil.partialWidth;
+		e.height = RenderUtil.partialHeight;
+	}
+	
+	@SubscribeEvent
+	public void renderHand(RenderHandEvent e) {
+		if (RenderUtil.render360) {
+			e.setCanceled(true);
+		}
 	}
 	
 	@SubscribeEvent

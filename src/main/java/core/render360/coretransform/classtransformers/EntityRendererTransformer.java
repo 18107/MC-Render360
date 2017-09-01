@@ -184,71 +184,32 @@ public class EntityRendererTransformer extends ClassTransformer {
 					if (instruction.getOpcode() == LDC) {
 						CLTLog.info("found LDC in method " + getMethodName().debug());
 						
-						InsnList toInsert = new InsnList();
-						LabelNode clearNode = new LabelNode();
-						
 						for (int i = 0; i < 3; i++) {
 							instruction = instruction.getNext();
 						}
 						
 						//if optifine is installed
 						if (instruction.getNext().getOpcode() == ILOAD) {
-							
-							for (int i = 0; i < 17; i++) {
-								instruction = instruction.getNext();
-							}
+							instruction = method.instructions.get(
+									method.instructions.indexOf(instruction) + 17);
 						}
 						//assume no other coremods are installed
 						
-						//Change from GlStateManager.viewport(0, 0, this.mc.displayWidth, this.mc.displayHeight);
-						//to GlStateManager.viewport(0, 0, RenderUtil.partialWidth, RenderUtil.partialHeight);
-						for (int i = 0; i < 8; i++) {
-							method.instructions.remove(instruction.getNext()); //remove 0, 0, this.mc.displayWidth, this.mc.displayHeight
-						}
-						toInsert.add(new InsnNode(ICONST_0));
-						toInsert.add(new InsnNode(ICONST_0));
-						toInsert.add(new FieldInsnNode(GETSTATIC, Type.getInternalName(RenderUtil.class), "partialWidth", "I"));
-						toInsert.add(new FieldInsnNode(GETSTATIC, Type.getInternalName(RenderUtil.class), "partialHeight", "I"));
-						instruction = instruction.getNext();
-						method.instructions.insertBefore(instruction, toInsert);
+						/**
+						 * Change from
+						 *   GlStateManager.viewport(0, 0, this.mc.displayWidth, this.mc.displayHeight);
+						 * to
+						 *   TransformerUtil.setViewport(0, 0, this.mc.displayWidth, this.mc.displayHeight);
+						 */
+						instruction = method.instructions.get(
+								method.instructions.indexOf(instruction) + 8);
+						method.instructions.remove(instruction.getNext()); //GlStateManager.viewport
+						method.instructions.insert(instruction, new MethodInsnNode(INVOKESTATIC,
+								Type.getInternalName(TransformerUtil.class),
+								"setViewport", "(IIII)V", false));
 						
 						break;
 					}
-				}
-				
-				AbstractInsnNode instruction = method.instructions.getLast();
-				CLTLog.info("reached end of method " + getMethodName().debug());
-				
-				
-				instruction = instruction.getPrevious();
-				LabelNode handNode = new LabelNode();
-				InsnList toInsert = new InsnList();
-				
-				//set handNode
-				method.instructions.insertBefore(instruction, handNode);
-				
-				for (int i = 0; i < 10+9; i++) {
-					instruction = instruction.getPrevious();
-				}
-				
-				//if optifine is installed
-				if (instruction.getPrevious().getOpcode() == GOTO) {
-					LabelNode newLabel = new LabelNode(); //Ignore handNode
-					instruction = instruction.getNext().getNext().getNext(); //find this.renderHand
-					//if (!RenderUtil.render360)
-					toInsert.add(new FieldInsnNode(GETSTATIC, Type.getInternalName(RenderUtil.class), "render360", "Z"));
-					toInsert.add(new JumpInsnNode(IFNE, newLabel));
-					method.instructions.insertBefore(instruction, toInsert);
-					
-					instruction = instruction.getNext().getNext().getNext(); //find end of this.renderHand
-					method.instructions.insert(instruction, newLabel); //insert after this.renderHand
-				}
-				//assume no other coremods are installed
-				else {
-					//if (&& !RenderUtil.render360)
-					toInsert.add(new FieldInsnNode(GETSTATIC, Type.getInternalName(RenderUtil.class), "render360", "Z"));
-					toInsert.add(new JumpInsnNode(IFNE, handNode));
-					method.instructions.insertBefore(instruction, toInsert);
 				}
 			}
 		};

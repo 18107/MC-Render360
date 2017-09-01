@@ -88,6 +88,21 @@ public abstract class Render360Event extends Event {
 		}
 	}
 	
+	public static class SetViewportEvent extends Render360Event {
+		
+		public int x;
+		public int y;
+		public int width;
+		public int height;
+		
+		public SetViewportEvent(int x, int y, int width, int height) {
+			this.x = x;
+			this.y = y;
+			this.width = width;
+			this.height = height;
+		}
+	}
+	
 	public static class RotateParticleEvent extends Render360Event {
 		
 		public float rotationX;

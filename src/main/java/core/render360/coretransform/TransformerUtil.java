@@ -70,6 +70,13 @@ public class TransformerUtil {
 		return event.isCanceled();
 	}
 	
+	//EntityRender
+	public static void setViewport(int x, int y, int width, int height) {
+		Render360Event.SetViewportEvent event = new Render360Event.SetViewportEvent(x, y, width, height);
+		MinecraftForge.EVENT_BUS.post(event);
+		GlStateManager.viewport(event.x, event.y, event.width, event.height);
+	}
+	
 	//Particle
 	public static float rotationX;
 	public static float rotationZ;
