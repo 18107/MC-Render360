@@ -3,6 +3,7 @@ package mod.render360;
 import core.render360.Render360Event;
 import core.render360.coretransform.RenderUtil;
 import mod.render360.gui.Render360Settings;
+import mod.render360.render.Standard;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiOptions;
@@ -120,6 +121,13 @@ public class Render360EventHandler {
 	@SubscribeEvent
 	public void renderHand(RenderHandEvent e) {
 		if (RenderUtil.render360) {
+			e.setCanceled(true);
+		}
+	}
+	
+	@SubscribeEvent
+	public void sunsetColor(Render360Event.SunsetFogEvent e) {
+		if (!(RenderUtil.renderMethod instanceof Standard)) {
 			e.setCanceled(true);
 		}
 	}

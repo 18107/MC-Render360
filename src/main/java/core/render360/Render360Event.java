@@ -103,6 +103,11 @@ public abstract class Render360Event extends Event {
 		}
 	}
 	
+	@Cancelable
+	public static class SunsetFogEvent extends Render360Event {
+		
+	}
+	
 	public static class RotateParticleEvent extends Render360Event {
 		
 		public float rotationX;

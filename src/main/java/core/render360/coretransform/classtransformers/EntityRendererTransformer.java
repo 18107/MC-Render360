@@ -232,28 +232,26 @@ public class EntityRendererTransformer extends ClassTransformer {
 						CLTLog.info("found D2F in method " + getMethodName().debug());
 						
 						//after float f5 = (float)entity.getLook(partialTicks).dotProduct(vec3d2);
-						for (int i = 0; i < 3; i++) {
-							instruction = instruction.getNext();
-						}
+						instruction = instruction.getNext().getNext();
 						
 						InsnList toInsert = new InsnList();
 						LabelNode label = new LabelNode();
 						
-						//if (RenderUtil.renderMethod.getName() != "Standard") {
-							//f5 = 1;
-						//}
-						toInsert.add(new FieldInsnNode(GETSTATIC, Type.getInternalName(RenderUtil.class),
-								"renderMethod", "L" + Type.getInternalName(RenderMethod.class) + ";"));
-						toInsert.add(new MethodInsnNode(INVOKEVIRTUAL, Type.getInternalName(RenderMethod.class),
-								"getName", "()L" + Type.getInternalName(String.class) + ";", false));
-						toInsert.add(new LdcInsnNode("Standard"));
-						toInsert.add(new JumpInsnNode(IF_ACMPEQ, label));
+						/**
+						 * if (TransformerUtil.sunsetFog()) {
+						 *   f5 = 0;
+						 * }
+						 */
+						toInsert.add(new MethodInsnNode(INVOKESTATIC,
+								Type.getInternalName(TransformerUtil.class),
+								"sunsetFog", "()Z", false));
 						
-						toInsert.add(new InsnNode(FCONST_1));
-						toInsert.add(new VarInsnNode(FSTORE, 13)); //f5
+						toInsert.add(new JumpInsnNode(IFEQ, label));
+						toInsert.add(new InsnNode(FCONST_0));
+						toInsert.add(new VarInsnNode(FSTORE, 13));
 						toInsert.add(label);
 						
-						method.instructions.insertBefore(instruction, toInsert);
+						method.instructions.insert(instruction, toInsert);
 						
 						break;
 					}
