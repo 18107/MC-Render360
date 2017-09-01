@@ -62,6 +62,14 @@ public class TransformerUtil {
 		MinecraftForge.EVENT_BUS.post(new Render360Event.RenderOverlayEvent.Post());
 	}
 	
+	//EntityRenderer
+	public static boolean renderWorld(float partialTicks, long finishTimeNano) {
+		Render360Event.RenderWorldEvent event =
+				new Render360Event.RenderWorldEvent(partialTicks, finishTimeNano);
+		MinecraftForge.EVENT_BUS.post(event);
+		return event.isCanceled();
+	}
+	
 	//Particle
 	public static float rotationX;
 	public static float rotationZ;

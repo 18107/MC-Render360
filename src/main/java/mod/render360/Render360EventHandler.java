@@ -102,6 +102,13 @@ public class Render360EventHandler {
 	}
 	
 	@SubscribeEvent
+	public void renderWorld(Render360Event.RenderWorldEvent e) {
+		Minecraft mc = Minecraft.getMinecraft();
+		e.setCanceled(true);
+		RenderUtil.setupRenderWorld(mc.entityRenderer, mc, e.partialTicks, e.finishTimeNano);
+	}
+	
+	@SubscribeEvent
 	public void rotateParticle(Render360Event.RotateParticleEvent e) {
 		float posX = e.posX;
 		float posY = e.posY - Minecraft.getMinecraft().thePlayer.eyeHeight;
