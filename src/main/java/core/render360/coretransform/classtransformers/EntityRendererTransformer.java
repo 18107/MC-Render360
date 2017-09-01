@@ -141,24 +141,28 @@ public class EntityRendererTransformer extends ClassTransformer {
 						CLTLog.info("Found ALOAD in method " + getMethodName().debug());
 						
 						InsnList toInsert = new InsnList();
+						LabelNode label = new LabelNode();
 						
-						// void RenderUtil.setupRenderWorld(EntityRenderer, mc, p_78471_1_, p_78471_2_);
-						toInsert.add(new VarInsnNode(ALOAD, 0)); //this
-						toInsert.add(new VarInsnNode(ALOAD, 0)); //this
-						toInsert.add(new FieldInsnNode(GETFIELD, classNode.name, Names.EntityRenderer_mc.getFullName(), Names.EntityRenderer_mc.getDesc())); //mc
-						toInsert.add(new VarInsnNode(FLOAD, 1));
-						toInsert.add(new VarInsnNode(LLOAD, 2));
-						toInsert.add(new MethodInsnNode(INVOKESTATIC, Type.getInternalName(RenderUtil.class), "setupRenderWorld", 
-								"(L" + classNode.name + ";L" + Type.getInternalName(Minecraft.class) + ";FJ)V", false));
+						/**
+						 * if (TransformerUtil.renderWorld(partialTicks, finishTimeNano)) {
+						 *   this.renderWorldPass(2, partialTicks, finishTimeNano);
+						 * }
+						 */
+						toInsert.add(new VarInsnNode(FLOAD, 1)); //p_78471_1_
+						toInsert.add(new VarInsnNode(LLOAD, 2)); //p_78471_2_
+						toInsert.add(new MethodInsnNode(INVOKESTATIC,
+								Type.getInternalName(TransformerUtil.class),
+								"renderWorld", "(FJ)Z", false));
+						toInsert.add(new JumpInsnNode(IFNE, label));
 						
 						//Insert method call
 						method.instructions.insertBefore(instruction, toInsert);
 						
-						//Remove this.renderWorldPass(2, partialTicks, finishTimeNano);
+						//this.renderWorldPass(2, partialTicks, finishTimeNano);
 						for (int i = 0; i < 4; i++) {
-							method.instructions.remove(instruction.getNext());
+							instruction = instruction.getNext();
 						}
-						method.instructions.remove(instruction);
+						method.instructions.insert(instruction, label);
 						
 						break;
 					}

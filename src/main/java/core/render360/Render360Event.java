@@ -71,6 +71,23 @@ public abstract class Render360Event extends Event {
 		}
 	}
 	
+	/**
+	 * Does not handle 3D anaglyph
+	 */
+	@Cancelable
+	public static class RenderWorldEvent extends Render360Event {
+		
+		public final int renderPass;
+		public final float partialTicks;
+		public final long finishTimeNano;
+		
+		public RenderWorldEvent(float partialTicks, long finishTimeNano) {
+			this.renderPass = 2;
+			this.partialTicks = partialTicks;
+			this.finishTimeNano = finishTimeNano;
+		}
+	}
+	
 	public static class RotateParticleEvent extends Render360Event {
 		
 		public float rotationX;
