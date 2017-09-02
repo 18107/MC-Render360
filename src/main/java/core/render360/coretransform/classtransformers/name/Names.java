@@ -53,4 +53,5 @@ public class Names {
 	public static final ClassName Particle = new ClassName("net.minecraft.client.particle.Particle", "bos");
 	public static final MethodName Particle_renderParticle = new MethodName("renderParticle", "func_180434_a", "a", "(Lnet/minecraft/client/renderer/VertexBuffer;Lnet/minecraft/entity/Entity;FFFFFF)V", "(Lbpw;Lsm;FFFFFF)V");
 	
+	public static final ClassName WorldClient = new ClassName("net.minecraft.client.multiplayer.WorldClient", "bno");
 }

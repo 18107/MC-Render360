@@ -6,11 +6,13 @@ import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 
 @IFMLLoadingPlugin.MCVersion("1.11")
 @IFMLLoadingPlugin.TransformerExclusions(value = "core.render360.coretransform.")
-@IFMLLoadingPlugin.Name(CoreLoader.NAME)
+@IFMLLoadingPlugin.Name(CoreLoader.MOD_NAME)
 @IFMLLoadingPlugin.SortingIndex(value = 999)
 public class CoreLoader implements IFMLLoadingPlugin {
 	
-	public static final String NAME = "Render 360 core";
+	public static final String MOD_ID = "render360core";
+    public static final String MOD_NAME = "Render 360 core";
+    public static final String MOD_VERSION = "1.0";
 	public static boolean isObfuscated;
 	
 	@Override
