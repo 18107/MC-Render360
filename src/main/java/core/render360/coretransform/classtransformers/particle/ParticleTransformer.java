@@ -15,7 +15,6 @@ import core.render360.coretransform.classtransformers.ClassTransformer;
 import core.render360.coretransform.classtransformers.name.ClassName;
 import core.render360.coretransform.classtransformers.name.MethodName;
 import core.render360.coretransform.classtransformers.name.Names;
-import net.minecraft.client.Minecraft;
 
 import static org.objectweb.asm.Opcodes.*;
 

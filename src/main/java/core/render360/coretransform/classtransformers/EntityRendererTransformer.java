@@ -1,7 +1,5 @@
 package core.render360.coretransform.classtransformers;
 
-import static org.objectweb.asm.Opcodes.*;
-
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
@@ -10,22 +8,17 @@ import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.LabelNode;
-import org.objectweb.asm.tree.LdcInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
-import org.objectweb.asm.tree.TypeInsnNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
 import core.render360.coretransform.CLTLog;
-import core.render360.coretransform.RenderUtil;
 import core.render360.coretransform.TransformerUtil;
 import core.render360.coretransform.classtransformers.name.ClassName;
 import core.render360.coretransform.classtransformers.name.MethodName;
 import core.render360.coretransform.classtransformers.name.Names;
-import mod.render360.render.RenderMethod;
-import mod.render360.render.Standard;
-import net.minecraft.client.Minecraft;
-import net.minecraftforge.client.event.EntityViewRenderEvent.CameraSetup;
+
+import static org.objectweb.asm.Opcodes.*;
 
 public class EntityRendererTransformer extends ClassTransformer {
 	
@@ -35,7 +28,7 @@ public class EntityRendererTransformer extends ClassTransformer {
 	@Override
 	public MethodTransformer[] getMethodTransformers() {
 		//TODO
-		MethodTransformer hurtCameraEffectTransformer = new MethodTransformer() {
+		/*MethodTransformer hurtCameraEffectTransformer = new MethodTransformer() {
 			@Override
 			public MethodName getMethodName() {
 				return Names.EntityRenderer_hurtCameraEffect;
@@ -61,7 +54,7 @@ public class EntityRendererTransformer extends ClassTransformer {
 				
 				method.instructions.insert(toInsert);
 			}
-		};
+		};*/
 		
 		MethodTransformer transformSetupCameraTransform = new MethodTransformer() {
 			@Override

@@ -1,35 +1,18 @@
-package core.render360.coretransform;
-
-import java.io.IOException;
+package mod.render360;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 
-import mod.render360.Shader;
 import mod.render360.render.RenderMethod;
 import mod.render360.render.Standard;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.multiplayer.WorldClient;
-import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderGlobal;
-import net.minecraft.client.renderer.culling.ICamera;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.shader.Framebuffer;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.passive.EntityAnimal;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.client.event.EntityViewRenderEvent.CameraSetup;
 
 public class RenderUtil {
 	
@@ -75,7 +58,7 @@ public class RenderUtil {
 			shader = new Shader();
 			shader.createShaderProgram(renderMethod);
 		} else {
-			CLTLog.info("Attemped to re-create existing shader");
+			Log.info("Attemped to re-create existing shader");
 		}
 	}
 	
@@ -87,7 +70,7 @@ public class RenderUtil {
 			shader.deleteShaderProgram();
 			shader = null;
 		} else {
-			CLTLog.info("Attemped to delete non-existent shader");
+			Log.info("Attemped to delete non-existent shader");
 		}
 	}
 	
@@ -114,7 +97,7 @@ public class RenderUtil {
 			}
 			GlStateManager.bindTexture(0);
 		} else {
-			CLTLog.info("Attempted to recreate existing framebuffer");
+			Log.info("Attempted to recreate existing framebuffer");
 		}
 		createShader();
 	}
@@ -133,7 +116,7 @@ public class RenderUtil {
 			framebuffer.deleteFramebuffer();
 			framebuffer = null;
 		} else {
-			CLTLog.info("Attempted to delete non-existant framebuffer");
+			Log.info("Attempted to delete non-existant framebuffer");
 		}
 	}
 

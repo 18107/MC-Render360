@@ -1,8 +1,8 @@
 package core.render360.coretransform.classtransformers;
 
+import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
@@ -12,16 +12,12 @@ import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
 import core.render360.coretransform.CLTLog;
-import core.render360.coretransform.RenderUtil;
 import core.render360.coretransform.TransformerUtil;
 import core.render360.coretransform.classtransformers.name.ClassName;
 import core.render360.coretransform.classtransformers.name.MethodName;
 import core.render360.coretransform.classtransformers.name.Names;
-import mod.render360.render.RenderMethod;
 
 import static org.objectweb.asm.Opcodes.*;
-
-import org.objectweb.asm.Type;
 
 public class GuiScreenTransformer extends ClassTransformer {
 

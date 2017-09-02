@@ -1,40 +1,13 @@
 package core.render360.coretransform;
 
 import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Label;
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Type;
-import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.FieldInsnNode;
-import org.objectweb.asm.tree.InsnList;
-import org.objectweb.asm.tree.InsnNode;
-import org.objectweb.asm.tree.JumpInsnNode;
-import org.objectweb.asm.tree.LabelNode;
-import org.objectweb.asm.tree.LdcInsnNode;
-import org.objectweb.asm.tree.LineNumberNode;
-import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
-import org.objectweb.asm.tree.VarInsnNode;
 
 import core.render360.coretransform.classtransformers.ClassTransformer;
-import core.render360.coretransform.classtransformers.EntityRendererTransformer;
-import core.render360.coretransform.classtransformers.MinecraftTransformer;
 import core.render360.coretransform.classtransformers.ClassTransformer.MethodTransformer;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiIngame;
-import net.minecraft.client.multiplayer.WorldClient;
-import net.minecraft.client.renderer.EntityRenderer;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.settings.GameSettings;
-import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.launchwrapper.IClassTransformer;
-
-import static org.objectweb.asm.Opcodes.*;
-
-import java.io.PrintStream;
 
 public class CoreTransformer implements IClassTransformer {
 	

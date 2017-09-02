@@ -1,6 +1,5 @@
 package mod.render360.render;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.lwjgl.opengl.Display;
@@ -10,8 +9,7 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 
 import core.render360.Render360Event;
-import core.render360.coretransform.CLTLog;
-import core.render360.coretransform.RenderUtil;
+import mod.render360.RenderUtil;
 import mod.render360.Shader;
 import mod.render360.gui.Slider;
 import net.minecraft.client.Minecraft;

@@ -2,16 +2,9 @@ package mod.render360.render;
 
 import java.util.List;
 
-import org.lwjgl.opengl.GL20;
-
-import core.render360.coretransform.RenderUtil;
-import mod.render360.Shader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.EntityRenderer;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.shader.Framebuffer;
-import net.minecraft.entity.Entity;
 
 public class Cubic extends RenderMethod {
 

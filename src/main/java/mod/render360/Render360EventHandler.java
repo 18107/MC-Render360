@@ -1,9 +1,7 @@
 package mod.render360;
 
 import core.render360.Render360Event;
-import core.render360.coretransform.RenderUtil;
 import mod.render360.gui.Render360Settings;
-import mod.render360.render.Standard;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiOptions;
@@ -12,7 +10,6 @@ import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.client.event.RenderHandEvent;
-import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class Render360EventHandler {
