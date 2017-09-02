@@ -108,6 +108,23 @@ public abstract class Render360Event extends Event {
 		
 	}
 	
+	public static class DrawNameplateEvent extends Render360Event {
+		
+		public float x;
+		public float y;
+		public float z;
+		public float yaw;
+		public float pitch;
+		
+		public DrawNameplateEvent(float x, float y, float z, float yaw, float pitch) {
+			this.x = x;
+			this.y = y;
+			this.z = z;
+			this.yaw = yaw;
+			this.pitch = pitch;
+		}
+	}
+	
 	public static class RotateParticleEvent extends Render360Event {
 		
 		public float rotationX;

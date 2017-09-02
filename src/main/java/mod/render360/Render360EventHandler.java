@@ -127,24 +127,38 @@ public class Render360EventHandler {
 	
 	@SubscribeEvent
 	public void sunsetColor(Render360Event.SunsetFogEvent e) {
-		if (!(RenderUtil.renderMethod instanceof Standard)) {
+		if (RenderUtil.render360) {
 			e.setCanceled(true);
 		}
 	}
 	
 	@SubscribeEvent
+	public void drawNameplate(Render360Event.DrawNameplateEvent e) {
+		if (RenderUtil.render360) {
+			e.yaw = (float) -(Math.atan(e.x/e.z)*180/Math.PI);
+			if (e.z < 0) {
+				e.yaw += 180;
+			}
+			float distance = (float) (Math.sqrt(e.x*e.x + e.z*e.z));
+			e.pitch = (float) -(Math.atan((e.y-Minecraft.getMinecraft().getRenderViewEntity().height)/distance)*180/Math.PI);
+		}
+	}
+	
+	@SubscribeEvent
 	public void rotateParticle(Render360Event.RotateParticleEvent e) {
-		float posX = e.posX;
-		float posY = e.posY - Minecraft.getMinecraft().thePlayer.eyeHeight;
-		float posZ = e.posZ;
-		
-		float hDist = (float) (Math.sqrt(posZ*posZ + posX*posX));
-		float dist = (float) (Math.sqrt(posZ*posZ + posY*posY + posX*posX));
-		
-		e.rotationX = posZ/hDist;
-		e.rotationZ = 1-Math.abs(posY/dist);
-		e.rotationYZ = -posX/hDist;
-		e.rotationXY = -posY/dist * posX/hDist;
-		e.rotationXZ = -posY/dist * posZ/hDist;
+		if (RenderUtil.render360) {
+			float posX = e.posX;
+			float posY = e.posY - Minecraft.getMinecraft().thePlayer.eyeHeight;
+			float posZ = e.posZ;
+			
+			float hDist = (float) (Math.sqrt(posZ*posZ + posX*posX));
+			float dist = (float) (Math.sqrt(posZ*posZ + posY*posY + posX*posX));
+			
+			e.rotationX = posZ/hDist;
+			e.rotationZ = 1-Math.abs(posY/dist);
+			e.rotationYZ = -posX/hDist;
+			e.rotationXY = -posY/dist * posX/hDist;
+			e.rotationXZ = -posY/dist * posZ/hDist;
+		}
 	}
 }

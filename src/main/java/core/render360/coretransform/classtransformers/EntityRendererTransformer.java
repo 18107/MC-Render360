@@ -267,21 +267,35 @@ public class EntityRendererTransformer extends ClassTransformer {
 			
 			public void transform(ClassNode classNode, MethodNode method, boolean obfuscated) {
 				CLTLog.info("Found method: " + getMethodName().all());
-				CLTLog.info("begining at start of method " + getMethodName().debug());
 				
-				//viewerYaw = RenderUtil.setViewerYaw(x, z)
 				InsnList toInsert = new InsnList();
-				toInsert.add(new VarInsnNode(FLOAD, 2)); //x
-				toInsert.add(new VarInsnNode(FLOAD, 4));
-				toInsert.add(new MethodInsnNode(INVOKESTATIC, Type.getInternalName(RenderUtil.class), "setViewerYaw", "(FF)F", false));
-				toInsert.add(new VarInsnNode(FSTORE, 6)); //viewerYaw
-				
-				//viewerPitch = RenderUtil.setViewerPitch(x, y, z)
+				/**
+				 * TransformerUtil.setNameplateOrientation(x, y, z, viewerYaw, viewerPitch);
+				 */
 				toInsert.add(new VarInsnNode(FLOAD, 2)); //x
 				toInsert.add(new VarInsnNode(FLOAD, 3)); //y
 				toInsert.add(new VarInsnNode(FLOAD, 4)); //z
-				toInsert.add(new MethodInsnNode(INVOKESTATIC, Type.getInternalName(RenderUtil.class), "setViewerPitch", "(FFF)F", false));
-				toInsert.add(new VarInsnNode(FSTORE, 7)); //viewerPitch
+				toInsert.add(new VarInsnNode(FLOAD, 6)); //viewerYaw
+				toInsert.add(new VarInsnNode(FLOAD, 7)); //viewerPitch
+				toInsert.add(new MethodInsnNode(INVOKESTATIC,
+						Type.getInternalName(TransformerUtil.class),
+						"setNameplateOrientation", "(FFFFF)V", false));
+				
+				toInsert.add(new FieldInsnNode(GETSTATIC,Type.getInternalName(TransformerUtil.class),
+						"nameplateX", "F"));
+				toInsert.add(new VarInsnNode(FSTORE, 2));
+				toInsert.add(new FieldInsnNode(GETSTATIC,Type.getInternalName(TransformerUtil.class),
+						"nameplateY", "F"));
+				toInsert.add(new VarInsnNode(FSTORE, 3));
+				toInsert.add(new FieldInsnNode(GETSTATIC,Type.getInternalName(TransformerUtil.class),
+						"nameplateZ", "F"));
+				toInsert.add(new VarInsnNode(FSTORE, 4));
+				toInsert.add(new FieldInsnNode(GETSTATIC,Type.getInternalName(TransformerUtil.class),
+						"nameplateYaw", "F"));
+				toInsert.add(new VarInsnNode(FSTORE, 6));
+				toInsert.add(new FieldInsnNode(GETSTATIC,Type.getInternalName(TransformerUtil.class),
+						"nameplatePitch", "F"));
+				toInsert.add(new VarInsnNode(FSTORE, 7));
 				
 				method.instructions.insert(toInsert);
 			}

@@ -84,6 +84,23 @@ public class TransformerUtil {
 		return event.isCanceled();
 	}
 	
+	//EntityRenderer
+	public static float nameplateX;
+	public static float nameplateY;
+	public static float nameplateZ;
+	public static float nameplateYaw;
+	public static float nameplatePitch;
+	public static void setNameplateOrientation(float x, float y, float z, float yaw, float pitch) {
+		Render360Event.DrawNameplateEvent event =
+				new Render360Event.DrawNameplateEvent(x, y, z, yaw, pitch);
+		MinecraftForge.EVENT_BUS.post(event);
+		nameplateX = event.x;
+		nameplateY = event.y;
+		nameplateZ = event.z;
+		nameplateYaw = event.yaw;
+		nameplatePitch = event.pitch;
+	}
+	
 	//Particle
 	public static float rotationX;
 	public static float rotationZ;

@@ -236,26 +236,4 @@ public class RenderUtil {
 			}
 		}
 	}
-	
-	/**
-	 * Called from asm modified code
-	 * {@link net.minecraft.client.renderer.EntityRenderer#drawNameplate(float, long) drawNameplate}
-	 */
-	public static float setViewerYaw(float x, float z) {
-		float yaw = (float) -(Math.atan(x/z)*180/Math.PI);
-		if (z < 0) {
-			yaw += 180;
-		}
-		return yaw;
-	}
-	
-	/**
-	 * Called from asm modified code
-	 * {@link net.minecraft.client.renderer.EntityRenderer#drawNameplate(float, long) drawNameplate}
-	 */
-	public static float setViewerPitch(float x, float y, float z) {
-		float distance = (float) (Math.sqrt(x*x + z*z));
-		float pitch = (float) -(Math.atan((y-Minecraft.getMinecraft().getRenderViewEntity().height)/distance)*180/Math.PI);
-		return pitch;
-	}
 }
