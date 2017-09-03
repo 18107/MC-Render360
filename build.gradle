@@ -11,7 +11,7 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 //Only edit below this line, the above code adds and enables the nessasary things for Forge to be setup.
 
 
-version = "3.0.0 1.11"
+version = "3.0.0"
 group= "mod.18107.render360" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "Render 360"
 
@@ -22,9 +22,7 @@ compileJava {
 
 jar {
         manifest {
-        attributes 'FMLAT': 'render360_at.cfg',
-            'FMLCorePlugin': 'core.render360.coretransform.CoreLoader',
-                        'FMLCorePluginContainsFMLMod': 'false'
+        attributes 'FMLAT': 'render360_at.cfg'
     }
 }
 
