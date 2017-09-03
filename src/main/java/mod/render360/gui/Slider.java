@@ -1,4 +1,4 @@
-package mod.render360.coretransform.gui;
+package mod.render360.gui;
 
 import java.text.DecimalFormat;
 

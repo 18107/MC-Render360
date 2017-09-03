@@ -1,4 +1,4 @@
-package mod.render360.coretransform;
+package mod.render360;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -10,7 +10,7 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
-import mod.render360.coretransform.render.RenderMethod;
+import mod.render360.render.RenderMethod;
 
 public class Shader {
 
@@ -23,7 +23,7 @@ public class Shader {
 	
 	private static final String vertexShader = "#version 130//\n /* The position of the vertex as two-dimensional vector */ in vec2 vertex; /* Write interpolated texture coordinate to fragment shader */ out vec2 texcoord; void main(void) { gl_Position = vec4(vertex, 0.0, 1.0); /* * Compute texture coordinate by simply * interval-mapping from [-1..+1] to [0..1] */ texcoord = vertex * 0.5 + vec2(0.5, 0.5); } ";
 	
-	public void createShaderProgram(RenderMethod renderMethod) throws IOException {
+	public void createShaderProgram(RenderMethod renderMethod) {
 		shaderProgram = GL20.glCreateProgram();
 		vshader = createShader(vertexShader, GL20.GL_VERTEX_SHADER);
 		fshader = createShader(renderMethod.getFragmentShader(), GL20.GL_FRAGMENT_SHADER);
@@ -56,7 +56,7 @@ public class Shader {
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 	}
 	
-	private int createShader(String resource, int type) throws IOException {
+	private int createShader(String resource, int type) {
 		int shader = GL20.glCreateShader(type);
 		GL20.glShaderSource(shader, resource);
 		GL20.glCompileShader(shader);

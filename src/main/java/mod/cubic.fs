@@ -11,8 +11,9 @@ uniform sampler2D texRight;
 uniform sampler2D texTop;
 uniform sampler2D texBottom;
 
-//fovx\n
-uniform float fovx;
+uniform int antialiasing;
+
+uniform vec2 pixelOffset[16];
 
 uniform vec4 backgroundColor;
 
@@ -23,42 +24,64 @@ uniform bool drawCursor;
 out vec4 color;
 
 void main(void) {
-  if (texcoord.y >= 0.333333333 && texcoord.y < 0.666666666) {
-    //Left\n
-    if (texcoord.x < 0.25) {
-      color = vec4(texture(texLeft, vec2(texcoord.x*4, texcoord.y*3-1)).rgb, 1);
-    }
-    //Front\n
-    else if (texcoord.x < 0.5) {
-      color = vec4(texture(texFront, vec2(texcoord.x*4-1, texcoord.y*3-1)).rgb, 1);
-    }
-    //Right\n
-    else if (texcoord.x < 0.75) {
-      color = vec4(texture(texRight, vec2(texcoord.x*4-2, texcoord.y*3-1)).rgb, 1);
-    }
-    //Back\n
-    else {
-      color = vec4(texture(texBack, vec2(texcoord.x*4-3, texcoord.y*3-1)).rgb, 1);
-    }
-  }
-  else if (texcoord.x < 0.5 && texcoord.x >= 0.25) {
-    //Bottom\n
-    if (texcoord.y < 0.333333333) {
-      color = vec4(texture(texBottom, vec2(texcoord.x*4-1, texcoord.y*3)).rgb, 1);
-    }
-    //Top\n
-    else {
-      color = vec4(texture(texTop, vec2(texcoord.x*4-1, texcoord.y*3-2)).rgb, 1);
-    }
-  }
-	else {
-		color = backgroundColor;
+	//Anti-aliasing
+	vec4 colorN[16];
+	
+	for (int loop = 0; loop < pow(4, antialiasing); loop++) {
+		vec2 coord = texcoord+pixelOffset[loop];
+		
+		if (coord.y >= 0.333333333 && coord.y < 0.666666666) {
+			//Left\n
+			if (coord.x < 0.25) {
+				colorN[loop] = vec4(texture(texLeft, vec2(coord.x*4, coord.y*3-1)).rgb, 1);
+			}
+			//Front\n
+			else if (coord.x < 0.5) {
+				colorN[loop] = vec4(texture(texFront, vec2(coord.x*4-1, coord.y*3-1)).rgb, 1);
+			}
+			//Right\n
+			else if (coord.x < 0.75) {
+				colorN[loop] = vec4(texture(texRight, vec2(coord.x*4-2, coord.y*3-1)).rgb, 1);
+			}
+			//Back\n
+			else {
+				colorN[loop] = vec4(texture(texBack, vec2(coord.x*4-3, coord.y*3-1)).rgb, 1);
+			}
+		}
+		else if (coord.x < 0.5 && coord.x >= 0.25) {
+			//Bottom\n
+			if (coord.y < 0.333333333) {
+				colorN[loop] = vec4(texture(texBottom, vec2(coord.x*4-1, coord.y*3)).rgb, 1);
+			}
+			//Top\n
+			else {
+				colorN[loop] = vec4(texture(texTop, vec2(coord.x*4-1, coord.y*3-2)).rgb, 1);
+			}
+		}
+		else {
+			colorN[loop] = backgroundColor;
+		}
+		
+		if (drawCursor) {
+			if (coord.x + 0.0015 >= (cursorPos.x+1)/4 && coord.x - 0.0015 < (cursorPos.x+1)/4 &&
+				coord.y + 0.002 >= (cursorPos.y+1)/3 && coord.y - 0.002 < (cursorPos.y+1)/3) {
+					colorN[loop] = vec4(1, 1, 1, 1);
+			}
+		}
 	}
-  
-  if (drawCursor) {
-    if (texcoord.x + 0.0015 >= (cursorPos.x+1)/4 && texcoord.x - 0.0015 < (cursorPos.x+1)/4 &&
-      texcoord.y + 0.002 >= (cursorPos.y+1)/3 && texcoord.y - 0.002 < (cursorPos.y+1)/3) {
-        color = vec4(1, 1, 1, 1);
-      }
-  }
+	
+	if (antialiasing == 2) {
+	  vec4 corner[4];
+	  corner[0] = mix(mix(colorN[0], colorN[1], 2.0/3.0), mix(colorN[4], colorN[5], 3.0/5.0), 5.0/8.0);
+	  corner[1] = mix(mix(colorN[3], colorN[2], 2.0/3.0), mix(colorN[7], colorN[6], 3.0/5.0), 5.0/8.0);
+	  corner[2] = mix(mix(colorN[12], colorN[13], 2.0/3.0), mix(colorN[8], colorN[9], 3.0/5.0), 5.0/8.0);
+	  corner[3] = mix(mix(colorN[15], colorN[14], 2.0/3.0), mix(colorN[11], colorN[10], 3.0/5.0), 5.0/8.0);
+	  color = mix(mix(corner[0], corner[1], 0.5), mix(corner[2], corner[3], 0.5), 0.5);
+	}
+	else if (antialiasing == 1) {
+		color = mix(mix(colorN[0], colorN[1], 0.5), mix(colorN[2], colorN[3], 0.5), 0.5);
+	}
+	else { //if antialiasing == 0
+		color = colorN[0];
+	}
 }
