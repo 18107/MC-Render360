@@ -36,7 +36,8 @@ public abstract class RenderMethod {
 	
 	protected static float quality = 1;
 	protected static boolean resizeGui = false;
-	protected static int antialiasing = 2;
+	/**possible values: 1, 4, 16*/
+	protected static int antialiasing = 16;
 	
 	private float yaw;
 	private float pitch;
@@ -143,11 +144,11 @@ public abstract class RenderMethod {
 		int aaUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "antialiasing");
 		GL20.glUniform1i(aaUniform, getAntialiasing());
 		int pixelOffsetUniform;
-		if (getAntialiasing() == 0) {
+		if (getAntialiasing() == 1) {
 			pixelOffsetUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "pixelOffset[0]");
 			GL20.glUniform2f(pixelOffsetUniform, 0, 0);
 		}
-		else if (getAntialiasing() == 1) {
+		else if (getAntialiasing() == 4) {
 			pixelOffsetUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "pixelOffset[0]");
 			GL20.glUniform2f(pixelOffsetUniform, -0.25f/mc.displayWidth, -0.25f/mc.displayHeight);
 			pixelOffsetUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "pixelOffset[1]");
@@ -157,7 +158,7 @@ public abstract class RenderMethod {
 			pixelOffsetUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "pixelOffset[3]");
 			GL20.glUniform2f(pixelOffsetUniform, 0.25f/mc.displayWidth, 0.25f/mc.displayHeight);
 		}
-		else if (getAntialiasing() == 2) {
+		else if (getAntialiasing() == 16) {
 			float left = (-0.5f+0.125f)/mc.displayWidth;
 			float top = (-0.5f+0.125f)/mc.displayHeight;
 			float right = 0.25f/mc.displayWidth;
@@ -363,11 +364,11 @@ public abstract class RenderMethod {
 		int aaUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "antialiasing");
 		GL20.glUniform1i(aaUniform, getAntialiasing());
 		int pixelOffsetUniform;
-		if (getAntialiasing() == 0) {
+		if (getAntialiasing() == 1) {
 			pixelOffsetUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "pixelOffset[0]");
 			GL20.glUniform2f(pixelOffsetUniform, 0, 0);
 		}
-		else if (getAntialiasing() == 1) {
+		else if (getAntialiasing() == 4) {
 			pixelOffsetUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "pixelOffset[0]");
 			GL20.glUniform2f(pixelOffsetUniform, -0.25f/mc.displayWidth, -0.25f/mc.displayHeight);
 			pixelOffsetUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "pixelOffset[1]");
@@ -377,7 +378,7 @@ public abstract class RenderMethod {
 			pixelOffsetUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "pixelOffset[3]");
 			GL20.glUniform2f(pixelOffsetUniform, 0.25f/mc.displayWidth, 0.25f/mc.displayHeight);
 		}
-		else if (getAntialiasing() == 2) {
+		else if (getAntialiasing() == 16) {
 			float left = (-0.5f+0.125f)/mc.displayWidth;
 			float top = (-0.5f+0.125f)/mc.displayHeight;
 			float right = 0.25f/mc.displayWidth;
@@ -445,7 +446,7 @@ public abstract class RenderMethod {
 	public void addButtonsToGui(List<GuiButton> buttonList, int width, int height) {
 		buttonList.add(new GuiButton(18101, width / 2 - 155, height / 6 + 48, 150, 20, "Resize Gui: " + (resizeGui ? "ON" : "OFF")));
 		buttonList.add(new Slider(new Responder(), 18102, width / 2 + 5, height / 6 + 48, 150, 20, "Quality", 0.1f, 5f, quality, 0.1f, null));
-		buttonList.add(new GuiButton(18106, width / 2 + 5, height / 6 + 72, 150, 20, "Antialiasing: " + (antialiasing == 0 ? "OFF" : antialiasing == 1 ? "LOW" : "HIGH")));
+		buttonList.add(new GuiButton(18106, width / 2 + 5, height / 6 + 72, 150, 20, "Antialiasing: " + (antialiasing == 1 ? "OFF" : antialiasing == 4 ? "LOW" : "HIGH")));
 	}
 	
 	public void onButtonPress(GuiButton button) {
@@ -455,9 +456,19 @@ public abstract class RenderMethod {
 			button.displayString = "Resize Gui: " + (resizeGui ? "ON" : "OFF");
 		}
 		else if (button.id == 18106) {
-			antialiasing++;
-			if (antialiasing >=3) antialiasing = 0;
-			button.displayString = "Antialiasing: " + (antialiasing == 0 ? "OFF" : antialiasing == 1 ? "LOW" : "HIGH");
+			switch (antialiasing) {
+			case 1:
+				antialiasing = 4;
+				break;
+			case 4:
+				antialiasing = 16;
+				break;
+			default:
+			case 16:
+				antialiasing = 1;
+				break;
+			}
+			button.displayString = "Antialiasing: " + (antialiasing == 1 ? "OFF" : antialiasing == 4 ? "LOW" : "HIGH");
 		}
 	}
 	
