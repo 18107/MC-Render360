@@ -48,7 +48,7 @@ void main(void) {
 	//Anti-aliasing
 	vec4 colorN[16];
 	
-	for (int loop = 0; loop < pow(4, antialiasing); loop++) {
+	for (int loop = 0; loop < antialiasing; loop++) {
 		
 		//create ray\n
 		vec3 ray = vec3(0, 0, -1);
@@ -57,8 +57,8 @@ void main(void) {
 		float x = (texcoord.x+pixelOffset[loop].x)*2 - 1;
 		float y = (texcoord.y+pixelOffset[loop].y)*2 - 1;
 		float z = sqrt(1 - x*x/2 - y*y/2);
-		float longitude = 2*atan((sqrt(2)*z*x)/(2*z*z - 1));
-		float latitude = asin(sqrt(2)*z*y);
+		float longitude = 2*atan((sqrt(2.0)*z*x)/(2*z*z - 1));
+		float latitude = asin(sqrt(2.0)*z*y);
 		
 		if (x*x + y*y > 1) {
 			color = backgroundColor;
@@ -135,7 +135,7 @@ void main(void) {
 		}
 	}
 	
-	if (antialiasing == 2) {
+	if (antialiasing == 16) {
 	  vec4 corner[4];
 	  corner[0] = mix(mix(colorN[0], colorN[1], 2.0/3.0), mix(colorN[4], colorN[5], 3.0/5.0), 5.0/8.0);
 	  corner[1] = mix(mix(colorN[3], colorN[2], 2.0/3.0), mix(colorN[7], colorN[6], 3.0/5.0), 5.0/8.0);
@@ -143,10 +143,10 @@ void main(void) {
 	  corner[3] = mix(mix(colorN[15], colorN[14], 2.0/3.0), mix(colorN[11], colorN[10], 3.0/5.0), 5.0/8.0);
 	  color = mix(mix(corner[0], corner[1], 0.5), mix(corner[2], corner[3], 0.5), 0.5);
 	}
-	else if (antialiasing == 1) {
+	else if (antialiasing == 4) {
 		color = mix(mix(colorN[0], colorN[1], 0.5), mix(colorN[2], colorN[3], 0.5), 0.5);
 	}
-	else { //if antialiasing == 0
+	else { //if antialiasing == 1
 		color = colorN[0];
 	}
 }
