@@ -11,7 +11,7 @@ public class TheMod
 {
     public static final String MOD_ID = "render360";
     public static final String MOD_NAME = "Render 360";
-    public static final String MOD_VERSION = "3.0.0";
+    public static final String MOD_VERSION = "3.0.1";
     
     public static final String RESOURCE_PREFIX = MOD_ID.toLowerCase() + ':';
     
