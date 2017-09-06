@@ -434,10 +434,13 @@ public abstract class RenderMethod {
 		GL11.glPopMatrix();
 
 		//unbind textures
-		for (int i = framebufferTextures.length-1; i >= 0; i--) {
+		for (int i = framebufferTextures.length-1; i >= 2; i--) {
 			GL13.glActiveTexture(GL13.GL_TEXTURE0+i);
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
 		}
+		GL13.glActiveTexture(GL13.GL_TEXTURE1);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 11); //lightmap
+		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		
 		//Unbind shader
 		GL20.glUseProgram(0);
