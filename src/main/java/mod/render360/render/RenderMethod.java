@@ -50,7 +50,7 @@ public abstract class RenderMethod {
 	
 	static {
 		//Put all of the render methods here
-		renderMethods = new RenderMethod[] {new Standard(), new Cubic(), new Hammer(), new Equirectangular()};
+		renderMethods = new RenderMethod[] {new Standard(), new Flex(), new Cubic(), new Hammer(), new Equirectangular()};
 	}
 	
 	/**
@@ -227,11 +227,7 @@ public abstract class RenderMethod {
 	public void renderWorld(EntityRenderer er, Minecraft mc, Framebuffer framebuffer, Shader shader,
 			int[] framebufferTextures, float partialTicks, long finishTimeNano, int width, int height, float sizeIncrease) {
 		//save the players state
-		player = mc.getRenderViewEntity();
-		yaw = player.rotationYaw;
-		pitch = player.rotationPitch;
-		prevYaw = player.prevRotationYaw;
-		prevPitch = player.prevRotationPitch;
+		setPlayerRotation(mc);
 
 		//clear the primary framebuffer
 		mc.getFramebuffer().framebufferClear();
@@ -260,6 +256,9 @@ public abstract class RenderMethod {
 				renderBack(er, mc, partialTicks, finishTimeNano, player, framebufferTextures[1], yaw, pitch, prevYaw, prevPitch);
 			}
 		}
+		
+		changeYaw = 0;
+		changePitch = 0;
 		
 		//reset displayWidth and displayHeight to the primary framebuffer dimensions
 		mc.displayWidth = width;
@@ -403,8 +402,10 @@ public abstract class RenderMethod {
 		GL20.glUniform1i(texTopUniform, 4);
 		int texBottomUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "texBottom");
 		GL20.glUniform1i(texBottomUniform, 5);
-		int fovUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "fovx");
-		GL20.glUniform1f(fovUniform, getFOV());
+		int fovxUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "fovx");
+		GL20.glUniform1f(fovxUniform, getFOV());
+		int fovyUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "fovy");
+		GL20.glUniform1f(fovyUniform, getFOV()*Display.getHeight()/Display.getWidth());
 		
 		int backgroundUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "backgroundColor");
 		float backgroundColor[] = getBackgroundColor();
@@ -492,7 +493,15 @@ public abstract class RenderMethod {
 		}
 	}
 	
-	private void resetPlayerRotation() {
+	public void setPlayerRotation(Minecraft mc) {
+		player = mc.getRenderViewEntity();
+		yaw = player.rotationYaw;
+		pitch = player.rotationPitch;
+		prevYaw = player.prevRotationYaw;
+		prevPitch = player.prevRotationPitch;
+	}
+	
+	public void resetPlayerRotation() {
 		player.rotationYaw = yaw;
 		player.rotationPitch = pitch;
 		player.prevRotationYaw = prevYaw;
@@ -517,6 +526,10 @@ public abstract class RenderMethod {
 	
 	public float getFOV() {
 		return 360;
+	}
+	
+	public boolean lockDefaultFOV() {
+		return RenderUtil.render360;
 	}
 	
 	public float getQuality() {
