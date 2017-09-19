@@ -16,7 +16,7 @@ public class Hammer extends RenderMethod {
 	
 	public int antialiasing = 16;
 	
-	public boolean skyBackground = false;
+	public boolean skyBackground = true;
 	
 	@Override
 	public String getName() {

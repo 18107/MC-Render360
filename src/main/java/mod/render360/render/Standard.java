@@ -31,16 +31,6 @@ public class Standard extends RenderMethod {
 	}
 	
 	@Override
-	public void addButtonsToGui(List<GuiButton> buttonList, int width, int height) {
-		//This method intentionally left blank.
-	}
-	
-	@Override
-	public void onButtonPress(GuiButton button) {
-		//This method intentionally left blank.
-	}
-	
-	@Override
 	public boolean getResizeGui() {
 		return false;
 	}

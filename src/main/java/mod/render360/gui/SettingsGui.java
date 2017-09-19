@@ -19,15 +19,15 @@ public class SettingsGui extends GuiScreen {
 	
 	@Override
 	public void initGui() {
-		GuiButton button = new GuiButton(18190, super.width / 2 - 190, super.height / 6 - 12, 120, 20, "Standard");
+		GuiButton button = new GuiButton(18100, super.width / 2 - 190, super.height / 6 - 12, 120, 20, "Off");
 		if (settingsGui instanceof StandardGui) button.enabled = false;
 		super.buttonList.add(button);
 		
-		button = new GuiButton(18191, super.width / 2 - 60, super.height / 6 - 12, 120, 20, "Simple");
+		button = new GuiButton(18101, super.width / 2 - 60, super.height / 6 - 12, 120, 20, "Simple");
 		if (settingsGui instanceof SimpleGui) button.enabled = false;
 		super.buttonList.add(button);
 		
-		button = new GuiButton(18192, super.width / 2 + 70, super.height / 6 - 12, 120, 20, "Advanced");
+		button = new GuiButton(18102, super.width / 2 + 70, super.height / 6 - 12, 120, 20, "Advanced");
 		if (settingsGui instanceof AdvancedGui) button.enabled = false;
 		super.buttonList.add(button);
 		
@@ -39,15 +39,15 @@ public class SettingsGui extends GuiScreen {
 	protected void actionPerformed(GuiButton button) throws IOException {
 		if (button.enabled) {
 			switch (button.id) {
-			case 18190: //Standard
+			case 18100: //Standard
 				settingsGui = new StandardGui();
 				mc.displayGuiScreen(new SettingsGui(parentGuiScreen));
 				break;
-			case 18191: //Simple
+			case 18101: //Simple
 				settingsGui = new SimpleGui();
 				mc.displayGuiScreen(new SettingsGui(parentGuiScreen));
 				break;
-			case 18192: //Advanced
+			case 18102: //Advanced
 				settingsGui = new AdvancedGui();
 				mc.displayGuiScreen(new SettingsGui(parentGuiScreen));
 				break;

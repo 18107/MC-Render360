@@ -23,15 +23,15 @@ public class AdvancedGui implements Settings {
 	
 	@Override
 	public void initGui(List<GuiButton> buttonList, int width, int height) {
-		GuiButton button = new GuiButton(18150, width / 2 - 190, height / 6 + 24, 120, 20, "Cubic");
+		GuiButton button = new GuiButton(18130, width / 2 - 190, height / 6 + 24, 120, 20, "Cubic");
 		if (guiObject instanceof CubicGui) button.enabled = false;
 		buttonList.add(button);
 		
-		button = new GuiButton(18151, width / 2 - 60, height / 6 + 24, 120, 20, "Hammer");
+		button = new GuiButton(18131, width / 2 - 60, height / 6 + 24, 120, 20, "Hammer");
 		if (guiObject instanceof HammerGui) button.enabled = false;
 		buttonList.add(button);
 		
-		button = new GuiButton(18152, width / 2 + 70, height / 6 + 24, 120, 20, "Equirectangular");
+		button = new GuiButton(18132, width / 2 + 70, height / 6 + 24, 120, 20, "Equirectangular");
 		if (guiObject instanceof EquirectangularGui) button.enabled = false;
 		buttonList.add(button);
 		
@@ -41,19 +41,19 @@ public class AdvancedGui implements Settings {
 	@Override
 	public void actionPerformed(GuiButton guiButton, GuiScreen parentScreen) {
 		switch(guiButton.id) {
-		case 18150: //Cubic
+		case 18130: //Cubic
 			guiObject = new CubicGui();
 			RenderUtil.renderMethod = guiObject.getRenderMethod();
 			RenderUtil.forceReload();
 			Minecraft.getMinecraft().displayGuiScreen(new SettingsGui(parentScreen));
 			break;
-		case 18151: //Hammer
+		case 18131: //Hammer
 			guiObject = new HammerGui();
 			RenderUtil.renderMethod = guiObject.getRenderMethod();
 			RenderUtil.forceReload();
 			Minecraft.getMinecraft().displayGuiScreen(new SettingsGui(parentScreen));
 			break;
-		case 18152: //Equirectangular
+		case 18132: //Equirectangular
 			guiObject = new EquirectangularGui();
 			RenderUtil.renderMethod = guiObject.getRenderMethod();
 			RenderUtil.forceReload();

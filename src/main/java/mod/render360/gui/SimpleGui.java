@@ -19,7 +19,7 @@ public class SimpleGui implements Settings {
 	
 	@Override
 	public void initGui(List<GuiButton> buttonList, int width, int height) {
-		buttonList.add(new Slider(new Responder(), 18104, width / 2 - 180, height / 6 + 24, 360, 20, "FOV", 0f, 360f, flex.fov, 1f, null));
+		buttonList.add(new Slider(new Responder(), 18120, width / 2 - 180, height / 6 + 24, 360, 20, "FOV", 0f, 360f, flex.fov, 1f, null));
 	}
 	
 	@Override
@@ -36,7 +36,7 @@ public class SimpleGui implements Settings {
 		@Override
 		public void setEntryValue(int id, float value) {
 			//FOV
-			if (id == 18104) {
+			if (id == 18120) {
 				flex.fov = value;
 			}
 		}
