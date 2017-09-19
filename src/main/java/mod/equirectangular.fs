@@ -17,8 +17,6 @@ uniform int antialiasing;
 
 uniform vec2 pixelOffset[16];
 
-uniform float fovx;
-
 uniform vec2 cursorPos;
 
 uniform bool drawCursor;
@@ -74,7 +72,7 @@ void main(void) {
 		vec3 ray = vec3(0, 0, -1);
 		
 		//rotate ray\n
-		ray = rotate(ray, vec2((texcoord.x+pixelOffset[loop].x-0.5)*2*M_PI*fovx/360, (texcoord.y+pixelOffset[loop].y-0.5)*M_PI*fovx/360)); //x (-pi to pi), y (-pi/2 to pi/2\n
+		ray = rotate(ray, vec2((texcoord.x+pixelOffset[loop].x-0.5)*2*M_PI, (texcoord.y+pixelOffset[loop].y-0.5)*M_PI)); //x (-pi to pi), y (-pi/2 to pi/2\n
 		ray = rotate2(ray, vec2(-rotation.x*M_PI/180, rotation.y*M_PI/180));
 		
 		//find which side to use\n

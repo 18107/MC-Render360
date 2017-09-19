@@ -3,7 +3,7 @@ package mod.render360;
 import org.lwjgl.opengl.Display;
 
 import core.render360.Render360Event;
-import mod.render360.gui.Render360Settings;
+import mod.render360.gui.SettingsGui;
 import mod.render360.render.RenderMethod;
 import mod.render360.render.Standard;
 import net.minecraft.client.Minecraft;
@@ -38,7 +38,7 @@ public class Render360EventHandler {
 		if (!disabled) {
 			if (e.getGui() instanceof GuiOptions && e.getButton().id == 18107) {
 				e.getGui().mc.gameSettings.saveOptions();
-				e.getGui().mc.displayGuiScreen(new Render360Settings(e.getGui()));
+				e.getGui().mc.displayGuiScreen(new SettingsGui(e.getGui()));
 			}
 		}
 	}
@@ -64,21 +64,21 @@ public class Render360EventHandler {
 	@SubscribeEvent
 	public void rotatePlayer(EntityViewRenderEvent.CameraSetup e) {
 		if (!disabled) {
-			RenderUtil.renderMethod.rotatePlayer(); //FIXME
+			RenderUtil.renderMethod.rotatePlayer();
 		}
 	}
 	
 	@SubscribeEvent
 	public void worldLoad(Render360Event.DimensionLoadEvent e) {
 		if (!disabled) {
-			RenderUtil.onWorldLoad(); //FIXME
+			RenderUtil.onWorldLoad();
 		}
 	}
 	
 	@SubscribeEvent
 	public void worldUnload(Render360Event.DimensionUnloadEvent e) {
 		if (!disabled) {
-			RenderUtil.onWorldUnload(); //FIXME
+			RenderUtil.onWorldUnload();
 		}
 	}
 	

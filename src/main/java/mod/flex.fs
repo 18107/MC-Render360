@@ -110,7 +110,7 @@ void main(void) {
 		//create ray
 		vec3 ray;
 		
-		if (fovx < 90) { //TODO
+		if (fovx < 90) {
 			ray = passthrough(vec2(coord.x, coord.y*fovy/fovx + (1-fovy/fovx)/2));
 		} else if (fovx <= 180) {
 			ray = panini_ray(coord, (fovx-90)/90);
