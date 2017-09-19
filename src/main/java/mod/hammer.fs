@@ -1,6 +1,6 @@
-#version 130//\n
+#version 130
 
-#define M_PI 3.14159265//\n
+#define M_PI 3.14159265
 
 /* This comes interpolated from the vertex shader */
 in vec2 texcoord;
@@ -27,13 +27,13 @@ out vec4 color;
 
 vec3 rotate(vec3 ray, vec2 angle) {
   
-  //rotate y\n
+  //rotate y
   float y = -sin(angle.y)*ray.z;
   float z = cos(angle.y)*ray.z;
   ray.y = y;
   ray.z = z;
   
-  //rotate x\n
+  //rotate x
   float x = -sin(angle.x)*ray.z;
   z = cos(angle.x)*ray.z;
   ray.x = x;
@@ -50,10 +50,10 @@ void main(void) {
 	
 	for (int loop = 0; loop < antialiasing; loop++) {
 		
-		//create ray\n
+		//create ray
 		vec3 ray = vec3(0, 0, -1);
 		
-		//hammer stuff http://paulbourke.net/geometry/transformationprojection/ \n
+		//hammer stuff http://paulbourke.net/geometry/transformationprojection/
 		float x = (texcoord.x+pixelOffset[loop].x)*2 - 1;
 		float y = (texcoord.y+pixelOffset[loop].y)*2 - 1;
 		float z = sqrt(1 - x*x/2 - y*y/2);
@@ -65,31 +65,31 @@ void main(void) {
 			return;
 		}
 		
-		//rotate ray\n
+		//rotate ray
 		ray = rotate(ray, vec2(longitude, latitude));
 		
-		//find which side to use\n
+		//find which side to use
 		if (abs(ray.x) > abs(ray.y)) {
 			if (abs(ray.x) > abs(ray.z)) {
 				if (ray.x > 0) {
-					//right\n
+					//right
 					float x = ray.z / ray.x;
 					float y = ray.y / ray.x;
 					colorN[loop] = vec4(texture(texRight, vec2((x+1)/2, (y+1)/2)).rgb, 1);
 				} else {
-					//left\n
+					//left
 					float x = -ray.z / -ray.x;
 					float y = ray.y / -ray.x;
 					colorN[loop] = vec4(texture(texLeft, vec2((x+1)/2, (y+1)/2)).rgb, 1);
 				}
 			} else {
 				if (ray.z > 0) {
-					//back\n
+					//back
 					float x = -ray.x / ray.z;
 					float y = ray.y / ray.z;
 					colorN[loop] = vec4(texture(texBack, vec2((x+1)/2, (y+1)/2)).rgb, 1);
 				} else {
-					//front\n
+					//front
 					float x = ray.x / -ray.z;
 					float y = ray.y / -ray.z;
 					colorN[loop] = vec4(texture(texFront, vec2((x+1)/2, (y+1)/2)).rgb, 1);
@@ -98,24 +98,24 @@ void main(void) {
 		} else {
 			if (abs(ray.y) > abs(ray.z)) {
 				if (ray.y > 0) {
-					//top\n
+					//top
 					float x = ray.x / ray.y;
 					float y = ray.z / ray.y;
 					colorN[loop] = vec4(texture(texTop, vec2((x+1)/2, (y+1)/2)).rgb, 1);
 				} else {
-					//bottom\n
+					//bottom
 					float x = ray.x / -ray.y;
 					float y = -ray.z / -ray.y;
 					colorN[loop] = vec4(texture(texBottom, vec2((x+1)/2, (y+1)/2)).rgb, 1);
 				}
 			} else {
 				if (ray.z > 0) {
-					//back\n
+					//back
 					float x = -ray.x / ray.z;
 					float y = ray.y / ray.z;
 					colorN[loop] = vec4(texture(texBack, vec2((x+1)/2, (y+1)/2)).rgb, 1);
 				} else {
-					//front\n
+					//front
 					float x = ray.x / -ray.z;
 					float y = ray.y / -ray.z;
 					colorN[loop] = vec4(texture(texFront, vec2((x+1)/2, (y+1)/2)).rgb, 1);

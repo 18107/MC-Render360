@@ -93,10 +93,6 @@ vec3 panini_ray(vec2 lenscoord, float dist) {
 }
 //end copy
 
-vec3 equirectangular(vec2 coord) {
-	return rotate(vec3(0, 0, -1), vec2((coord.x-0.5)*2*M_PI*fovx/360, (coord.y-0.5)*M_PI*fovx/360));
-}
-
 void main(void) {
 	/* Ray-trace a cube */
 	
