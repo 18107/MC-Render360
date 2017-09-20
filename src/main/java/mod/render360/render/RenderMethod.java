@@ -34,8 +34,6 @@ public abstract class RenderMethod {
 	 */
 	private static final RenderMethod[] renderMethods;
 	
-	protected static float quality = 1;
-	protected static boolean resizeGui = false;
 	/**possible values: 1, 4, 16*/
 	protected static int antialiasing = 16;
 	
@@ -50,7 +48,7 @@ public abstract class RenderMethod {
 	
 	static {
 		//Put all of the render methods here
-		renderMethods = new RenderMethod[] {new Standard(), new Cubic(), new Hammer(), new Equirectangular()};
+		renderMethods = new RenderMethod[] {new Standard(), new Flex(), new Cubic(), new Hammer(), new Equirectangular()};
 	}
 	
 	/**
@@ -183,8 +181,10 @@ public abstract class RenderMethod {
 		GL20.glUniform1i(texTopUniform, 4);
 		int texBottomUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "texBottom");
 		GL20.glUniform1i(texBottomUniform, 5);
-		int fovUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "fovx");
-		GL20.glUniform1f(fovUniform, getFOV());
+		int fovxUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "fovx");
+		GL20.glUniform1f(fovxUniform, getFOV());
+		int fovyUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "fovy");
+		GL20.glUniform1f(fovyUniform, getFOV()*Display.getHeight()/Display.getWidth());
 		int backgroundUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "backgroundColor");
 		GL20.glUniform4f(backgroundUniform, 0, 0, 0, 1);
 		
@@ -227,11 +227,7 @@ public abstract class RenderMethod {
 	public void renderWorld(EntityRenderer er, Minecraft mc, Framebuffer framebuffer, Shader shader,
 			int[] framebufferTextures, float partialTicks, long finishTimeNano, int width, int height, float sizeIncrease) {
 		//save the players state
-		player = mc.getRenderViewEntity();
-		yaw = player.rotationYaw;
-		pitch = player.rotationPitch;
-		prevYaw = player.prevRotationYaw;
-		prevPitch = player.prevRotationPitch;
+		setPlayerRotation(mc);
 
 		//clear the primary framebuffer
 		mc.getFramebuffer().framebufferClear();
@@ -260,6 +256,9 @@ public abstract class RenderMethod {
 				renderBack(er, mc, partialTicks, finishTimeNano, player, framebufferTextures[1], yaw, pitch, prevYaw, prevPitch);
 			}
 		}
+		
+		changeYaw = 0;
+		changePitch = 0;
 		
 		//reset displayWidth and displayHeight to the primary framebuffer dimensions
 		mc.displayWidth = width;
@@ -360,6 +359,7 @@ public abstract class RenderMethod {
 		GL11.glPushMatrix();
 		GL11.glLoadIdentity();
 		
+		//TODO put these somewhere else
 		//Anti-aliasing
 		int aaUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "antialiasing");
 		GL20.glUniform1i(aaUniform, getAntialiasing());
@@ -403,8 +403,10 @@ public abstract class RenderMethod {
 		GL20.glUniform1i(texTopUniform, 4);
 		int texBottomUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "texBottom");
 		GL20.glUniform1i(texBottomUniform, 5);
-		int fovUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "fovx");
-		GL20.glUniform1f(fovUniform, getFOV());
+		int fovxUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "fovx");
+		GL20.glUniform1f(fovxUniform, getFOV());
+		int fovyUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "fovy");
+		GL20.glUniform1f(fovyUniform, getFOV()*Display.getHeight()/Display.getWidth());
 		
 		int backgroundUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "backgroundColor");
 		float backgroundColor[] = getBackgroundColor();
@@ -446,35 +448,6 @@ public abstract class RenderMethod {
 		GL20.glUseProgram(0);
 	}
 	
-	public void addButtonsToGui(List<GuiButton> buttonList, int width, int height) {
-		buttonList.add(new GuiButton(18101, width / 2 - 155, height / 6 + 48, 150, 20, "Resize Gui: " + (resizeGui ? "ON" : "OFF")));
-		buttonList.add(new Slider(new Responder(), 18102, width / 2 + 5, height / 6 + 48, 150, 20, "Quality", 0.1f, 5f, quality, 0.1f, null));
-		buttonList.add(new GuiButton(18106, width / 2 + 5, height / 6 + 72, 150, 20, "Antialiasing: " + (antialiasing == 1 ? "OFF" : antialiasing == 4 ? "LOW" : "HIGH")));
-	}
-	
-	public void onButtonPress(GuiButton button) {
-		//Resize Gui
-		if (button.id == 18101) {
-			resizeGui = !resizeGui;
-			button.displayString = "Resize Gui: " + (resizeGui ? "ON" : "OFF");
-		}
-		else if (button.id == 18106) {
-			switch (antialiasing) {
-			case 1:
-				antialiasing = 4;
-				break;
-			case 4:
-				antialiasing = 16;
-				break;
-			default:
-			case 16:
-				antialiasing = 1;
-				break;
-			}
-			button.displayString = "Antialiasing: " + (antialiasing == 1 ? "OFF" : antialiasing == 4 ? "LOW" : "HIGH");
-		}
-	}
-	
 	public void rotateCamera(Render360Event.RotateCameraEvent event) {
 		event.yaw = changeYaw;
 		event.pitch = changePitch;
@@ -492,7 +465,15 @@ public abstract class RenderMethod {
 		}
 	}
 	
-	private void resetPlayerRotation() {
+	public void setPlayerRotation(Minecraft mc) {
+		player = mc.getRenderViewEntity();
+		yaw = player.rotationYaw;
+		pitch = player.rotationPitch;
+		prevYaw = player.prevRotationYaw;
+		prevPitch = player.prevRotationPitch;
+	}
+	
+	public void resetPlayerRotation() {
 		player.rotationYaw = yaw;
 		player.rotationPitch = pitch;
 		player.prevRotationYaw = prevYaw;
@@ -519,12 +500,16 @@ public abstract class RenderMethod {
 		return 360;
 	}
 	
+	public boolean lockDefaultFOV() {
+		return RenderUtil.render360;
+	}
+	
 	public float getQuality() {
-		return quality;
+		return 1;
 	}
 	
 	public boolean getResizeGui() {
-		return resizeGui;
+		return false;
 	}
 	
 	public int getAntialiasing() {
@@ -541,28 +526,5 @@ public abstract class RenderMethod {
 	
 	public boolean renderAllSides() {
 		return false;
-	}
-	
-	public class Responder implements GuiResponder {
-		@Override
-		public void setEntryValue(int id, boolean value) {
-			
-		}
-
-		@Override
-		public void setEntryValue(int id, float value) {
-			//Quality
-			if (id == 18102) {
-				if (quality != value) {
-					quality = value;
-					RenderUtil.forceReload();
-				}
-			}
-		}
-
-		@Override
-		public void setEntryValue(int id, String value) {
-			
-		}
 	}
 }

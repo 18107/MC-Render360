@@ -1,4 +1,4 @@
-#version 130//\n
+#version 130
 
 /* This comes interpolated from the vertex shader */
 in vec2 texcoord;
@@ -31,29 +31,29 @@ void main(void) {
 		vec2 coord = texcoord+pixelOffset[loop];
 		
 		if (coord.y >= 0.333333333 && coord.y < 0.666666666) {
-			//Left\n
+			//Left
 			if (coord.x < 0.25) {
 				colorN[loop] = vec4(texture(texLeft, vec2(coord.x*4, coord.y*3-1)).rgb, 1);
 			}
-			//Front\n
+			//Front
 			else if (coord.x < 0.5) {
 				colorN[loop] = vec4(texture(texFront, vec2(coord.x*4-1, coord.y*3-1)).rgb, 1);
 			}
-			//Right\n
+			//Right
 			else if (coord.x < 0.75) {
 				colorN[loop] = vec4(texture(texRight, vec2(coord.x*4-2, coord.y*3-1)).rgb, 1);
 			}
-			//Back\n
+			//Back
 			else {
 				colorN[loop] = vec4(texture(texBack, vec2(coord.x*4-3, coord.y*3-1)).rgb, 1);
 			}
 		}
 		else if (coord.x < 0.5 && coord.x >= 0.25) {
-			//Bottom\n
+			//Bottom
 			if (coord.y < 0.333333333) {
 				colorN[loop] = vec4(texture(texBottom, vec2(coord.x*4-1, coord.y*3)).rgb, 1);
 			}
-			//Top\n
+			//Top
 			else {
 				colorN[loop] = vec4(texture(texTop, vec2(coord.x*4-1, coord.y*3-2)).rgb, 1);
 			}

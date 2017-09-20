@@ -1,6 +1,6 @@
-#version 130//\n
+#version 130
 
-#define M_PI 3.14159265//\n
+#define M_PI 3.14159265
 
 /* This comes interpolated from the vertex shader */
 in vec2 texcoord;
@@ -17,8 +17,6 @@ uniform int antialiasing;
 
 uniform vec2 pixelOffset[16];
 
-uniform float fovx;
-
 uniform vec2 cursorPos;
 
 uniform bool drawCursor;
@@ -31,13 +29,13 @@ out vec4 color;
 
 vec3 rotate(vec3 ray, vec2 angle) {
   
-  //rotate y\n
+  //rotate y
   float y = -sin(angle.y)*ray.z;
   float z = cos(angle.y)*ray.z;
   ray.y = y;
   ray.z = z;
   
-  //rotate x\n
+  //rotate x
   float x = -sin(angle.x)*ray.z;
   z = cos(angle.x)*ray.z;
   ray.x = x;
@@ -47,13 +45,13 @@ vec3 rotate(vec3 ray, vec2 angle) {
 }
 
 vec3 rotate2(vec3 ray, vec2 angle) {
-	//rotate x\n
+	//rotate x
 	float x = cos(angle.x)*ray.x - sin(angle.x)*ray.z;
 	float z = cos(angle.x)*ray.z + sin(angle.x)*ray.x;
 	ray.x = x;
 	ray.z = z;
 	
-	//rotate y\n
+	//rotate y
 	float y = cos(angle.y)*ray.y - sin(angle.y)*ray.z;
 	z = cos(angle.y)*ray.z + sin(angle.y)*ray.y;
 	ray.y = y;
@@ -70,35 +68,35 @@ void main(void) {
 	
 	for (int loop = 0; loop < antialiasing; loop++) {
 		
-		//create ray\n
+		//create ray
 		vec3 ray = vec3(0, 0, -1);
 		
-		//rotate ray\n
-		ray = rotate(ray, vec2((texcoord.x+pixelOffset[loop].x-0.5)*2*M_PI*fovx/360, (texcoord.y+pixelOffset[loop].y-0.5)*M_PI*fovx/360)); //x (-pi to pi), y (-pi/2 to pi/2\n
+		//rotate ray
+		ray = rotate(ray, vec2((texcoord.x+pixelOffset[loop].x-0.5)*2*M_PI, (texcoord.y+pixelOffset[loop].y-0.5)*M_PI)); //x (-pi to pi), y (-pi/2 to pi/2\n
 		ray = rotate2(ray, vec2(-rotation.x*M_PI/180, rotation.y*M_PI/180));
 		
-		//find which side to use\n
+		//find which side to use
 		if (abs(ray.x) > abs(ray.y)) {
 			if (abs(ray.x) > abs(ray.z)) {
 				if (ray.x > 0) {
-					//right\n
+					//right
 					float x = ray.z / ray.x;
 					float y = ray.y / ray.x;
 					colorN[loop] = vec4(texture(texRight, vec2((x+1)/2, (y+1)/2)).rgb, 1);
 				} else {
-					//left\n
+					//left
 					float x = -ray.z / -ray.x;
 					float y = ray.y / -ray.x;
 					colorN[loop] = vec4(texture(texLeft, vec2((x+1)/2, (y+1)/2)).rgb, 1);
 				}
 			} else {
 				if (ray.z > 0) {
-					//back\n
+					//back
 					float x = -ray.x / ray.z;
 					float y = ray.y / ray.z;
 					colorN[loop] = vec4(texture(texBack, vec2((x+1)/2, (y+1)/2)).rgb, 1);
 				} else {
-					//front\n
+					//front
 					float x = ray.x / -ray.z;
 					float y = ray.y / -ray.z;
 					colorN[loop] = vec4(texture(texFront, vec2((x+1)/2, (y+1)/2)).rgb, 1);
@@ -107,24 +105,24 @@ void main(void) {
 		} else {
 			if (abs(ray.y) > abs(ray.z)) {
 				if (ray.y > 0) {
-					//top\n
+					//top
 					float x = ray.x / ray.y;
 					float y = ray.z / ray.y;
 					colorN[loop] = vec4(texture(texTop, vec2((x+1)/2, (y+1)/2)).rgb, 1);
 				} else {
-					//bottom\n
+					//bottom
 					float x = ray.x / -ray.y;
 					float y = -ray.z / -ray.y;
 					colorN[loop] = vec4(texture(texBottom, vec2((x+1)/2, (y+1)/2)).rgb, 1);
 				}
 			} else {
 				if (ray.z > 0) {
-					//back\n
+					//back
 					float x = -ray.x / ray.z;
 					float y = ray.y / ray.z;
 					colorN[loop] = vec4(texture(texBack, vec2((x+1)/2, (y+1)/2)).rgb, 1);
 				} else {
-					//front\n
+					//front
 					float x = ray.x / -ray.z;
 					float y = ray.y / -ray.z;
 					colorN[loop] = vec4(texture(texFront, vec2((x+1)/2, (y+1)/2)).rgb, 1);

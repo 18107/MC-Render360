@@ -1,6 +1,7 @@
 #version 130
 
 #define M_PI 3.14159265
+#define M_E 2.718281828
 
 /* This comes interpolated from the vertex shader */
 in vec2 texcoord;
@@ -17,11 +18,8 @@ uniform int antialiasing;
 
 uniform vec2 pixelOffset[16];
 
-uniform vec4 backgroundColor;
-
-uniform vec2 cursorPos;
-
-uniform bool drawCursor;
+uniform float fovx;
+uniform float fovy;
 
 out vec4 color;
 
@@ -42,31 +40,83 @@ vec3 rotate(vec3 ray, vec2 angle) {
   return ray;
 }
 
+vec3 passthrough(vec2 coord) {
+	return vec3(coord*2-1, -1);
+}
+
+//copied from github.com/shaunlebron/flex-fov
+vec3 latlon_to_ray(float lat, float lon) {
+  return vec3(
+    sin(lon)*cos(lat),
+    sin(lat),
+    -cos(lon)*cos(lat)
+  );
+}
+
+vec3 mercator_inverse(vec2 lenscoord) {
+  float lon = lenscoord.x;
+  float lat = atan(sinh(lenscoord.y*fovy/fovx));
+  return latlon_to_ray(lat, lon);
+}
+vec2 mercator_forward(float lat, float lon) {
+  float x = lon;
+  float y = log(tan(M_PI*0.25+lat*0.5));
+  return vec2(x,y);
+}
+vec3 mercator_ray(vec2 lenscoord) {
+  float scale = mercator_forward(0, radians(fovx)/2).x;
+  return mercator_inverse((lenscoord*2-1) * scale);
+}
+
+vec3 panini_inverse(vec2 lenscoord, float dist) {
+  float x = lenscoord.x;
+  float y = lenscoord.y*fovy/fovx;
+  float d = dist;
+  float k = x*x/((d+1)*(d+1));
+  float dscr = k*k*d*d - (k+1)*(k*d*d-1);
+  float clon = (-k*d+sqrt(dscr))/(k+1);
+  float S = (d+1)/(d+clon);
+  float lon = atan(x,S*clon);
+  float lat = atan(y,S);
+  return latlon_to_ray(lat, lon);
+}
+vec2 panini_forward(float lat, float lon, float dist) {
+  float d = dist;
+  float S = (d+1)/(d+cos(lon));
+  float x = S*sin(lon);
+  float y = S*tan(lat);
+  return vec2(x,y);
+}
+vec3 panini_ray(vec2 lenscoord, float dist) {
+  float scale = panini_forward(0, radians(fovx)/2, dist).x;
+  return panini_inverse((lenscoord*2-1) * scale, dist);
+}
+//end copy
+
 void main(void) {
-  /* Ray-trace a cube */
+	/* Ray-trace a cube */
 	
 	//Anti-aliasing
 	vec4 colorN[16];
 	
 	for (int loop = 0; loop < antialiasing; loop++) {
 		
+		vec2 coord = texcoord + pixelOffset[loop];
+		
 		//create ray
-		vec3 ray = vec3(0, 0, -1);
+		vec3 ray;
 		
-		//hammer stuff http://paulbourke.net/geometry/transformationprojection/
-		float x = (texcoord.x+pixelOffset[loop].x)*2 - 1;
-		float y = (texcoord.y+pixelOffset[loop].y)*2 - 1;
-		float z = sqrt(1 - x*x/2 - y*y/2);
-		float longitude = 2*atan((sqrt(2.0)*z*x)/(2*z*z - 1));
-		float latitude = asin(sqrt(2.0)*z*y);
-		
-		if (x*x + y*y > 1) {
-			color = backgroundColor;
-			return;
+		if (fovx < 90) {
+			ray = passthrough(vec2(coord.x, coord.y*fovy/fovx + (1-fovy/fovx)/2));
+		} else if (fovx <= 180) {
+			ray = panini_ray(coord, (fovx-90)/90);
+		} else if (fovx < 320) {
+			float linear = (fovx - 180)/ 140;
+			float expon = linear*pow(M_E, 1-linear);
+			ray = mix(panini_ray(coord, 1), mercator_ray(coord), expon);
+		} else {
+			ray = mercator_ray(coord);
 		}
-		
-		//rotate ray
-		ray = rotate(ray, vec2(longitude, latitude));
 		
 		//find which side to use
 		if (abs(ray.x) > abs(ray.y)) {
@@ -120,17 +170,6 @@ void main(void) {
 					float y = ray.y / -ray.z;
 					colorN[loop] = vec4(texture(texFront, vec2((x+1)/2, (y+1)/2)).rgb, 1);
 				}
-			}
-		}
-		
-		if (drawCursor) {
-			vec2 normalAngle = cursorPos*2 - 1;
-			float x = ray.x / -ray.z;
-			float y = ray.y / -ray.z;
-			if (x <= normalAngle.x + 0.01 && y <= normalAngle.y + 0.01 &&
-				x >= normalAngle.x - 0.01 && y >= normalAngle.y - 0.01 &&
-				ray.z < 0) {
-				colorN[loop] = vec4(1, 1, 1, 1);
 			}
 		}
 	}

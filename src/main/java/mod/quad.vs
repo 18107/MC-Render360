@@ -1,4 +1,4 @@
-#version 130//\n
+#version 130
 
 /* The position of the vertex as two-dimensional vector */
 in vec2 vertex;
