@@ -112,7 +112,7 @@ public class FisheyeGui implements Advanced {
 		@Override
 		public void setEntryValue(int id, float value) {
 			//Quality
-			if (id == 18160) {
+			if (id == 18150) {
 				if (fisheye.quality != value) {
 					fisheye.quality = value;
 					RenderUtil.forceReload();
