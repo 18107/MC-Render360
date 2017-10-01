@@ -15,11 +15,11 @@ public class FisheyeGui implements Advanced {
 
 	@Override
 	public void initGui(List<GuiButton> buttonList, int width, int height) {
-		buttonList.add(new GuiButton(18140, width / 2 - 190, height / 6 - 12, 120, 20, (fisheye.fisheyeType==0?"Stereographic":"")));
-		buttonList.add(new GuiButton(18141, width / 2 - 60, height / 6 - 12, 120, 20, (fisheye.fisheyeType==1?"Equidistant":"")));
-		buttonList.add(new GuiButton(18142, width / 2 + 70, height / 6 - 12, 120, 20, (fisheye.fisheyeType==2?"Equisolid":"")));
-		buttonList.add(new GuiButton(18143, width / 2 + 80, height / 6 - 12, 120, 20, (fisheye.fisheyeType==3?"Thoby":"")));
-		buttonList.add(new GuiButton(18144, width / 2 + 90, height / 6 - 12, 120, 20, (fisheye.fisheyeType==4?"Orthographic":"")));
+		buttonList.add(new GuiButton(18140, width / 2 - 190 + ((190*2-0*4)/5 + 0) * 0, height / 6 + 48, (190*2-0*4)/5, 20, "Stereographic"));
+		buttonList.add(new GuiButton(18141, width / 2 - 190 + ((190*2-0*4)/5 + 0) * 1, height / 6 + 48, (190*2-0*4)/5, 20, "Equidistant"));
+		buttonList.add(new GuiButton(18142, width / 2 - 190 + ((190*2-0*4)/5 + 0) * 2, height / 6 + 48, (190*2-0*4)/5, 20, "Equisolid"));
+		buttonList.add(new GuiButton(18143, width / 2 - 190 + ((190*2-0*4)/5 + 0) * 3, height / 6 + 48, (190*2-0*4)/5, 20, "Thoby"));
+		buttonList.add(new GuiButton(18144, width / 2 - 190 + ((190*2-0*4)/5 + 0) * 4, height / 6 + 48, (190*2-0*4)/5, 20, "Orthographic"));
 		
 		buttonList.add(new Slider(new Responder(), 18150, width / 2 - 155, height / 6 + 72, 150, 20, "Quality", 0.1f, 5f, fisheye.quality, 0.1f, null));
 		buttonList.add(new GuiButton(18151, width / 2 + 5, height / 6 + 72, 150, 20, "Antialiasing: " + (fisheye.antialiasing == 1 ? "OFF" : fisheye.antialiasing == 4 ? "LOW" : "HIGH")));
@@ -32,7 +32,14 @@ public class FisheyeGui implements Advanced {
 	@Override
 	public void actionPerformed(GuiButton guiButton) {
 		switch (guiButton.id) {
-		case 18161:
+		case 18140:
+		case 18141:
+		case 18142:
+		case 18143:
+		case 18144:
+			fisheye.fisheyeType=-18140+guiButton.id;
+			break;
+		case 18151:
 			switch (fisheye.antialiasing) {
 			case 1:
 				fisheye.antialiasing = 4;
@@ -47,9 +54,17 @@ public class FisheyeGui implements Advanced {
 			}
 			guiButton.displayString = "Antialiasing: " + (fisheye.antialiasing == 1 ? "OFF" : fisheye.antialiasing == 4 ? "LOW" : "HIGH");
 			break;
-		case 18162:
+		case 18152:
 			fisheye.resizeGui = !fisheye.resizeGui;
 			guiButton.displayString = "Resize Gui: " + (fisheye.resizeGui ? "ON" : "OFF");
+			break;
+		case 18153:
+			fisheye.skyBackground = !fisheye.skyBackground;
+			guiButton.displayString = "Background Color: " + (fisheye.skyBackground ? "Sky" : "Black");
+			break;
+		case 18160:
+			fisheye.fullFrame = !fisheye.fullFrame;
+			guiButton.displayString = "Full Frame: " + (fisheye.fullFrame ? "ON" : "OFF");
 			break;
 		}
 	}
