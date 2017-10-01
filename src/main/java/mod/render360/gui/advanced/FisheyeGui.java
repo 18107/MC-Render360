@@ -5,6 +5,7 @@ import java.util.List;
 import mod.render360.RenderUtil;
 import mod.render360.gui.SettingsGui;
 import mod.render360.gui.Slider;
+import mod.render360.gui.SimpleGui.Responder;
 import mod.render360.render.Fisheye;
 import mod.render360.render.RenderMethod;
 import net.minecraft.client.Minecraft;
@@ -41,6 +42,11 @@ public class FisheyeGui implements Advanced {
 		buttonList.add(new GuiButton(18153, width / 2 + 5, height / 6 + 96, 150, 20, "Background Color: " + (fisheye.skyBackground ? "Sky" : "Black")));
 
 		buttonList.add(new GuiButton(18160, width / 2 + 5, height / 6 + 120, 150, 20, "Full Frame: " + (fisheye.fullFrame ? "ON" : "OFF")));
+		
+		int fovSliderLimit = 360;
+		if (fisheye.fisheyeType==1) fovSliderLimit = (int)Math.ceil(fovSliderLimit*0.713); //Thoby 256.68 degrees, slider goes up to 257
+		if (fisheye.fisheyeType==0) fovSliderLimit = 180; //Orthographic
+		buttonList.add(new Slider(new Responder(), 18120, width / 2 - 180, height / 6 + 144, fovSliderLimit, 20, "FOV", 0f, (float)fovSliderLimit, Math.min(fovSliderLimit,fisheye.fov), 1f, null));
 	}
 
 	@Override
@@ -111,6 +117,10 @@ public class FisheyeGui implements Advanced {
 					fisheye.quality = value;
 					RenderUtil.forceReload();
 				}
+			}
+			//FOV
+			if (id == 18120) {
+				fisheye.fov = value;
 			}
 		}
 
