@@ -3,11 +3,14 @@ package mod.render360.gui.advanced;
 import java.util.List;
 
 import mod.render360.RenderUtil;
+import mod.render360.gui.SettingsGui;
 import mod.render360.gui.Slider;
 import mod.render360.render.Fisheye;
 import mod.render360.render.RenderMethod;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiPageButtonList.GuiResponder;
+import net.minecraft.client.gui.GuiScreen;
 
 public class FisheyeGui implements Advanced {
 	
@@ -40,7 +43,7 @@ public class FisheyeGui implements Advanced {
 	}
 
 	@Override
-	public void actionPerformed(GuiButton guiButton) {
+	public void actionPerformed(GuiButton guiButton, GuiScreen parentScreen) {
 		switch (guiButton.id) {
 		case 18140:
 		case 18141:
@@ -56,6 +59,7 @@ public class FisheyeGui implements Advanced {
 			buttonList.byID(18144).enabled = true;
 			 */
 			guiButton.enabled = false;
+			Minecraft.getMinecraft().displayGuiScreen(new SettingsGui(parentScreen));
 			break;
 		case 18151:
 			switch (fisheye.antialiasing) {

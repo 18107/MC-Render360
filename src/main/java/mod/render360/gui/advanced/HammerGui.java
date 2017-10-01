@@ -8,6 +8,7 @@ import mod.render360.render.Hammer;
 import mod.render360.render.RenderMethod;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiPageButtonList.GuiResponder;
+import net.minecraft.client.gui.GuiScreen;
 
 public class HammerGui implements Advanced {
 	
@@ -22,7 +23,7 @@ public class HammerGui implements Advanced {
 	}
 
 	@Override
-	public void actionPerformed(GuiButton guiButton) {
+	public void actionPerformed(GuiButton guiButton, GuiScreen parentScreen) {
 		switch (guiButton.id) {
 		case 18151:
 			switch (hammer.antialiasing) {

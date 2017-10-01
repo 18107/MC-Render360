@@ -71,7 +71,7 @@ public class AdvancedGui implements Settings {
 			Minecraft.getMinecraft().displayGuiScreen(new SettingsGui(parentScreen));
 			break;
 		default:
-			guiObject.actionPerformed(guiButton);
+			guiObject.actionPerformed(guiButton, parentScreen);
 			break;
 		}
 	}

@@ -8,6 +8,7 @@ import mod.render360.render.Cubic;
 import mod.render360.render.RenderMethod;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiPageButtonList.GuiResponder;
+import net.minecraft.client.gui.GuiScreen;
 
 public class CubicGui implements Advanced {
 	
@@ -22,7 +23,7 @@ public class CubicGui implements Advanced {
 	}
 
 	@Override
-	public void actionPerformed(GuiButton guiButton) {
+	public void actionPerformed(GuiButton guiButton, GuiScreen parentScreen) {
 		switch (guiButton.id) {
 		case 18141:
 			switch (cubic.antialiasing) {
