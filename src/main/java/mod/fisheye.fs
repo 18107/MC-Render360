@@ -18,9 +18,9 @@ uniform int antialiasing;
 uniform vec2 pixelOffset[16];
 
 uniform float fovx;
+uniform float fovy;
 
 uniform int fisheyeType;
-uniform float aspectRatio;
 uniform bool fullFrame;
 
 uniform vec4 backgroundColor;
@@ -49,6 +49,7 @@ void main(void) {
 		float y = (texcoord.y+pixelOffset[loop].y)*2-1;
 		
 		//scale from square view to window shape view //fcontain
+		float aspectRatio = fovx/fovy;
 		if (aspectRatio > 1) {
 			x *= aspectRatio;
 		} else {
