@@ -36,7 +36,7 @@ public class FisheyeGui implements Advanced {
 		buttonList.add(new GuiButton(18152, width / 2 - 155, height / 6 + 96, 150, 20, "Resize Gui: " + (fisheye.resizeGui ? "ON" : "OFF")));
 		buttonList.add(new GuiButton(18153, width / 2 + 5, height / 6 + 96, 150, 20, "Background Color: " + (fisheye.skyBackground ? "Sky" : "Black")));
 
-		buttonList.add(new GuiButton(18166, width / 2 + 5, height / 6 + 120, 150, 20, "Full Frame: " + (fisheye.fullFrame ? "ON" : "OFF")));
+		buttonList.add(new GuiButton(18160, width / 2 + 5, height / 6 + 120, 150, 20, "Full Frame: " + (fisheye.fullFrame ? "ON" : "OFF")));
 	}
 
 	@Override
@@ -48,6 +48,14 @@ public class FisheyeGui implements Advanced {
 		case 18143:
 		case 18144:
 			fisheye.fisheyeType=-18140+guiButton.id;
+			/*
+			buttonList.byID(18140).enabled = true;
+			buttonList.byID(18141).enabled = true;
+			buttonList.byID(18142).enabled = true;
+			buttonList.byID(18143).enabled = true;
+			buttonList.byID(18144).enabled = true;
+			 */
+			guiButton.enabled = false;
 			break;
 		case 18151:
 			switch (fisheye.antialiasing) {
