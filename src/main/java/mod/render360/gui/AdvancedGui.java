@@ -7,6 +7,7 @@ import mod.render360.gui.advanced.Advanced;
 import mod.render360.gui.advanced.CubicGui;
 import mod.render360.gui.advanced.EquirectangularGui;
 import mod.render360.gui.advanced.HammerGui;
+import mod.render360.gui.advanced.FisheyeGui;
 import mod.render360.render.Hammer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -35,6 +36,10 @@ public class AdvancedGui implements Settings {
 		if (guiObject instanceof EquirectangularGui) button.enabled = false;
 		buttonList.add(button);
 		
+		button = new GuiButton(18133, width / 2 + 80, height / 6 + 24, 120, 20, "Fisheye");
+		if (guiObject instanceof FisheyeGui) button.enabled = false;
+		buttonList.add(button);
+		
 		guiObject.initGui(buttonList, width, height);
 	}
 	
@@ -55,6 +60,12 @@ public class AdvancedGui implements Settings {
 			break;
 		case 18132: //Equirectangular
 			guiObject = new EquirectangularGui();
+			RenderUtil.renderMethod = guiObject.getRenderMethod();
+			RenderUtil.forceReload();
+			Minecraft.getMinecraft().displayGuiScreen(new SettingsGui(parentScreen));
+			break;
+		case 18133: //Fisheye
+			guiObject = new FisheyeGui();
 			RenderUtil.renderMethod = guiObject.getRenderMethod();
 			RenderUtil.forceReload();
 			Minecraft.getMinecraft().displayGuiScreen(new SettingsGui(parentScreen));
