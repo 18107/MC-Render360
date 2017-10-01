@@ -18,11 +18,12 @@ public class FisheyeGui implements Advanced {
 
 	@Override
 	public void initGui(List<GuiButton> buttonList, int width, int height) {
-		GuiButton button0 = new GuiButton(18140, width / 2 - 190 + ((190*2-0*4)/5 + 0) * 0, height / 6 + 48, (190*2-0*4)/5, 20, "Stereographic");
-		GuiButton button1 = new GuiButton(18141, width / 2 - 190 + ((190*2-0*4)/5 + 0) * 1, height / 6 + 48, (190*2-0*4)/5, 20, "Equidistant"  );
+
+		GuiButton button0 = new GuiButton(18140, width / 2 - 190 + ((190*2-0*4)/5 + 0) * 0, height / 6 + 48, (190*2-0*4)/5, 20, "Orthographic" );
+		GuiButton button1 = new GuiButton(18141, width / 2 - 190 + ((190*2-0*4)/5 + 0) * 1, height / 6 + 48, (190*2-0*4)/5, 20, "Thoby"        );
 		GuiButton button2 = new GuiButton(18142, width / 2 - 190 + ((190*2-0*4)/5 + 0) * 2, height / 6 + 48, (190*2-0*4)/5, 20, "Equisolid"    );
-		GuiButton button3 = new GuiButton(18143, width / 2 - 190 + ((190*2-0*4)/5 + 0) * 3, height / 6 + 48, (190*2-0*4)/5, 20, "Thoby"        );
-		GuiButton button4 = new GuiButton(18144, width / 2 - 190 + ((190*2-0*4)/5 + 0) * 4, height / 6 + 48, (190*2-0*4)/5, 20, "Orthographic" );
+		GuiButton button3 = new GuiButton(18143, width / 2 - 190 + ((190*2-0*4)/5 + 0) * 3, height / 6 + 48, (190*2-0*4)/5, 20, "Equidistant"  );
+		GuiButton button4 = new GuiButton(18144, width / 2 - 190 + ((190*2-0*4)/5 + 0) * 4, height / 6 + 48, (190*2-0*4)/5, 20, "Stereographic");
 		button0.enabled = fisheye.fisheyeType!=0;
 		button1.enabled = fisheye.fisheyeType!=1;
 		button2.enabled = fisheye.fisheyeType!=2;

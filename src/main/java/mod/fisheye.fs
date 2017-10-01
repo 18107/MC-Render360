@@ -77,7 +77,7 @@ void main(void) {
 		float fovTheta = fovx*M_PI/360;
 		float r;
 		float theta;
-		if (fisheyeType == 0) {//stereographic
+		if (fisheyeType == 4) {//stereographic
 			//forward: r=2f*tan(theta/2)
 			float maxr = 2*tan(fovTheta*0.5);
 				x *= maxr;
@@ -85,7 +85,7 @@ void main(void) {
 				r = sqrt(x*x+y*y);
 			//inverse:
 			theta = 2*atan(r*0.5);
-		} else if (fisheyeType == 1) {//equidistant
+		} else if (fisheyeType == 3) {//equidistant
 			//This is the x scale of the theta= equation. Not related to fov.
 			//it's the result of the forward equation with theta=pi
 			//forward: r=f*theta
@@ -105,7 +105,7 @@ void main(void) {
 				r = sqrt(x*x+y*y);
 			//inverse:
 			theta = 2*asin(r*0.5);
-		} else if (fisheyeType == 3) {//thoby
+		} else if (fisheyeType == 1) {//thoby
 			//it starts shrinking near max fov without this - 256.68 degrees
 			fovTheta = min(fovTheta, M_PI*0.713);
 			
@@ -116,7 +116,7 @@ void main(void) {
 				r = sqrt(x*x+y*y);
 			//inverse:
 			theta = asin(r/1.47)/0.713;
-		} else {// if (fisheyeType == 4) {//orthographic
+		} else {// if (fisheyeType == 0) {//orthographic
 			//this projection has a mathematical limit at hemisphere
 			fovTheta = min(fovTheta, M_PI*0.5);
 		

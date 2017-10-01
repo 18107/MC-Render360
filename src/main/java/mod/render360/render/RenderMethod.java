@@ -513,7 +513,7 @@ public abstract class RenderMethod {
 	}
 	
 	public int getFisheyeType() {
-		return 1;
+		return 3;
 	}
 	
 	public boolean getFullFrame() {
