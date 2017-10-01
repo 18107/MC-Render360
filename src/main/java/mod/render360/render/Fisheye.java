@@ -86,12 +86,12 @@ public class Fisheye extends RenderMethod {
 		return fov;
 	}
 
-	//@Override
+	@Override
 	public int getFisheyeType() {
 		return fisheyeType;
 	}
 	
-	//@Override
+	@Override
 	public boolean getFullFrame() {
 		return fullFrame;
 	}
