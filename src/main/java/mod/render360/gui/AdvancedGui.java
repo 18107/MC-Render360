@@ -46,33 +46,24 @@ public class AdvancedGui implements Settings {
 	@Override
 	public void actionPerformed(GuiButton guiButton, GuiScreen parentScreen) {
 		switch(guiButton.id) {
+		default:
+			guiObject.actionPerformed(guiButton, parentScreen);
+			return;
 		case 18130: //Cubic
 			guiObject = new CubicGui();
-			RenderUtil.renderMethod = guiObject.getRenderMethod();
-			RenderUtil.forceReload();
-			Minecraft.getMinecraft().displayGuiScreen(new SettingsGui(parentScreen));
 			break;
 		case 18131: //Hammer
 			guiObject = new HammerGui();
-			RenderUtil.renderMethod = guiObject.getRenderMethod();
-			RenderUtil.forceReload();
-			Minecraft.getMinecraft().displayGuiScreen(new SettingsGui(parentScreen));
 			break;
 		case 18132: //Equirectangular
 			guiObject = new EquirectangularGui();
-			RenderUtil.renderMethod = guiObject.getRenderMethod();
-			RenderUtil.forceReload();
-			Minecraft.getMinecraft().displayGuiScreen(new SettingsGui(parentScreen));
 			break;
 		case 18133: //Fisheye
 			guiObject = new FisheyeGui();
-			RenderUtil.renderMethod = guiObject.getRenderMethod();
-			RenderUtil.forceReload();
-			Minecraft.getMinecraft().displayGuiScreen(new SettingsGui(parentScreen));
-			break;
-		default:
-			guiObject.actionPerformed(guiButton, parentScreen);
 			break;
 		}
+		RenderUtil.renderMethod = guiObject.getRenderMethod();
+		RenderUtil.forceReload();
+		Minecraft.getMinecraft().displayGuiScreen(new SettingsGui(parentScreen));
 	}
 }
