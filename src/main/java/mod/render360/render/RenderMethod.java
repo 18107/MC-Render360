@@ -48,7 +48,7 @@ public abstract class RenderMethod {
 	
 	static {
 		//Put all of the render methods here
-		renderMethods = new RenderMethod[] {new Standard(), new Flex(), new Cubic(), new Hammer(), new Equirectangular()};
+		renderMethods = new RenderMethod[] {new Standard(), new Flex(), new Cubic(), new Hammer(), new Fisheye(), new Equirectangular()};
 	}
 	
 	/**
@@ -185,6 +185,10 @@ public abstract class RenderMethod {
 		GL20.glUniform1f(fovxUniform, getFOV());
 		int fovyUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "fovy");
 		GL20.glUniform1f(fovyUniform, getFOV()*Display.getHeight()/Display.getWidth());
+		int fisheyeTypeUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "fisheyeType");
+		GL20.glUniform1i(fisheyeTypeUniform, getFisheyeType());
+		int fullFrameUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "fullFrame");
+		GL20.glUniform1i(fullFrameUniform, getFullFrame()?1:0);
 		int backgroundUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "backgroundColor");
 		GL20.glUniform4f(backgroundUniform, 0, 0, 0, 1);
 		
@@ -247,12 +251,25 @@ public abstract class RenderMethod {
 		RenderUtil.render360 = true;
 
 		renderFront(er, mc, partialTicks, finishTimeNano, player, framebufferTextures[0], yaw, pitch, prevYaw, prevPitch);
+		/* Given an observer in the center of a cube (O), looking at the middle of the front face (Fₘ)
+		 * who turns toward a side face by first turning toward either the front face's edge (Fₑ) or corner (Fc)
+		 * will either turn ∠FₘOFₑ=45° or ∠FₘOFc=54.74°.
+		 * The smallest fov to reach a side face is 45°×2=90°, while the largest is 54.72°×2=109.44°.
+		 * The sides are rendered the earliest they might be needed, so they render at 90° fov (Fₑ).
+		 */
 		if (getFOV() >= 90 || renderAllSides()) {
 			renderLeft(er, mc, partialTicks, finishTimeNano, player, framebufferTextures[2], yaw, pitch, prevYaw, prevPitch);
 			renderRight(er, mc, partialTicks, finishTimeNano, player, framebufferTextures[3], yaw, pitch, prevYaw, prevPitch);
 			renderTop(er, mc, partialTicks, finishTimeNano, player, framebufferTextures[4], yaw, pitch, prevYaw, prevPitch);
 			renderBottom(er, mc, partialTicks, finishTimeNano, player, framebufferTextures[5], yaw, pitch, prevYaw, prevPitch);
-			if (getFOV() >= 270 || renderAllSides()) {
+			/* The observer keeps turning in the same direction,
+			 * either turning through Fₑ and reaching the back face's edge (Bₑ),
+			 * or turning through Fc and reaching the back face's corner (Bc),
+			 * turning ∠FₘOBₑ=135° or ∠FₘOBc=125.265°.
+			 * The largest fov to reach the back face is 135°×2=270°, while the smallest is 125.265°×2=250.53°.
+			 * The back is rendered the earliest it might be needed, so it renders at 250.53° fov (Bc).
+			 */
+			if (getFOV() >= 250.53 || renderAllSides()) {
 				renderBack(er, mc, partialTicks, finishTimeNano, player, framebufferTextures[1], yaw, pitch, prevYaw, prevPitch);
 			}
 		}
@@ -407,6 +424,10 @@ public abstract class RenderMethod {
 		GL20.glUniform1f(fovxUniform, getFOV());
 		int fovyUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "fovy");
 		GL20.glUniform1f(fovyUniform, getFOV()*Display.getHeight()/Display.getWidth());
+		int fisheyeTypeUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "fisheyeType");
+		GL20.glUniform1i(fisheyeTypeUniform, getFisheyeType());
+		int fullFrameUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "fullFrame");
+		GL20.glUniform1i(fullFrameUniform, getFullFrame()?1:0);
 		
 		int backgroundUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "backgroundColor");
 		float backgroundColor[] = getBackgroundColor();
@@ -504,6 +525,14 @@ public abstract class RenderMethod {
 		return RenderUtil.render360;
 	}
 	
+	public int getFisheyeType() {
+		return 3;
+	}
+	
+	public boolean getFullFrame() {
+		return false;
+	}
+
 	public float getQuality() {
 		return 1;
 	}
