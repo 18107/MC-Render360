@@ -32,12 +32,12 @@ public class AdvancedGui implements Settings {
 		if (guiObject instanceof HammerGui) button.enabled = false;
 		buttonList.add(button);
 		
-		button = new GuiButton(18132, width / 2 + 5, height / 6 + 24, 88, 20, "Equirectangular");
-		if (guiObject instanceof EquirectangularGui) button.enabled = false;
-		buttonList.add(button);
-		
-		button = new GuiButton(18133, width / 2 + 102, height / 6 + 24, 88, 20, "Fisheye");
+		button = new GuiButton(18132, width / 2 + 5, height / 6 + 24, 88, 20, "Fisheye");
 		if (guiObject instanceof FisheyeGui) button.enabled = false;
+		buttonList.add(button);
+				
+		button = new GuiButton(18133, width / 2 + 102, height / 6 + 24, 88, 20, "Equirectangular");
+		if (guiObject instanceof EquirectangularGui) button.enabled = false;
 		buttonList.add(button);
 		
 		guiObject.initGui(buttonList, width, height);
@@ -55,11 +55,11 @@ public class AdvancedGui implements Settings {
 		case 18131: //Hammer
 			guiObject = new HammerGui();
 			break;
-		case 18132: //Equirectangular
-			guiObject = new EquirectangularGui();
-			break;
-		case 18133: //Fisheye
+		case 18132: //Fisheye
 			guiObject = new FisheyeGui();
+			break;
+		case 18133: //Equirectangular
+			guiObject = new EquirectangularGui();
 			break;
 		}
 		RenderUtil.renderMethod = guiObject.getRenderMethod();

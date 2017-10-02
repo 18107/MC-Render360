@@ -48,7 +48,7 @@ public abstract class RenderMethod {
 	
 	static {
 		//Put all of the render methods here
-		renderMethods = new RenderMethod[] {new Standard(), new Flex(), new Cubic(), new Hammer(), new Equirectangular(), new Fisheye()};
+		renderMethods = new RenderMethod[] {new Standard(), new Flex(), new Cubic(), new Hammer(), new Fisheye(), new Equirectangular()};
 	}
 	
 	/**
