@@ -24,19 +24,19 @@ public class AdvancedGui implements Settings {
 	
 	@Override
 	public void initGui(List<GuiButton> buttonList, int width, int height) {
-		GuiButton button = new GuiButton(18130, width / 2 - 190 + ((190*2-10*3)/4 + 10) * 0, height / 6 + 24, (190*2-10*3)/4, 20, "Cubic");
+		GuiButton button = new GuiButton(18130, width / 2 - 190, height / 6 + 24, 88, 20, "Cubic");
 		if (guiObject instanceof CubicGui) button.enabled = false;
 		buttonList.add(button);
 		
-		button = new GuiButton(18131, width / 2 - 190 + ((190*2-10*3)/4 + 10) * 1, height / 6 + 24, (190*2-10*3)/4, 20, "Hammer");
+		button = new GuiButton(18131, width / 2 - 93, height / 6 + 24, 88, 20, "Hammer");
 		if (guiObject instanceof HammerGui) button.enabled = false;
 		buttonList.add(button);
 		
-		button = new GuiButton(18132, width / 2 - 190 + ((190*2-10*3)/4 + 10) * 2, height / 6 + 24, (190*2-10*3)/4, 20, "Equirectangular");
+		button = new GuiButton(18132, width / 2 + 5, height / 6 + 24, 88, 20, "Equirectangular");
 		if (guiObject instanceof EquirectangularGui) button.enabled = false;
 		buttonList.add(button);
 		
-		button = new GuiButton(18133, width / 2 - 190 + ((190*2-10*3)/4 + 10) * 3, height / 6 + 24, (190*2-10*3)/4, 20, "Fisheye");
+		button = new GuiButton(18133, width / 2 + 102, height / 6 + 24, 88, 20, "Fisheye");
 		if (guiObject instanceof FisheyeGui) button.enabled = false;
 		buttonList.add(button);
 		
