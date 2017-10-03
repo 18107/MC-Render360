@@ -12,13 +12,11 @@ import net.minecraft.client.renderer.EntityRenderer;
 
 public class Fisheye extends RenderMethod {
 	
-	public boolean resizeGui = false;
-	
 	public float quality = 1;
 	
 	public int antialiasing = 16;
 	
-	public boolean skyBackground = false;
+	public boolean skyBackground = true;
 
 	public int fisheyeType = 3;
 	public boolean fullFrame = false;
@@ -38,11 +36,6 @@ public class Fisheye extends RenderMethod {
 	@Override
 	public float getQuality() {
 		return quality;
-	}
-	
-	@Override
-	public boolean getResizeGui() {
-		return resizeGui;
 	}
 	
 	@Override
