@@ -25,6 +25,8 @@ public class Flex extends RenderMethod {
 	
 	public float fov = 180;
 	private float lastFOV = 180;
+	
+	public float zoom = 4;
 
 	@Override
 	public String getName() {
@@ -223,18 +225,25 @@ public class Flex extends RenderMethod {
 	
 	@Override
 	public float getFOV() {
-		return fov != 0 ? fov : 0.00001f;
+		float fov = this.fov;
+		if (fov == 0)
+			fov = 0.00001f;
+		if (RenderUtil.KEY_ZOOM.isKeyDown()) {
+			return fov / zoom;
+		} else {
+			return fov;
+		}
 	}
 	
 	@Override
 	public boolean lockDefaultFOV() {
-		return fov >= 90;
+		return getFOV() >= 90;
 	}
 	
 	@Override
 	public float getQuality() {
 		float quality;
-		if (fov < 270) {
+		if (getFOV() < 270) {
 			quality = super.getQuality()*2f;
 			if (lastFOV >= 270) {
 				RenderUtil.forceReload();
@@ -247,7 +256,7 @@ public class Flex extends RenderMethod {
 				quality = super.getQuality()*2f;
 			}
 		}
-		lastFOV = fov;
+		lastFOV = getFOV();
 		return quality;
 	}
 }

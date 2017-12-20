@@ -10,6 +10,7 @@ import mod.render360.gui.advanced.HammerGui;
 import mod.render360.gui.advanced.FisheyeGui;
 import mod.render360.render.Hammer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 
@@ -23,7 +24,7 @@ public class AdvancedGui implements Settings {
 	}
 	
 	@Override
-	public void initGui(List<GuiButton> buttonList, int width, int height) {
+	public void initGui(List<GuiButton> buttonList, int width, int height, FontRenderer fontRendererobj) {
 		GuiButton button = new GuiButton(18130, width / 2 - 190, height / 6 + 24, 88, 20, "Cubic");
 		if (guiObject instanceof CubicGui) button.enabled = false;
 		buttonList.add(button);
@@ -41,6 +42,11 @@ public class AdvancedGui implements Settings {
 		buttonList.add(button);
 		
 		guiObject.initGui(buttonList, width, height);
+	}
+
+	@Override
+	public void updateScreen() {
+		
 	}
 	
 	@Override
@@ -65,5 +71,20 @@ public class AdvancedGui implements Settings {
 		RenderUtil.renderMethod = guiObject.getRenderMethod();
 		RenderUtil.forceReload();
 		Minecraft.getMinecraft().displayGuiScreen(new SettingsGui(parentScreen));
+	}
+
+	@Override
+	public void keyTyped(char typedChar, int keyCode) {
+		
+	}
+
+	@Override
+	public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+		
+	}
+
+	@Override
+	public void drawScreen() {
+		
 	}
 }

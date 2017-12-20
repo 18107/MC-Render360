@@ -18,6 +18,12 @@ public class SettingsGui extends GuiScreen {
 	}
 	
 	@Override
+	public void updateScreen() {
+		settingsGui.updateScreen();
+		super.updateScreen();
+	}
+	
+	@Override
 	public void initGui() {
 		GuiButton button = new GuiButton(18100, super.width / 2 - 190, super.height / 6 - 12, 120, 20, "Off");
 		if (settingsGui instanceof StandardGui) button.enabled = false;
@@ -32,7 +38,7 @@ public class SettingsGui extends GuiScreen {
 		super.buttonList.add(button);
 		
 		super.buttonList.add(new GuiButton(200, super.width / 2 - 100, super.height / 6 + 168, I18n.format("gui.done", new Object[0])));
-		settingsGui.initGui(super.buttonList, super.width, super.height);
+		settingsGui.initGui(super.buttonList, super.width, super.height, super.fontRendererObj);
 	}
 	
 	@Override
@@ -62,9 +68,22 @@ public class SettingsGui extends GuiScreen {
 	}
 	
 	@Override
+	protected void keyTyped(char typedChar, int keyCode) throws IOException {
+		settingsGui.keyTyped(typedChar, keyCode);
+		super.keyTyped(typedChar, keyCode);
+	}
+	
+	@Override
+	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+		settingsGui.mouseClicked(mouseX, mouseY, mouseButton);
+		super.mouseClicked(mouseX, mouseY, mouseButton);
+	}
+	
+	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		super.drawDefaultBackground();
 		this.drawCenteredString(super.fontRendererObj, this.screenTitle, this.width / 2, 15, 0xFFFFFF);
+		settingsGui.drawScreen();
 		super.drawScreen(mouseX, mouseY, partialTicks);
 	}
 }

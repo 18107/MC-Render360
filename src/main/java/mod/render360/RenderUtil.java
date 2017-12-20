@@ -1,5 +1,6 @@
 package mod.render360;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
@@ -12,9 +13,17 @@ import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.texture.TextureUtil;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.shader.Framebuffer;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 
 public class RenderUtil {
+	
+	public static final KeyBinding KEY_ZOOM = new KeyBinding("Zoom", Keyboard.KEY_Z, "Render 360");
+	
+	static {
+		ClientRegistry.registerKeyBinding(KEY_ZOOM);
+	}
 	
 	/**Enables or disables 360 degree rendering.*/
 	public static boolean render360 = true;
