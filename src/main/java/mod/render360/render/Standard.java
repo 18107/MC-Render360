@@ -23,7 +23,7 @@ public class Standard extends RenderMethod {
 	
 	@Override
 	public void renderWorld(EntityRenderer er, Minecraft mc, Framebuffer framebuffer, Shader shader,
-			int[] framebufferTextures, float partialTicks, long finishTimeNano, int width, int height, float sizeIncrease) {
+			int cubeTexture, float partialTicks, long finishTimeNano, int width, int height, float sizeIncrease) {
 		RenderUtil.render360 = false;
 		RenderUtil.partialWidth = mc.displayWidth;
 		RenderUtil.partialHeight = mc.displayHeight;

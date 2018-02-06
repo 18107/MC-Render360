@@ -37,7 +37,7 @@ public class Equirectangular extends RenderMethod {
 	
 	@Override
 	public void runShader(EntityRenderer er, Minecraft mc, Framebuffer framebuffer,
-			Shader shader, int[] framebufferTextures) {
+			Shader shader, int cubeTexture) {
 		GL20.glUseProgram(shader.getShaderProgram());
 
 		GL20.glUseProgram(shader.getShaderProgram());
@@ -61,7 +61,7 @@ public class Equirectangular extends RenderMethod {
 		int angleUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "rotation");
 		GL20.glUniform2f(angleUniform, rotX, rotY);
 		
-		super.runShader(er, mc, framebuffer, shader, framebufferTextures);
+		super.runShader(er, mc, framebuffer, shader, cubeTexture);
 	}
 	
 	@Override

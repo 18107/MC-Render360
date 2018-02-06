@@ -229,7 +229,7 @@ public abstract class RenderMethod {
 	 * and {@link net.minecraft.client.renderer.EntityRenderer#renderWorldPass(int, float, long) renderWorldPass}
 	 */
 	public void renderWorld(EntityRenderer er, Minecraft mc, Framebuffer framebuffer, Shader shader,
-			int[] framebufferTextures, float partialTicks, long finishTimeNano, int width, int height, float sizeIncrease) {
+			int cubeTexture, float partialTicks, long finishTimeNano, int width, int height, float sizeIncrease) {
 		//save the players state
 		setPlayerRotation(mc);
 
@@ -250,7 +250,7 @@ public abstract class RenderMethod {
 		
 		RenderUtil.render360 = true;
 
-		renderFront(er, mc, partialTicks, finishTimeNano, player, framebufferTextures[0], yaw, pitch, prevYaw, prevPitch);
+		renderFront(er, mc, partialTicks, finishTimeNano, player, cubeTexture, yaw, pitch, prevYaw, prevPitch);
 		/* Given an observer in the center of a cube (O), looking at the middle of the front face (Fₘ)
 		 * who turns toward a side face by first turning toward either the front face's edge (Fₑ) or corner (Fc)
 		 * will either turn ∠FₘOFₑ=45° or ∠FₘOFc=54.74°.
@@ -258,10 +258,10 @@ public abstract class RenderMethod {
 		 * The sides are rendered the earliest they might be needed, so they render at 90° fov (Fₑ).
 		 */
 		if (getFOV() >= 90 || renderAllSides()) {
-			renderLeft(er, mc, partialTicks, finishTimeNano, player, framebufferTextures[2], yaw, pitch, prevYaw, prevPitch);
-			renderRight(er, mc, partialTicks, finishTimeNano, player, framebufferTextures[3], yaw, pitch, prevYaw, prevPitch);
-			renderTop(er, mc, partialTicks, finishTimeNano, player, framebufferTextures[4], yaw, pitch, prevYaw, prevPitch);
-			renderBottom(er, mc, partialTicks, finishTimeNano, player, framebufferTextures[5], yaw, pitch, prevYaw, prevPitch);
+			renderLeft(er, mc, partialTicks, finishTimeNano, player, cubeTexture, yaw, pitch, prevYaw, prevPitch);
+			renderRight(er, mc, partialTicks, finishTimeNano, player, cubeTexture, yaw, pitch, prevYaw, prevPitch);
+			renderTop(er, mc, partialTicks, finishTimeNano, player, cubeTexture, yaw, pitch, prevYaw, prevPitch);
+			renderBottom(er, mc, partialTicks, finishTimeNano, player, cubeTexture, yaw, pitch, prevYaw, prevPitch);
 			/* The observer keeps turning in the same direction,
 			 * either turning through Fₑ and reaching the back face's edge (Bₑ),
 			 * or turning through Fc and reaching the back face's corner (Bc),
@@ -270,7 +270,7 @@ public abstract class RenderMethod {
 			 * The back is rendered the earliest it might be needed, so it renders at 250.53° fov (Bc).
 			 */
 			if (getFOV() >= 250.53 || renderAllSides()) {
-				renderBack(er, mc, partialTicks, finishTimeNano, player, framebufferTextures[1], yaw, pitch, prevYaw, prevPitch);
+				renderBack(er, mc, partialTicks, finishTimeNano, player, cubeTexture, yaw, pitch, prevYaw, prevPitch);
 			}
 		}
 		
@@ -290,13 +290,13 @@ public abstract class RenderMethod {
 			GL20.glUseProgram(shader.getShaderProgram());
 			int cursorUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "drawCursor");
 			GL20.glUniform1i(cursorUniform, 0);
-			runShader(er, mc, framebuffer, shader, framebufferTextures);
+			runShader(er, mc, framebuffer, shader, cubeTexture);
 		}
 	}
 	
 	protected void renderFront(EntityRenderer er, Minecraft mc, float partialTicks, long finishTimeNano,
-			Entity player, int framebufferTexture, float yaw, float pitch, float prevYaw, float prevPitch) {
-		OpenGlHelper.glFramebufferTexture2D(OpenGlHelper.GL_FRAMEBUFFER, OpenGlHelper.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D, framebufferTexture, 0);
+			Entity player, int cubeTexture, float yaw, float pitch, float prevYaw, float prevPitch) {
+		OpenGlHelper.glFramebufferTexture2D(GL13.GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, OpenGlHelper.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D, cubeTexture, 0);
 		GlStateManager.bindTexture(0);
 		//rotate the player and render
 		changeYaw = 0;
@@ -307,8 +307,8 @@ public abstract class RenderMethod {
 	}
 	
 	protected void renderLeft(EntityRenderer er, Minecraft mc, float partialTicks, long finishTimeNano,
-			Entity player, int framebufferTexture, float yaw, float pitch, float prevYaw, float prevPitch) {
-		OpenGlHelper.glFramebufferTexture2D(OpenGlHelper.GL_FRAMEBUFFER, OpenGlHelper.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D, framebufferTexture, 0);
+			Entity player, int cubeTexture, float yaw, float pitch, float prevYaw, float prevPitch) {
+		OpenGlHelper.glFramebufferTexture2D(GL13.GL_TEXTURE_CUBE_MAP_NEGATIVE_X, OpenGlHelper.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D, cubeTexture, 0);
 		GlStateManager.bindTexture(0);
 		changeYaw = -90;
 		changePitch = 0;
@@ -318,8 +318,8 @@ public abstract class RenderMethod {
 	}
 	
 	protected void renderRight(EntityRenderer er, Minecraft mc, float partialTicks, long finishTimeNano,
-			Entity player, int framebufferTexture, float yaw, float pitch, float prevYaw, float prevPitch) {
-		OpenGlHelper.glFramebufferTexture2D(OpenGlHelper.GL_FRAMEBUFFER, OpenGlHelper.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D, framebufferTexture, 0);
+			Entity player, int cubeTexture, float yaw, float pitch, float prevYaw, float prevPitch) {
+		OpenGlHelper.glFramebufferTexture2D(GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X, OpenGlHelper.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D, cubeTexture, 0);
 		GlStateManager.bindTexture(0);
 		changeYaw = 90;
 		changePitch = 0;
@@ -329,8 +329,8 @@ public abstract class RenderMethod {
 	}
 	
 	protected void renderTop(EntityRenderer er, Minecraft mc, float partialTicks, long finishTimeNano,
-			Entity player, int framebufferTexture, float yaw, float pitch, float prevYaw, float prevPitch) {
-		OpenGlHelper.glFramebufferTexture2D(OpenGlHelper.GL_FRAMEBUFFER, OpenGlHelper.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D, framebufferTexture, 0);
+			Entity player, int cubeTexture, float yaw, float pitch, float prevYaw, float prevPitch) {
+		OpenGlHelper.glFramebufferTexture2D(GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_Y, OpenGlHelper.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D, cubeTexture, 0);
 		GlStateManager.bindTexture(0);
 		changeYaw = 0;
 		changePitch = - 90;
@@ -340,8 +340,8 @@ public abstract class RenderMethod {
 	}
 	
 	protected void renderBottom(EntityRenderer er, Minecraft mc, float partialTicks, long finishTimeNano,
-			Entity player, int framebufferTexture, float yaw, float pitch, float prevYaw, float prevPitch) {
-		OpenGlHelper.glFramebufferTexture2D(OpenGlHelper.GL_FRAMEBUFFER, OpenGlHelper.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D, framebufferTexture, 0);
+			Entity player, int cubeTexture, float yaw, float pitch, float prevYaw, float prevPitch) {
+		OpenGlHelper.glFramebufferTexture2D(GL13.GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, OpenGlHelper.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D, cubeTexture, 0);
 		GlStateManager.bindTexture(0);
 		changeYaw = 0;
 		changePitch = 90;
@@ -351,8 +351,8 @@ public abstract class RenderMethod {
 	}
 	
 	protected void renderBack(EntityRenderer er, Minecraft mc, float partialTicks, long finishTimeNano,
-			Entity player, int framebufferTexture, float yaw, float pitch, float prevYaw, float prevPitch) {
-		OpenGlHelper.glFramebufferTexture2D(OpenGlHelper.GL_FRAMEBUFFER, OpenGlHelper.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D, framebufferTexture, 0);
+			Entity player, int cubeTexture, float yaw, float pitch, float prevYaw, float prevPitch) {
+		OpenGlHelper.glFramebufferTexture2D(GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_Z, OpenGlHelper.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D, cubeTexture, 0);
 		GlStateManager.bindTexture(0);
 		changeYaw = 180;
 		changePitch = 0;
@@ -363,7 +363,7 @@ public abstract class RenderMethod {
 	}
 	
 	public void runShader(EntityRenderer er, Minecraft mc, Framebuffer framebuffer,
-			Shader shader, int[] framebufferTextures) {
+			Shader shader, int cubeTexture) {
 		//Use shader
 		GL20.glUseProgram(shader.getShaderProgram());
 
@@ -441,10 +441,7 @@ public abstract class RenderMethod {
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, shader.getVbo());
 		GL20.glEnableVertexAttribArray(0);
 		GL20.glVertexAttribPointer(0, 2, GL11.GL_BYTE, false, 0, 0L);
-		for (int i = 0; i < framebufferTextures.length; i++) {
-			GL13.glActiveTexture(GL13.GL_TEXTURE0+i);
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, framebufferTextures[i]);
-		}
+		GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, cubeTexture);
 		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, 6);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
 		GL20.glDisableVertexAttribArray(0);
@@ -456,11 +453,8 @@ public abstract class RenderMethod {
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		GL11.glPopMatrix();
 
-		//unbind textures
-		for (int i = framebufferTextures.length-1; i >= 2; i--) {
-			GL13.glActiveTexture(GL13.GL_TEXTURE0+i);
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
-		}
+		//unbind texture
+		GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, 0);
 		GL13.glActiveTexture(GL13.GL_TEXTURE1);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 11); //lightmap
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);

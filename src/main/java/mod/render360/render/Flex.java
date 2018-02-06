@@ -171,9 +171,9 @@ public class Flex extends RenderMethod {
 	
 	@Override
 	public void renderWorld(EntityRenderer er, Minecraft mc, Framebuffer framebuffer, Shader shader,
-			int[] framebufferTextures, float partialTicks, long finishTimeNano, int width, int height, float sizeIncrease) {
+			int cubeTexture, float partialTicks, long finishTimeNano, int width, int height, float sizeIncrease) {
 		if (getFOV() >= 90) {
-			super.renderWorld(er, mc, framebuffer, shader, framebufferTextures, partialTicks, finishTimeNano, width, height, sizeIncrease);
+			super.renderWorld(er, mc, framebuffer, shader, cubeTexture, partialTicks, finishTimeNano, width, height, sizeIncrease);
 		} else {
 			setPlayerRotation(mc);
 			
@@ -190,7 +190,7 @@ public class Flex extends RenderMethod {
 			RenderUtil.partialWidth = mc.displayWidth;
 			RenderUtil.partialHeight = mc.displayHeight;
 			
-			OpenGlHelper.glFramebufferTexture2D(OpenGlHelper.GL_FRAMEBUFFER, OpenGlHelper.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D, framebufferTextures[0], 0);
+			OpenGlHelper.glFramebufferTexture2D(OpenGlHelper.GL_FRAMEBUFFER, OpenGlHelper.GL_COLOR_ATTACHMENT0, GL13.GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, cubeTexture, 0);
 			GlStateManager.bindTexture(0);
 			RenderUtil.renderPass = 0;
 			
@@ -213,7 +213,7 @@ public class Flex extends RenderMethod {
 				GL20.glUseProgram(shader.getShaderProgram());
 				int cursorUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "drawCursor");
 				GL20.glUniform1i(cursorUniform, 0);
-				runShader(er, mc, framebuffer, shader, framebufferTextures);
+				runShader(er, mc, framebuffer, shader, cubeTexture);
 			}
 		}
 	}

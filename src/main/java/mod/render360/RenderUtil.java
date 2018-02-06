@@ -4,7 +4,11 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
+import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GL21;
+import org.lwjgl.opengl.GL30;
 
 import mod.render360.render.RenderMethod;
 import mod.render360.render.Standard;
@@ -49,7 +53,7 @@ public class RenderUtil {
 	private static Shader shader = null;
 	/**The secondary framebuffer used to render the world in 360 degrees.*/
 	private static Framebuffer framebuffer = null;
-	private static int[] framebufferTextures = new int[6];
+	private static int cubeTexture;
 	
 	/**Reload the framebuffer and shader.*/
 	private static boolean forceReload = false;
@@ -91,18 +95,17 @@ public class RenderUtil {
 			//The actual numbers don't matter, they are reset later.
 			framebuffer = new Framebuffer((int)(Display.getHeight()*renderMethod.getQuality()),
 					(int)(Display.getHeight()*renderMethod.getQuality()), true);
-			//create 6 new textures
-			for (int i = 0; i < framebufferTextures.length; i++) {
-				framebufferTextures[i] = TextureUtil.glGenTextures();
-				GlStateManager.bindTexture(framebufferTextures[i]);
-				GlStateManager.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8,
-						framebuffer.framebufferTextureWidth, framebuffer.framebufferTextureHeight,
+			//create new texture cubemap
+			cubeTexture = TextureUtil.glGenTextures();
+			GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, cubeTexture);
+			GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
+			GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+			GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_WRAP_S, GL11.GL_CLAMP);
+			GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_WRAP_T, GL11.GL_CLAMP);
+			for (int i = 0; i < 6; i++) {
+				GlStateManager.glTexImage2D(GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X+i, 0, GL11.GL_RGBA8,
+						framebuffer.framebufferTextureHeight, framebuffer.framebufferTextureHeight,
 						0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, null);
-				GlStateManager.bindTexture(framebufferTextures[i]);
-				GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
-				GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-				GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_CLAMP);
-				GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_CLAMP);
 			}
 			GlStateManager.bindTexture(0);
 		} else {
@@ -118,10 +121,8 @@ public class RenderUtil {
 		deleteShader();
 		if (framebuffer != null) {
 			//delete textures
-			for (int i = 0; i < framebufferTextures.length; i++) {
-				TextureUtil.deleteTexture(framebufferTextures[i]);
-				framebufferTextures[i] = -1;
-			}
+			TextureUtil.deleteTexture(cubeTexture);
+			cubeTexture = -1;
 			framebuffer.deleteFramebuffer();
 			framebuffer = null;
 		} else {
@@ -144,33 +145,30 @@ public class RenderUtil {
 			width = mc.displayWidth;
 			height = mc.displayHeight;
 			//delete textures
-			for (int i = 0; i < framebufferTextures.length; i++) {
-				TextureUtil.deleteTexture(framebufferTextures[i]);
-				framebufferTextures[i] = -1;
-			}
+			TextureUtil.deleteTexture(cubeTexture);
+			cubeTexture = -1;
 			//recreate framebuffer with the new size
 			framebuffer.deleteFramebuffer();
 			//height is listed twice for an aspect ratio of 1:1
 			framebuffer = new Framebuffer((int)(height*renderMethod.getQuality()), (int)(height*renderMethod.getQuality()), true);
 			deleteShader();
 			createShader();
-			//create 6 new textures
-			for (int i = 0; i < framebufferTextures.length; i++) {
-				framebufferTextures[i] = TextureUtil.glGenTextures();
-				GlStateManager.bindTexture(framebufferTextures[i]);
-				GlStateManager.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8,
-						framebuffer.framebufferTextureWidth, framebuffer.framebufferTextureHeight,
+			//create new texture cubemap
+			cubeTexture = TextureUtil.glGenTextures();
+			GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, cubeTexture);
+			GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
+			GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+			GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_WRAP_S, GL11.GL_CLAMP);
+			GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_WRAP_T, GL11.GL_CLAMP);
+			for (int i = 0; i < 6; i++) {
+				GlStateManager.glTexImage2D(GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X+i, 0, GL11.GL_RGBA8,
+						framebuffer.framebufferTextureHeight, framebuffer.framebufferTextureHeight,
 						0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, null);
-				GlStateManager.bindTexture(framebufferTextures[i]);
-				GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
-	            GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-	            GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_CLAMP);
-	            GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_CLAMP);
 			}
 			GlStateManager.bindTexture(0);
 		}
 		
-		renderMethod.renderWorld(er, mc, framebuffer, shader, framebufferTextures, partialTicks, finishTimeNano, width, height, renderMethod.getQuality());
+		renderMethod.renderWorld(er, mc, framebuffer, shader, cubeTexture, partialTicks, finishTimeNano, width, height, renderMethod.getQuality());
 	}
 	
 	public static void renderGuiStart() {
@@ -178,7 +176,7 @@ public class RenderUtil {
 			Minecraft mc = Minecraft.getMinecraft();
 			framebuffer.bindFramebuffer(false);
 			GlStateManager.viewport(0, 0, (int) (mc.displayHeight*renderMethod.getQuality()), (int) (mc.displayHeight*renderMethod.getQuality()));
-			OpenGlHelper.glFramebufferTexture2D(OpenGlHelper.GL_FRAMEBUFFER, OpenGlHelper.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D, framebufferTextures[0], 0);
+			OpenGlHelper.glFramebufferTexture2D(OpenGlHelper.GL_FRAMEBUFFER, OpenGlHelper.GL_COLOR_ATTACHMENT0, GL13.GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, cubeTexture, 0);
 			GlStateManager.bindTexture(0);
 		}
 	}
@@ -203,7 +201,7 @@ public class RenderUtil {
 			GlStateManager.viewport(0, 0, mc.displayWidth, mc.displayHeight);
 			//if not in menu or inventory
 			if (mc.currentScreen == null) {
-				renderMethod.runShader(mc.entityRenderer, mc, framebuffer, shader, framebufferTextures);
+				renderMethod.runShader(mc.entityRenderer, mc, framebuffer, shader, cubeTexture);
 			}
 		}
 	}
@@ -224,7 +222,7 @@ public class RenderUtil {
 			if (mc.theWorld != null) {
 				mc.getFramebuffer().bindFramebuffer(false);
 				GlStateManager.viewport(0, 0, mc.displayWidth, mc.displayHeight);
-				renderMethod.runShader(mc.entityRenderer, mc, framebuffer, shader, framebufferTextures);
+				renderMethod.runShader(mc.entityRenderer, mc, framebuffer, shader, cubeTexture);
 			}
 		}
 	}
