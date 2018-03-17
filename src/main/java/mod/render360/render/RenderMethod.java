@@ -9,6 +9,7 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 
 import core.render360.Render360Event;
+import mod.render360.Reader;
 import mod.render360.RenderUtil;
 import mod.render360.Shader;
 import mod.render360.gui.Slider;
@@ -27,8 +28,6 @@ import net.minecraft.entity.Entity;
 
 public abstract class RenderMethod {
 
-	private final String vertexShader = "#version 130//\n /* The position of the vertex as two-dimensional vector */ in vec2 vertex; /* Write interpolated texture coordinate to fragment shader */ out vec2 texcoord; void main(void) { gl_Position = vec4(vertex, 0.0, 1.0); /* * Compute texture coordinate by simply * interval-mapping from [-1..+1] to [0..1] */ texcoord = vertex * 0.5 + vec2(0.5, 0.5); } ";
-	
 	/**
 	 * Contains all render methods
 	 */
@@ -79,7 +78,7 @@ public abstract class RenderMethod {
 	public abstract String getName();
 	
 	public String getVertexShader() {
-		return vertexShader;
+		return Reader.read("/mod/quad.vs");
 	}
 	
 	public abstract String getFragmentShader();
