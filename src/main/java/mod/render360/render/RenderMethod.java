@@ -78,7 +78,7 @@ public abstract class RenderMethod {
 	public abstract String getName();
 	
 	public String getVertexShader() {
-		return Reader.read("/mod/quad.vs");
+		return Reader.read("/mod/render360/shaders/quad.vs");
 	}
 	
 	public abstract String getFragmentShader();

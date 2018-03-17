@@ -24,7 +24,7 @@ public class Hammer extends RenderMethod {
 	
 	@Override
 	public String getFragmentShader() {
-		return Reader.read("/mod/hammer.fs");
+		return Reader.read("/mod/render360/shaders/hammer.fs");
 	}
 	
 	@Override
