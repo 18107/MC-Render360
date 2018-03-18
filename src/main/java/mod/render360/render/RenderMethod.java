@@ -386,19 +386,19 @@ public abstract class RenderMethod {
 		}
 		else if (getAntialiasing() == 4) {
 			pixelOffsetUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "pixelOffset[0]");
-			GL20.glUniform2f(pixelOffsetUniform, -0.25f/mc.displayWidth, -0.25f/mc.displayHeight);
+			GL20.glUniform2f(pixelOffsetUniform, -0.5f/mc.displayWidth, -0.5f/mc.displayHeight);
 			pixelOffsetUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "pixelOffset[1]");
-			GL20.glUniform2f(pixelOffsetUniform, 0.25f/mc.displayWidth, -0.25f/mc.displayHeight);
+			GL20.glUniform2f(pixelOffsetUniform, 0.5f/mc.displayWidth, -0.5f/mc.displayHeight);
 			pixelOffsetUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "pixelOffset[2]");
-			GL20.glUniform2f(pixelOffsetUniform, -0.25f/mc.displayWidth, 0.25f/mc.displayHeight);
+			GL20.glUniform2f(pixelOffsetUniform, -0.5f/mc.displayWidth, 0.5f/mc.displayHeight);
 			pixelOffsetUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "pixelOffset[3]");
-			GL20.glUniform2f(pixelOffsetUniform, 0.25f/mc.displayWidth, 0.25f/mc.displayHeight);
+			GL20.glUniform2f(pixelOffsetUniform, 0.5f/mc.displayWidth, 0.5f/mc.displayHeight);
 		}
 		else if (getAntialiasing() == 16) {
-			float left = (-0.5f+0.125f)/mc.displayWidth;
-			float top = (-0.5f+0.125f)/mc.displayHeight;
-			float right = 0.25f/mc.displayWidth;
-			float down = 0.25f/mc.displayHeight;
+			float left = (-1f+0.25f)/mc.displayWidth;
+			float top = (-1f+0.25f)/mc.displayHeight;
+			float right = 0.5f/mc.displayWidth;
+			float down = 0.5f/mc.displayHeight;
 			for (int y = 0; y < 4; y++) {
 				for (int x = 0; x < 4; x++) {
 					pixelOffsetUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "pixelOffset[" + (y*4+x) + "]");

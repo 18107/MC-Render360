@@ -39,7 +39,7 @@ vec4 fisheye(vec3 ray, float x, float y) {
 	} else {
 		y /= aspectRatio;
 	}
-	
+
 	if (fullFrame) {
 		//scale circle radius [1] up to screen diagonal radius [sqrt(2) or higher]
 		if (aspectRatio > 1) {
@@ -55,7 +55,7 @@ vec4 fisheye(vec3 ray, float x, float y) {
 			return backgroundColor;
 		}
 	}
-	
+
 	//max theta as limited by fov
 	float fovTheta = fovx*M_PI/360;
 	float r;
@@ -91,7 +91,7 @@ vec4 fisheye(vec3 ray, float x, float y) {
 	} else if (fisheyeType == 1) {//thoby
 		//it starts shrinking near max fov without this - 256.68 degrees
 		fovTheta = min(fovTheta, M_PI*0.713);
-		
+
 		//forward: r=1.47*f*sin(0.713*theta)
 		float maxr = 1.47*sin(0.713*fovTheta);
 			x *= maxr;
@@ -102,7 +102,7 @@ vec4 fisheye(vec3 ray, float x, float y) {
 	} else {// if (fisheyeType == 0) {//orthographic
 		//this projection has a mathematical limit at hemisphere
 		fovTheta = min(fovTheta, M_PI*0.5);
-	
+
 		//forward: r=f*sin(theta)
 		float maxr = sin(fovTheta);
 			x *= maxr;
@@ -115,7 +115,7 @@ vec4 fisheye(vec3 ray, float x, float y) {
 	//rotate ray
 	float s = sin(theta);
 	ray = vec3(x/r*s, y/r*s, -cos(theta));
-	
+
 	vec4 color = vec4(1, 0, 1, 0); //Purple should be obvious if the value is not set below
 
 	//find which side to use\n
@@ -185,10 +185,10 @@ void main(void) {
 
 		//create ray\n
 		vec3 ray = vec3(0, 0, -1);
-		
+
 		//point relative to center [0..1] -> [-1..1]
-		float x = (texcoord.x+pixelOffset[loop].x)*2-1;
-		float y = (texcoord.y+pixelOffset[loop].y)*2-1;
+		float x = (texcoord.x+pixelOffset[loop].x);
+		float y = (texcoord.y+pixelOffset[loop].y);
 
 		//fisheye stuff
 		colorN[loop] = fisheye(ray, x, y);

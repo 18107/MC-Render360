@@ -24,24 +24,24 @@ uniform float fovy;
 out vec4 color;
 
 vec3 rotate(vec3 ray, vec2 angle) {
-  
+
   //rotate y
   float y = -sin(angle.y)*ray.z;
   float z = cos(angle.y)*ray.z;
   ray.y = y;
   ray.z = z;
-  
+
   //rotate x
   float x = -sin(angle.x)*ray.z;
   z = cos(angle.x)*ray.z;
   ray.x = x;
   ray.z = z;
-  
+
   return ray;
 }
 
 vec3 passthrough(vec2 coord) {
-	return vec3(coord*2-1, -1);
+	return vec3(coord, -1);
 }
 
 //copied from github.com/shaunlebron/flex-fov
@@ -65,7 +65,7 @@ vec2 mercator_forward(float lat, float lon) {
 }
 vec3 mercator_ray(vec2 lenscoord) {
   float scale = mercator_forward(0, radians(fovx)/2).x;
-  return mercator_inverse((lenscoord*2-1) * scale);
+  return mercator_inverse((lenscoord) * scale);
 }
 
 vec3 panini_inverse(vec2 lenscoord, float dist) {
@@ -89,25 +89,25 @@ vec2 panini_forward(float lat, float lon, float dist) {
 }
 vec3 panini_ray(vec2 lenscoord, float dist) {
   float scale = panini_forward(0, radians(fovx)/2, dist).x;
-  return panini_inverse((lenscoord*2-1) * scale, dist);
+  return panini_inverse((lenscoord) * scale, dist);
 }
 //end copy
 
 void main(void) {
 	/* Ray-trace a cube */
-	
+
 	//Anti-aliasing
 	vec4 colorN[16];
-	
+
 	for (int loop = 0; loop < antialiasing; loop++) {
-		
+
 		vec2 coord = texcoord + pixelOffset[loop];
-		
+
 		//create ray
 		vec3 ray;
-		
+
 		if (fovx < 90) {
-			ray = passthrough(vec2(coord.x, coord.y*fovy/fovx + (1-fovy/fovx)/2));
+			ray = passthrough(vec2(coord.x, coord.y*fovy/fovx));
 		} else if (fovx <= 180) {
 			ray = panini_ray(coord, (fovx-90)/90);
 		} else if (fovx < 320) {
@@ -117,7 +117,7 @@ void main(void) {
 		} else {
 			ray = mercator_ray(coord);
 		}
-		
+
 		//find which side to use
 		if (abs(ray.x) > abs(ray.y)) {
 			if (abs(ray.x) > abs(ray.z)) {
@@ -173,7 +173,7 @@ void main(void) {
 			}
 		}
 	}
-	
+
 	if (antialiasing == 16) {
 	  vec4 corner[4];
 	  corner[0] = mix(mix(colorN[0], colorN[1], 2.0/3.0), mix(colorN[4], colorN[5], 3.0/5.0), 5.0/8.0);
