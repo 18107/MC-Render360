@@ -20,6 +20,7 @@ public class CubicGui implements Advanced {
 		buttonList.add(new GuiButton(18141, width / 2 + 5, height / 6 + 72, 150, 20, "Antialiasing: " + (cubic.antialiasing == 1 ? "OFF" : cubic.antialiasing == 4 ? "LOW" : "HIGH")));
 		buttonList.add(new GuiButton(18142, width / 2 - 155, height / 6 + 96, 150, 20, "Resize Gui: " + (cubic.resizeGui ? "ON" : "OFF")));
 		buttonList.add(new GuiButton(18143, width / 2 + 5, height / 6 + 96, 150, 20, "Background Color: " + (cubic.skyBackground ? "Sky" : "Black")));
+		buttonList.add(new GuiButton(18145, width / 2 + 5, height / 6 + 120, 150, 20, "Show Hand: " + (cubic.renderHand ? "ON" : "OFF")));
 	}
 
 	@Override
@@ -47,6 +48,10 @@ public class CubicGui implements Advanced {
 		case 18143:
 			cubic.skyBackground = !cubic.skyBackground;
 			guiButton.displayString = "Background Color: " + (cubic.skyBackground ? "Sky" : "Black");
+			break;
+		case 18145:
+			cubic.renderHand = !cubic.renderHand;
+			guiButton.displayString = "Show Hand: " + (cubic.renderHand ? "ON" : "OFF");
 			break;
 		}
 	}

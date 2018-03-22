@@ -17,6 +17,8 @@ public class Cubic extends RenderMethod {
 	
 	public boolean skyBackground = true;
 	
+	public boolean renderHand;
+	
 	@Override
 	public String getName() {
 		return "Cubic";
@@ -55,5 +57,10 @@ public class Cubic extends RenderMethod {
 	@Override
 	public boolean replaceLoadingScreen() {
 		return true;
+	}
+	
+	@Override
+	public boolean getRenderHand() {
+		return renderPass == 0 && renderHand;
 	}
 }

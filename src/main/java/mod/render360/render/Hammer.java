@@ -17,6 +17,8 @@ public class Hammer extends RenderMethod {
 	
 	public boolean skyBackground = true;
 	
+	public boolean renderHand;
+	
 	@Override
 	public String getName() {
 		return "Hammer";
@@ -55,5 +57,10 @@ public class Hammer extends RenderMethod {
 		} else {
 			return null;
 		}
+	}
+	
+	@Override
+	public boolean getRenderHand() {
+		return renderPass == 0 && renderHand;
 	}
 }

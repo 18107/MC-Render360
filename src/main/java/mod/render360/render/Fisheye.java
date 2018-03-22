@@ -23,6 +23,8 @@ public class Fisheye extends RenderMethod {
 	public boolean fullFrame = false;
 	
 	public float fov = 360;
+	
+	public boolean renderHand;
 
 	@Override
 	public String getName() {
@@ -92,5 +94,10 @@ public class Fisheye extends RenderMethod {
 		public void setEntryValue(int id, String value) {
 
 		}
+	}
+	
+	@Override
+	public boolean getRenderHand() {
+		return renderPass == 0 && renderHand;
 	}
 }

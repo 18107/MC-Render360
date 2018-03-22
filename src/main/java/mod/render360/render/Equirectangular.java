@@ -26,6 +26,8 @@ public class Equirectangular extends RenderMethod {
 	
 	public int antialiasing = 16;
 	
+	public boolean renderHand;
+	
 	@Override
 	public String getName() {
 		return "Equirectangular";
@@ -88,5 +90,10 @@ public class Equirectangular extends RenderMethod {
 	@Override
 	public boolean renderAllSides() {
 		return stabilizeYaw || stabilizePitch;
+	}
+	
+	@Override
+	public boolean getRenderHand() {
+		return renderPass == 0 && renderHand;
 	}
 }

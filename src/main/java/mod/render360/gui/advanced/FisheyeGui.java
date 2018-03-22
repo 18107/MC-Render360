@@ -39,6 +39,7 @@ public class FisheyeGui implements Advanced {
 		buttonList.add(new GuiButton(18176, width / 2 + 5, height / 6 + 72, 150, 20, "Antialiasing: " + (fisheye.antialiasing == 1 ? "OFF" : fisheye.antialiasing == 4 ? "LOW" : "HIGH")));
 		buttonList.add(new GuiButton(18177, width / 2 - 155, height / 6 + 96, 150, 20, "Full Frame: " + (fisheye.fullFrame ? "ON" : "OFF")));
 		buttonList.add(new GuiButton(18178, width / 2 + 5, height / 6 + 96, 150, 20, "Background Color: " + (fisheye.skyBackground ? "Sky" : "Black")));
+		buttonList.add(new GuiButton(18470, width / 2 + 5, height / 6 + 120, 150, 20, "Show Hand: " + (fisheye.renderHand ? "ON" : "OFF")));
 		
 		int fovSliderLimit = 360;
 		if (fisheye.fisheyeType==1) fovSliderLimit = (int)Math.ceil(fovSliderLimit*0.713); //Thoby 256.68 degrees, slider goes up to 257
@@ -87,6 +88,10 @@ public class FisheyeGui implements Advanced {
 		case 18178:
 			fisheye.skyBackground = !fisheye.skyBackground;
 			guiButton.displayString = "Background Color: " + (fisheye.skyBackground ? "Sky" : "Black");
+			break;
+		case 18470:
+			fisheye.renderHand = !fisheye.renderHand;
+			guiButton.displayString = "Show Hand: " + (fisheye.renderHand ? "ON" : "OFF");
 			break;
 		}
 	}

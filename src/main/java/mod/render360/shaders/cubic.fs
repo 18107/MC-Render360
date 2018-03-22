@@ -63,8 +63,8 @@ void main(void) {
 		}
 
 		if (drawCursor) {
-			if (coord.x + 0.0015 >= (cursorPos.x+1)/4 && coord.x - 0.0015 < (cursorPos.x+1)/4 &&
-				coord.y + 0.002 >= (cursorPos.y+1)/3 && coord.y - 0.002 < (cursorPos.y+1)/3) {
+			if (coord.x*2 + 0.006 >= cursorPos.x-1 && coord.x*2 - 0.006 < cursorPos.x-1 &&
+				coord.y*3 + 0.012 >= cursorPos.y*2-1 && coord.y*3 - 0.012 < cursorPos.y*2-1) {
 					colorN[loop] = vec4(1, 1, 1, 1);
 			}
 		}

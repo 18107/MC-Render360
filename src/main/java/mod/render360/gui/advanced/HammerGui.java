@@ -20,6 +20,7 @@ public class HammerGui implements Advanced {
 		buttonList.add(new GuiButton(18151, width / 2 + 5, height / 6 + 72, 150, 20, "Antialiasing: " + (hammer.antialiasing == 1 ? "OFF" : hammer.antialiasing == 4 ? "LOW" : "HIGH")));
 		buttonList.add(new GuiButton(18152, width / 2 - 155, height / 6 + 96, 150, 20, "Resize Gui: " + (hammer.resizeGui ? "ON" : "OFF")));
 		buttonList.add(new GuiButton(18153, width / 2 + 5, height / 6 + 96, 150, 20, "Background Color: " + (hammer.skyBackground ? "Sky" : "Black")));
+		buttonList.add(new GuiButton(18155, width / 2 + 5, height / 6 + 120, 150, 20, "Show Hand: " + (hammer.renderHand ? "ON" : "OFF")));
 	}
 
 	@Override
@@ -47,6 +48,10 @@ public class HammerGui implements Advanced {
 		case 18153:
 			hammer.skyBackground = !hammer.skyBackground;
 			guiButton.displayString = "Background Color: " + (hammer.skyBackground ? "Sky" : "Black");
+			break;
+		case 18155:
+			hammer.renderHand = !hammer.renderHand;
+			guiButton.displayString = "Show Hand: " + (hammer.renderHand ? "ON" : "OFF");
 			break;
 		}
 		

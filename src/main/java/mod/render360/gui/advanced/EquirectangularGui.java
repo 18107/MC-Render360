@@ -22,6 +22,7 @@ public class EquirectangularGui implements Advanced {
 		buttonList.add(new GuiButton(18163, width / 2 + 5, height / 6 + 96, 150, 20, "Draw Circle: " + (equirectangular.drawCircle ? "ON" : "OFF")));
 		buttonList.add(new GuiButton(18164, width / 2 - 155, height / 6 + 120, 150, 20, "Stabilize Pitch: " + (equirectangular.stabilizePitch ? "ON" : "OFF")));
 		buttonList.add(new GuiButton(18165, width / 2 + 5, height / 6 + 120, 150, 20, "Stabilize Yaw: " + (equirectangular.stabilizeYaw ? "ON" : "OFF")));
+		buttonList.add(new GuiButton(18167, width / 2 + 5, height / 6 + 144, 150, 20, "Show Hand: " + (equirectangular.renderHand ? "ON" : "OFF")));
 	}
 
 	@Override
@@ -57,6 +58,10 @@ public class EquirectangularGui implements Advanced {
 		case 18165:
 			equirectangular.stabilizeYaw = !equirectangular.stabilizeYaw;
 			guiButton.displayString = "Stabilize Yaw: " + (equirectangular.stabilizeYaw ? "ON" : "OFF");
+			break;
+		case 18167:
+			equirectangular.renderHand = !equirectangular.renderHand;
+			guiButton.displayString = "Show Hand: " + (equirectangular.renderHand ? "ON" : "OFF");
 			break;
 		}
 	}

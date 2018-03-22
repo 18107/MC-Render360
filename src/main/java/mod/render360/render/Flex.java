@@ -268,6 +268,6 @@ public class Flex extends RenderMethod {
 	
 	@Override
 	public boolean getRenderHand() {
-		return getRenderPass() == 0 && renderHand;
+		return renderPass == 0 && renderHand;
 	}
 }
