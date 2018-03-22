@@ -45,6 +45,8 @@ public abstract class RenderMethod {
 	private float changeYaw;
 	private float changePitch;
 	
+	protected int renderPass;
+	
 	static {
 		//Put all of the render methods here
 		renderMethods = new RenderMethod[] {new Standard(), new Flex(), new Cubic(), new Hammer(), new Fisheye(), new Equirectangular()};
@@ -295,6 +297,7 @@ public abstract class RenderMethod {
 	
 	protected void renderFront(EntityRenderer er, Minecraft mc, float partialTicks, long finishTimeNano,
 			Entity player, int framebufferTexture, float yaw, float pitch, float prevYaw, float prevPitch) {
+		renderPass = 0;
 		OpenGlHelper.glFramebufferTexture2D(OpenGlHelper.GL_FRAMEBUFFER, OpenGlHelper.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D, framebufferTexture, 0);
 		GlStateManager.bindTexture(0);
 		//rotate the player and render
@@ -307,6 +310,7 @@ public abstract class RenderMethod {
 	
 	protected void renderLeft(EntityRenderer er, Minecraft mc, float partialTicks, long finishTimeNano,
 			Entity player, int framebufferTexture, float yaw, float pitch, float prevYaw, float prevPitch) {
+		renderPass = 1;
 		OpenGlHelper.glFramebufferTexture2D(OpenGlHelper.GL_FRAMEBUFFER, OpenGlHelper.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D, framebufferTexture, 0);
 		GlStateManager.bindTexture(0);
 		changeYaw = -90;
@@ -318,6 +322,7 @@ public abstract class RenderMethod {
 	
 	protected void renderRight(EntityRenderer er, Minecraft mc, float partialTicks, long finishTimeNano,
 			Entity player, int framebufferTexture, float yaw, float pitch, float prevYaw, float prevPitch) {
+		renderPass = 2;
 		OpenGlHelper.glFramebufferTexture2D(OpenGlHelper.GL_FRAMEBUFFER, OpenGlHelper.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D, framebufferTexture, 0);
 		GlStateManager.bindTexture(0);
 		changeYaw = 90;
@@ -329,6 +334,7 @@ public abstract class RenderMethod {
 	
 	protected void renderTop(EntityRenderer er, Minecraft mc, float partialTicks, long finishTimeNano,
 			Entity player, int framebufferTexture, float yaw, float pitch, float prevYaw, float prevPitch) {
+		renderPass = 3;
 		OpenGlHelper.glFramebufferTexture2D(OpenGlHelper.GL_FRAMEBUFFER, OpenGlHelper.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D, framebufferTexture, 0);
 		GlStateManager.bindTexture(0);
 		changeYaw = 0;
@@ -340,6 +346,7 @@ public abstract class RenderMethod {
 	
 	protected void renderBottom(EntityRenderer er, Minecraft mc, float partialTicks, long finishTimeNano,
 			Entity player, int framebufferTexture, float yaw, float pitch, float prevYaw, float prevPitch) {
+		renderPass = 4;
 		OpenGlHelper.glFramebufferTexture2D(OpenGlHelper.GL_FRAMEBUFFER, OpenGlHelper.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D, framebufferTexture, 0);
 		GlStateManager.bindTexture(0);
 		changeYaw = 0;
@@ -351,6 +358,7 @@ public abstract class RenderMethod {
 	
 	protected void renderBack(EntityRenderer er, Minecraft mc, float partialTicks, long finishTimeNano,
 			Entity player, int framebufferTexture, float yaw, float pitch, float prevYaw, float prevPitch) {
+		renderPass = 5;
 		OpenGlHelper.glFramebufferTexture2D(OpenGlHelper.GL_FRAMEBUFFER, OpenGlHelper.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D, framebufferTexture, 0);
 		GlStateManager.bindTexture(0);
 		changeYaw = 180;
@@ -545,6 +553,14 @@ public abstract class RenderMethod {
 	}
 	
 	public boolean replaceLoadingScreen() {
+		return false;
+	}
+	
+	public int getRenderPass() {
+		return renderPass;
+	}
+	
+	public boolean getRenderHand() {
 		return false;
 	}
 	

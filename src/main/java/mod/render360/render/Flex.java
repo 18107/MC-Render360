@@ -28,6 +28,8 @@ public class Flex extends RenderMethod {
 	private float lastFOV = 180;
 	
 	public float zoom = 4;
+	
+	public boolean renderHand;
 
 	@Override
 	public String getName() {
@@ -191,12 +193,15 @@ public class Flex extends RenderMethod {
 			RenderUtil.partialWidth = mc.displayWidth;
 			RenderUtil.partialHeight = mc.displayHeight;
 			
+			RenderUtil.render360 = true;
+			
 			OpenGlHelper.glFramebufferTexture2D(OpenGlHelper.GL_FRAMEBUFFER, OpenGlHelper.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D, framebufferTextures[0], 0);
 			GlStateManager.bindTexture(0);
 			RenderUtil.renderPass = 0;
 			
 			float fov = mc.gameSettings.fovSetting;
 			mc.gameSettings.fovSetting = getFOV();
+			renderPass = 0;
 			er.renderWorldPass(2, partialTicks, finishTimeNano);
 			mc.gameSettings.fovSetting = fov;
 			
@@ -259,5 +264,10 @@ public class Flex extends RenderMethod {
 		}
 		lastFOV = getFOV();
 		return quality;
+	}
+	
+	@Override
+	public boolean getRenderHand() {
+		return getRenderPass() == 0 && renderHand;
 	}
 }

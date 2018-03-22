@@ -39,11 +39,15 @@ public class SimpleGui implements Settings {
 		FOVTextField.setText(String.format("%s", flex.fov));
 		ZoomTextField = new GuiTextField(18122, fontRendererObj, width / 2 + 5, height / 6 + 72, 150, 20);
 		ZoomTextField.setText(String.format("%s", flex.zoom));
+		buttonList.add(new GuiButton(18123, width / 2 + 5, height / 6 + 96, 150, 20, "Show Hand: " + (flex.renderHand ? "ON" : "OFF")));
 	}
 	
 	@Override
 	public void actionPerformed(GuiButton guiButton, GuiScreen parentScreen) {
-		
+		if (guiButton.id == 18123) {
+			flex.renderHand = !flex.renderHand;
+			guiButton.displayString = "Show Hand: " + (flex.renderHand ? "ON" : "OFF");
+		}
 	}
 	
 	@Override

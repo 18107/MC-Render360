@@ -1,6 +1,8 @@
 package mod.render360;
 
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.glu.Project;
 
 import core.render360.Render360Event;
 import mod.render360.gui.SettingsGui;
@@ -162,7 +164,14 @@ public class Render360EventHandler {
 	public void renderHand(RenderHandEvent e) {
 		if (!disabled) {
 			if (RenderUtil.render360) {
-				e.setCanceled(true);
+				if (!RenderUtil.renderMethod.getRenderHand()) {
+					e.setCanceled(true);
+				} else {
+					GL11.glMatrixMode(GL11.GL_PROJECTION);
+					GL11.glLoadIdentity();
+					Project.gluPerspective(90, Minecraft.getMinecraft().displayWidth / (float)Minecraft.getMinecraft().displayHeight, 0.05f, 384);
+					GL11.glMatrixMode(GL11.GL_MODELVIEW);
+				}
 			}
 		}
 	}
