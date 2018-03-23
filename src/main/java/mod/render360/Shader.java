@@ -81,16 +81,6 @@ public class Shader {
 		shaderProgram = 0;
 	}
 	
-	/**
-	 * Get shader from file.
-	 */
-	public CharSequence getCode(InputStream is) throws IOException {
-		final DataInputStream dataStream = new DataInputStream(is);
-		byte[] shaderCode = new byte[dataStream.available()];
-		dataStream.readFully(shaderCode);
-		return new String(shaderCode);
-	}
-	
 	public int getShaderProgram() {
 		return shaderProgram;
 	}
