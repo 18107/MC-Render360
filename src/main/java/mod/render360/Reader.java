@@ -3,10 +3,23 @@ package mod.render360;
 import java.io.IOException;
 import java.io.InputStream;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.IResource;
+import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.util.ResourceLocation;
+
 public class Reader {
 
 	public static String read(String resourceIn) {
-		InputStream is = Reader.class.getResourceAsStream(resourceIn);
+		IResourceManager resourceManager = Minecraft.getMinecraft().getResourceManager();
+		IResource resource = null;
+		try {
+			resource = resourceManager.getResource(new ResourceLocation(resourceIn));
+		} catch (IOException e) {
+			e.printStackTrace();
+			return "";
+		}
+		InputStream is = resource.getInputStream();
 		if (is == null) {
 			Log.info("Shader not found");
 			return "";

@@ -18,7 +18,7 @@ public class Standard extends RenderMethod {
 	
 	@Override
 	public String getFragmentShader() {
-		return Reader.read("/mod/render360/shaders/error.fs");
+		return Reader.read("render360:shaders/error.fs");
 	}
 	
 	@Override

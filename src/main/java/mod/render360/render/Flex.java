@@ -38,7 +38,7 @@ public class Flex extends RenderMethod {
 
 	@Override
 	public String getFragmentShader() {
-		return Reader.read("/mod/render360/shaders/flex.fs");
+		return Reader.read("render360:shaders/flex.fs");
 	}
 	
 	@Override

@@ -35,7 +35,7 @@ public class Equirectangular extends RenderMethod {
 	
 	@Override
 	public String getFragmentShader() {
-		return Reader.read("/mod/render360/shaders/equirectangular.fs");
+		return Reader.read("render360:shaders/equirectangular.fs");
 	}
 	
 	@Override

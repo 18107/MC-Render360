@@ -1,1 +1,0 @@
-All shaders must be placed in the compiled jar, in /mod/render360/shaders

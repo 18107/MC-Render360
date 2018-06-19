@@ -33,7 +33,7 @@ public class Fisheye extends RenderMethod {
 
 	@Override
 	public String getFragmentShader() {
-		return Reader.read("/mod/render360/shaders/fisheye.fs");
+		return Reader.read("render360:shaders/fisheye.fs");
 	}
 	
 	@Override

@@ -26,7 +26,7 @@ public class Cubic extends RenderMethod {
 	
 	@Override
 	public String getFragmentShader() {
-		return Reader.read("/mod/render360/shaders/cubic.fs");
+		return Reader.read("render360:shaders/cubic.fs");
 	}
 	
 	@Override
