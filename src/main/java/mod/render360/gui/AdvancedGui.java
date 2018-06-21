@@ -7,6 +7,7 @@ import mod.render360.gui.advanced.Advanced;
 import mod.render360.gui.advanced.CubicGui;
 import mod.render360.gui.advanced.EquirectangularGui;
 import mod.render360.gui.advanced.HammerGui;
+import mod.render360.gui.advanced.PaniniGui;
 import mod.render360.gui.advanced.FisheyeGui;
 import mod.render360.render.Hammer;
 import net.minecraft.client.Minecraft;
@@ -25,19 +26,23 @@ public class AdvancedGui implements Settings {
 	
 	@Override
 	public void initGui(List<GuiButton> buttonList, int width, int height, FontRenderer fontRendererobj) {
-		GuiButton button = new GuiButton(18130, width / 2 - 190, height / 6 + 24, 88, 20, "Cubic");
+		GuiButton button = new GuiButton(18130, width / 2 - 212, height / 6 + 24, 84, 20, "Cubic");
 		if (guiObject instanceof CubicGui) button.enabled = false;
 		buttonList.add(button);
 		
-		button = new GuiButton(18131, width / 2 - 93, height / 6 + 24, 88, 20, "Hammer");
+		button = new GuiButton(18131, width / 2 - 127, height / 6 + 24, 84, 20, "Hammer");
 		if (guiObject instanceof HammerGui) button.enabled = false;
 		buttonList.add(button);
 		
-		button = new GuiButton(18132, width / 2 + 5, height / 6 + 24, 88, 20, "Fisheye");
+		button = new GuiButton(18132, width / 2 - 42, height / 6 + 24, 84, 20, "Fisheye");
 		if (guiObject instanceof FisheyeGui) button.enabled = false;
 		buttonList.add(button);
+		
+		button = new GuiButton(18133, width / 2 + 43, height / 6 + 24, 84, 20, "Panini");
+		if (guiObject instanceof PaniniGui) button.enabled = false;
+		buttonList.add(button);
 				
-		button = new GuiButton(18133, width / 2 + 102, height / 6 + 24, 88, 20, "Equirectangular");
+		button = new GuiButton(18134, width / 2 + 128, height / 6 + 24, 84, 20, "Equirectangular");
 		if (guiObject instanceof EquirectangularGui) button.enabled = false;
 		buttonList.add(button);
 		
@@ -64,7 +69,10 @@ public class AdvancedGui implements Settings {
 		case 18132: //Fisheye
 			guiObject = new FisheyeGui();
 			break;
-		case 18133: //Equirectangular
+		case 18133: //Panini
+			guiObject = new PaniniGui();
+			break;
+		case 18134: //Equirectangular
 			guiObject = new EquirectangularGui();
 			break;
 		}

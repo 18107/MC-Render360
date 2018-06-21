@@ -186,6 +186,8 @@ public abstract class RenderMethod {
 		GL20.glUniform1f(fovxUniform, getFOV());
 		int fovyUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "fovy");
 		GL20.glUniform1f(fovyUniform, getFOV()*Display.getHeight()/Display.getWidth());
+		int distUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "dist");
+		GL20.glUniform1f(distUniform, getDist());
 		int fisheyeTypeUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "fisheyeType");
 		GL20.glUniform1i(fisheyeTypeUniform, getFisheyeType());
 		int fullFrameUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "fullFrame");
@@ -431,6 +433,8 @@ public abstract class RenderMethod {
 		GL20.glUniform1f(fovxUniform, getFOV());
 		int fovyUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "fovy");
 		GL20.glUniform1f(fovyUniform, getFOV()*Display.getHeight()/Display.getWidth());
+		int distUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "dist");
+		GL20.glUniform1f(distUniform, getDist());
 		int fisheyeTypeUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "fisheyeType");
 		GL20.glUniform1i(fisheyeTypeUniform, getFisheyeType());
 		int fullFrameUniform = GL20.glGetUniformLocation(shader.getShaderProgram(), "fullFrame");
@@ -570,5 +574,9 @@ public abstract class RenderMethod {
 	
 	public boolean renderAllSides() {
 		return false;
+	}
+	
+	public float getDist() {
+		return 1;
 	}
 }
